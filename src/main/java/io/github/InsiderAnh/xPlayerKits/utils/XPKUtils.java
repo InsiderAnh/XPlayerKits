@@ -2,7 +2,10 @@ package io.github.InsiderAnh.xPlayerKits.utils;
 
 import com.google.gson.Gson;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
+import io.github.InsiderAnh.xPlayerKits.data.KitData;
+import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.enums.ServerVersion;
+import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.utils.xseries.XSound;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -22,6 +25,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class XPKUtils {
 
+    private final PlayerKits playerKits = PlayerKits.getInstance();
     public final ServerVersion SERVER_VERSION;
     @Getter
     private final Gson gson;
@@ -33,6 +37,44 @@ public class XPKUtils {
         gson = new Gson();
         writerSettings = JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
         SERVER_VERSION = ServerVersion.valueOf(Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.", ""));
+    }
+
+    public void claimKit(Player player, Kit kit, PlayerKitData playerKitData) {
+        if (kit.isNoHasRequirements(player)) {
+            player.sendMessage(playerKits.getLang().getString("messages.noRequirements"));
+            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+            return;
+        }
+
+        if (!kit.getPermission().equals("none") && player.hasPermission(kit.getPermission())) {
+            XPKUtils.executeActions(player, kit.getActionsOnDeny());
+            player.sendMessage(playerKits.getLang().getString("messages.noPermissionKit"));
+            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+            return;
+        }
+
+        KitData kitData = playerKitData.getKitsData().get(kit.getName());
+        if (kit.isOneTime()) {
+            if (kitData != null && kitData.isOneTime() && !player.hasPermission("xkits.onetime.bypass")) {
+                XPKUtils.executeActions(player, kit.getActionsOnDeny());
+                player.sendMessage(playerKits.getLang().getString("messages.alreadyOneTime"));
+                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                return;
+            }
+        }
+
+        if (kitData != null && kitData.getCountdown() > System.currentTimeMillis() && !player.hasPermission("xkits.countdown.bypass")) {
+            XPKUtils.executeActions(player, kit.getActionsOnDeny());
+            player.sendMessage(playerKits.getLang().getString("messages.waitCountdown").replace("<time>", XPKUtils.millisToLongDHMS(kitData.getCountdown() - System.currentTimeMillis())));
+            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+            return;
+        }
+
+        playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (kit.getCountdown() * 1000L), kit.isOneTime(), false));
+        playerKits.getExecutor().execute(() -> {
+            playerKits.getDatabase().updatePlayerData(player.getUniqueId());
+            Bukkit.getScheduler().runTask(playerKits, () -> kit.giveKit(player));
+        });
     }
 
     public String getStatus(boolean bool) {

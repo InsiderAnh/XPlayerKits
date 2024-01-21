@@ -69,43 +69,13 @@ public class KitsMenu extends AInventory {
             Kit kit = playerKits.getKitManager().getKits().get(nbtItem.getString(currentItem, "kit"));
             if (kit == null) return;
 
-            if (kit.isNoHasRequirements(player)) {
-                player.sendMessage(playerKits.getLang().getString("messages.noRequirements"));
-                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                return;
-            }
-
-            if (!kit.getPermission().equals("none") && player.hasPermission(kit.getPermission())) {
-                XPKUtils.executeActions(player, kit.getActionsOnDeny());
-                player.sendMessage(playerKits.getLang().getString("messages.noPermissionKit"));
-                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                return;
-            }
-
-            KitData kitData = playerKitData.getKitsData().get(kit.getName());
-            if (kit.isOneTime()) {
-                if (kitData != null && kitData.isOneTime()) {
-                    XPKUtils.executeActions(player, kit.getActionsOnDeny());
-                    player.sendMessage(playerKits.getLang().getString("messages.alreadyOneTime"));
-                    player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                    return;
-                }
-            }
-
-            if (kitData != null && kitData.getCountdown() > System.currentTimeMillis() && !player.hasPermission("xkits.countdown.bypass")) {
-                XPKUtils.executeActions(player, kit.getActionsOnDeny());
-                player.sendMessage(playerKits.getLang().getString("messages.waitCountdown").replace("<time>", XPKUtils.millisToLongDHMS(kitData.getCountdown() - System.currentTimeMillis())));
-                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+            if (click.isRightClick() && kit.isPreview()) {
+                new KitPreviewMenu(player, kit).open();
                 return;
             }
 
             close();
-
-            playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (kit.getCountdown() * 1000L), kit.isOneTime(), false));
-            playerKits.getExecutor().execute(() -> {
-                playerKits.getDatabase().updatePlayerData(player.getUniqueId());
-                Bukkit.getScheduler().runTask(playerKits, () -> kit.giveKit(player));
-            });
+            XPKUtils.claimKit(player, kit, playerKitData);
         }
     }
 
@@ -166,7 +136,7 @@ public class KitsMenu extends AInventory {
         }
         KitData kitData = playerKitData.getKitsData().get(kit.getName());
         if (kit.isOneTime()) {
-            if (kitData != null && kitData.isOneTime()) {
+            if (kitData != null && kitData.isOneTime() && !player.hasPermission("xkits.onetime.bypass")) {
                 return "ONE_TIME_CLAIMED";
             }
             return "ONE_TIME_REQUIREMENT";

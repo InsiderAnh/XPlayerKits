@@ -27,7 +27,7 @@ public class Kit {
     private final ArrayList<String> actionsOnDeny = new ArrayList<>();
     private String name;
     private long countdown;
-    private boolean oneTime, autoArmor;
+    private boolean oneTime, autoArmor, preview;
     private int slot, page;
     private double price;
     private String permission;
@@ -38,6 +38,7 @@ public class Kit {
         this.countdown = TimeUnit.MINUTES.toSeconds(5);
         this.oneTime = false;
         this.autoArmor = false;
+        this.preview = false;
         this.slot = 10;
         this.page = 1;
         this.price = 0;
@@ -64,6 +65,7 @@ public class Kit {
         this.countdown = config.getLong("countdown");
         this.oneTime = config.getBoolean("oneTime");
         this.autoArmor = config.getBoolean("autoArmor");
+        this.preview = config.getBoolean("preview");
         this.slot = config.getInt("slot");
         this.page = config.getInt("page");
         this.price = config.getDouble("price");
@@ -86,6 +88,7 @@ public class Kit {
         config.set("countdown", countdown);
         config.set("oneTime", oneTime);
         config.set("autoArmor", autoArmor);
+        config.set("preview", preview);
         config.set("slot", slot);
         config.set("page", page);
         config.set("price", price);

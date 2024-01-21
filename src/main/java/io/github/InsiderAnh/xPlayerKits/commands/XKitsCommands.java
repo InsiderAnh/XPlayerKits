@@ -2,9 +2,11 @@ package io.github.InsiderAnh.xPlayerKits.commands;
 
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.CountdownPlayer;
+import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.menus.KitSlotEditorMenu;
 import io.github.InsiderAnh.xPlayerKits.menus.KitsMenu;
 import io.github.InsiderAnh.xPlayerKits.menus.MainKitEditorMenu;
+import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -61,6 +63,102 @@ public class XKitsCommands implements CommandExecutor {
                     new KitSlotEditorMenu(player).open();
                     countdownPlayer.resetCountdown("kitCommandCountdown");
                     break;
+                case "give": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Player online = Bukkit.getPlayer(args[2]);
+                    if (kit == null) {
+                        sender.sendMessage("§cThis kit don´t exists.");
+                        return true;
+                    }
+                    if (online == null) {
+                        sender.sendMessage("§cThis player is not online.");
+                        return true;
+                    }
+                    kit.giveKit(online);
+                    break;
+                }
+                case "delete": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().remove(args[1]);
+                    if (kit != null) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.deletedKit"));
+                    } else {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noExistsKit"));
+                    }
+                    break;
+                }
+                case "reset": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Player online = Bukkit.getPlayer(args[2]);
+                    if (kit == null) {
+                        sender.sendMessage("§cThis kit don´t exists.");
+                        return true;
+                    }
+                    if (online == null) {
+                        sender.sendMessage("§cThis player is not online.");
+                        return true;
+                    }
+                    playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
+                        playerKitData.getKitsData().remove(kit.getName());
+                        playerKits.getDatabase().updatePlayerData(online.getUniqueId());
+                    }).exceptionally(throwable -> {
+                        throwable.printStackTrace();
+                        return null;
+                    });
+                    break;
+                }
+                case "claim": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Player online = Bukkit.getPlayer(args[2]);
+                    if (kit == null) {
+                        sender.sendMessage("§cThis kit don´t exists.");
+                        return true;
+                    }
+                    if (online == null) {
+                        sender.sendMessage("§cThis player is not online.");
+                        return true;
+                    }
+                    playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
+                        Bukkit.getScheduler().runTask(playerKits, () -> {
+                            XPKUtils.claimKit(online, kit, playerKitData);
+                        });
+                    }).exceptionally(throwable -> {
+                        throwable.printStackTrace();
+                        return null;
+                    });
+                    break;
+                }
                 case "kits":
                     playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData -> {
                         Bukkit.getScheduler().runTask(playerKits, () -> {
@@ -77,7 +175,111 @@ public class XKitsCommands implements CommandExecutor {
                     break;
             }
         } else {
-            sender.sendMessage("§cThis command is only usable by players.");
+            if (args.length < 1) {
+                sendHelp(sender);
+                return true;
+            }
+            switch (args[0].toLowerCase()) {
+                case "give": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Player online = Bukkit.getPlayer(args[2]);
+                    if (kit == null) {
+                        sender.sendMessage("§cThis kit don´t exists.");
+                        return true;
+                    }
+                    if (online == null) {
+                        sender.sendMessage("§cThis player is not online.");
+                        return true;
+                    }
+                    kit.giveKit(online);
+                    break;
+                }
+                case "claim": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Player online = Bukkit.getPlayer(args[2]);
+                    if (kit == null) {
+                        sender.sendMessage("§cThis kit don´t exists.");
+                        return true;
+                    }
+                    if (online == null) {
+                        sender.sendMessage("§cThis player is not online.");
+                        return true;
+                    }
+                    playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
+                        Bukkit.getScheduler().runTask(playerKits, () -> {
+                            XPKUtils.claimKit(online, kit, playerKitData);
+                        });
+                    }).exceptionally(throwable -> {
+                        throwable.printStackTrace();
+                        return null;
+                    });
+                    break;
+                }
+                case "delete": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().remove(args[1]);
+                    if (kit != null) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.deletedKit"));
+                    } else {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noExistsKit"));
+                    }
+                    break;
+                }
+                case "reset": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Player online = Bukkit.getPlayer(args[2]);
+                    if (kit == null) {
+                        sender.sendMessage("§cThis kit don´t exists.");
+                        return true;
+                    }
+                    if (online == null) {
+                        sender.sendMessage("§cThis player is not online.");
+                        return true;
+                    }
+                    playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
+                        playerKitData.getKitsData().remove(kit.getName());
+                        playerKits.getDatabase().updatePlayerData(online.getUniqueId());
+                    }).exceptionally(throwable -> {
+                        throwable.printStackTrace();
+                        return null;
+                    });
+                    break;
+                }
+                default:
+                    sendHelp(sender);
+                    break;
+            }
         }
         return false;
     }

@@ -10,6 +10,7 @@ import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.xseries.XMaterial;
 import io.github.InsiderAnh.xPlayerKits.utils.xseries.XSound;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -38,7 +39,7 @@ public class KitEditorMenu extends AInventory {
         if (nbtItem.hasTag(currentItem, "icon")) {
             String icon = nbtItem.getString(currentItem, "icon");
             ItemStack itemStack = player.getItemInHand();
-            if (itemStack == null || itemStack.getType().isAir()) {
+            if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
                 player.sendMessage(playerKits.getLang().getString("messages.noItemHand"));
                 player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
                 return;

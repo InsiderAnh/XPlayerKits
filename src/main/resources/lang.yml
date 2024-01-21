@@ -25,8 +25,11 @@ messages:
   alreadyOneTime: "&8» &cYou have already claimed this kit, and it can only be claimed once."
   waitCountdown: "&8» &cYou must wait for &6<time> &cto claim this kit again."
   noRequirements: "&8» &cYou have not met the requirements to claim this kit."
-  pleaseWait: "&8» &cPlease wait a moment before running this command again.."
+  pleaseWait: "&8» &cPlease wait a moment before running this command again."
+  deletedKit: "&8» &aThe kit has been successfully deleted."
 menus:
+  kitPreview:
+    title: "Kit preview"
   kitsMenu:
     title: "Kits Menu"
     back:
