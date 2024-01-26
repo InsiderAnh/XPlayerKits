@@ -14,7 +14,11 @@ public abstract class Database {
 
     public abstract void close();
 
+    public abstract CompletableFuture<PlayerKitData> getPlayerDataByName(String name);
+
     public abstract CompletableFuture<PlayerKitData> getPlayerData(UUID uuid, String name);
+
+    public abstract PlayerKitData getSyncPlayerData(UUID uuid, String name);
 
     public abstract void updatePlayerData(UUID uuid);
 

@@ -3,6 +3,7 @@ package io.github.InsiderAnh.xPlayerKits.commands;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.CountdownPlayer;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.managers.MigratorManager;
 import io.github.InsiderAnh.xPlayerKits.menus.KitSlotEditorMenu;
 import io.github.InsiderAnh.xPlayerKits.menus.KitsMenu;
 import io.github.InsiderAnh.xPlayerKits.menus.MainKitEditorMenu;
@@ -14,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class XKitsCommands implements CommandExecutor {
@@ -96,6 +98,10 @@ public class XKitsCommands implements CommandExecutor {
                     }
                     Kit kit = playerKits.getKitManager().getKits().remove(args[1]);
                     if (kit != null) {
+                        File fileKit = new File(playerKits.getDataFolder(), kit.getName() + ".yml");
+                        if (fileKit.exists()) {
+                            fileKit.delete();
+                        }
                         sender.sendMessage(playerKits.getLang().getString("messages.deletedKit"));
                     } else {
                         sender.sendMessage(playerKits.getLang().getString("messages.noExistsKit"));
@@ -112,24 +118,66 @@ public class XKitsCommands implements CommandExecutor {
                         return true;
                     }
                     Kit kit = playerKits.getKitManager().getKits().get(args[1]);
-                    Player online = Bukkit.getPlayer(args[2]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
                         return true;
                     }
-                    if (online == null) {
-                        sender.sendMessage("§cThis player is not online.");
-                        return true;
-                    }
-                    playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
+                    playerKits.getDatabase().getPlayerDataByName(args[2]).thenAccept(playerKitData -> {
+                        if (playerKitData == null) {
+                            sender.sendMessage("§cThis user don´t have data.");
+                            return;
+                        }
                         playerKitData.getKitsData().remove(kit.getName());
-                        playerKits.getDatabase().updatePlayerData(online.getUniqueId());
+                        playerKits.getDatabase().updatePlayerData(playerKitData.getUuid());
                     }).exceptionally(throwable -> {
                         throwable.printStackTrace();
                         return null;
                     });
                     break;
                 }
+                case "resetall": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    playerKits.getDatabase().getPlayerDataByName(args[1]).thenAccept(playerKitData -> {
+                        if (playerKitData == null) {
+                            sender.sendMessage("§cThis user don´t have data.");
+                            return;
+                        }
+                        playerKitData.getKitsData().clear();
+                        playerKits.getDatabase().updatePlayerData(playerKitData.getUuid());
+                    }).exceptionally(throwable -> {
+                        throwable.printStackTrace();
+                        return null;
+                    });
+                    break;
+                }
+                case "migrate":
+                    if (args.length < 2) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "playerkits2_yml":
+                            new MigratorManager().migrateFromPlayerKits2MoreOptimized();
+                            break;
+                        case "playerkits2_mysql":
+                            new MigratorManager().migrateFromPlayerKits2MySQL();
+                            break;
+                        default:
+                            sendHelp(sender);
+                            break;
+                    }
+                    break;
                 case "claim": {
                     if (args.length < 3) {
                         sendHelp(sender);
@@ -242,6 +290,10 @@ public class XKitsCommands implements CommandExecutor {
                     }
                     Kit kit = playerKits.getKitManager().getKits().remove(args[1]);
                     if (kit != null) {
+                        File fileKit = new File(playerKits.getDataFolder(), kit.getName() + ".yml");
+                        if (fileKit.exists()) {
+                            fileKit.delete();
+                        }
                         sender.sendMessage(playerKits.getLang().getString("messages.deletedKit"));
                     } else {
                         sender.sendMessage(playerKits.getLang().getString("messages.noExistsKit"));
@@ -258,24 +310,66 @@ public class XKitsCommands implements CommandExecutor {
                         return true;
                     }
                     Kit kit = playerKits.getKitManager().getKits().get(args[1]);
-                    Player online = Bukkit.getPlayer(args[2]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
                         return true;
                     }
-                    if (online == null) {
-                        sender.sendMessage("§cThis player is not online.");
-                        return true;
-                    }
-                    playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
+                    playerKits.getDatabase().getPlayerDataByName(args[2]).thenAccept(playerKitData -> {
+                        if (playerKitData == null) {
+                            sender.sendMessage("§cThis user don´t have data.");
+                            return;
+                        }
                         playerKitData.getKitsData().remove(kit.getName());
-                        playerKits.getDatabase().updatePlayerData(online.getUniqueId());
+                        playerKits.getDatabase().updatePlayerData(playerKitData.getUuid());
                     }).exceptionally(throwable -> {
                         throwable.printStackTrace();
                         return null;
                     });
                     break;
                 }
+                case "resetall": {
+                    if (args.length < 3) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    playerKits.getDatabase().getPlayerDataByName(args[1]).thenAccept(playerKitData -> {
+                        if (playerKitData == null) {
+                            sender.sendMessage("§cThis user don´t have data.");
+                            return;
+                        }
+                        playerKitData.getKitsData().clear();
+                        playerKits.getDatabase().updatePlayerData(playerKitData.getUuid());
+                    }).exceptionally(throwable -> {
+                        throwable.printStackTrace();
+                        return null;
+                    });
+                    break;
+                }
+                case "migrate":
+                    if (args.length < 2) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "playerkits2_yml":
+                            new MigratorManager().migrateFromPlayerKits2MoreOptimized();
+                            break;
+                        case "playerkits2_mysql":
+                            new MigratorManager().migrateFromPlayerKits2MySQL();
+                            break;
+                        default:
+                            sendHelp(sender);
+                            break;
+                    }
+                    break;
                 default:
                     sendHelp(sender);
                     break;
@@ -289,6 +383,12 @@ public class XKitsCommands implements CommandExecutor {
         sender.sendMessage("§e/xkits editor §7- §fOpens the kit editor.");
         sender.sendMessage("§e/xkits slots §7- §fOpens the kit slot editor.");
         sender.sendMessage("§e/xkits kits §7- §fOpens the kit menu.");
+        sender.sendMessage("§e/xkits give <kitName> <player> §7- §fDirectly give kits to players without verifications..");
+        sender.sendMessage("§e/xkits claim <kitName> <player> §7- §fGive kits to players with verifications.");
+        sender.sendMessage("§e/xkits delete <kitName> §7- §fDelete a kit.");
+        sender.sendMessage("§e/xkits reset <kitName> <player> §7- §fReset a certain kit data.");
+        sender.sendMessage("§e/xkits resetall <player> §7- §fReset all kit data.");
+        sender.sendMessage("§e/xkits migrate playerkits2_yml §7- §fMigrate data from kits plugin.");
         sender.sendMessage("§7§m--------------------------------------");
     }
 

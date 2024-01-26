@@ -29,6 +29,7 @@ public class MongoDatabase extends Database {
             this.mongoClient = MongoClients.create(new ConnectionString(connectionString));
             this.collection = mongoClient.getDatabase(playerKits.getConfig().getString("databases.mongodb.database", "xPlayerKits")).getCollection("player_kits");
             this.collection.createIndex(new Document("uuid", 1), new IndexOptions().unique(true));
+            this.collection.createIndex(new Document("name", 1));
             playerKits.getLogger().info("Connected to Mongo database correctly.");
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -39,6 +40,22 @@ public class MongoDatabase extends Database {
     @Override
     public void close() {
         this.mongoClient.close();
+    }
+
+    @Override
+    public CompletableFuture<PlayerKitData> getPlayerDataByName(String name) {
+        CompletableFuture<PlayerKitData> completableFuture = new CompletableFuture<>();
+        playerKits.getExecutor().execute(() -> {
+            Document documentFound = collection.find(new Document("name", name)).first();
+            PlayerKitData playerKitData;
+            if (documentFound != null) {
+                playerKitData = XPKUtils.getGson().fromJson(documentFound.toJson(XPKUtils.getWriterSettings()), PlayerKitData.class);
+                completableFuture.complete(playerKitData);
+            } else {
+                completableFuture.complete(null);
+            }
+        });
+        return completableFuture;
     }
 
     @Override
@@ -58,6 +75,21 @@ public class MongoDatabase extends Database {
             completableFuture.complete(playerKitData);
         });
         return completableFuture;
+    }
+
+    @Override
+    public PlayerKitData getSyncPlayerData(UUID uuid, String name) {
+        Document documentFound = collection.find(new Document("uuid", uuid.toString())).first();
+        PlayerKitData playerKitData;
+        if (documentFound != null) {
+            playerKitData = XPKUtils.getGson().fromJson(documentFound.toJson(XPKUtils.getWriterSettings()), PlayerKitData.class);
+        } else {
+            playerKitData = new PlayerKitData(uuid, name);
+            Document document = Document.parse(XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
+            collection.insertOne(document);
+        }
+        cachedPlayerKits.put(uuid, playerKitData);
+        return playerKitData;
     }
 
     @Override

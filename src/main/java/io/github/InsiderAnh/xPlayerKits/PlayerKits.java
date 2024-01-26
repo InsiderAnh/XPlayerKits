@@ -13,12 +13,10 @@ import io.github.InsiderAnh.xPlayerKits.superclass.Database;
 import io.github.InsiderAnh.xPlayerKits.utils.NBTEditor;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 @Getter
 public class PlayerKits extends JavaPlugin {

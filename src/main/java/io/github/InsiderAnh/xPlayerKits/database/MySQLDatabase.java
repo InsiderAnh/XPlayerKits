@@ -70,13 +70,35 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
+    public CompletableFuture<PlayerKitData> getPlayerDataByName(String name) {
+        CompletableFuture<PlayerKitData> completableFuture = new CompletableFuture<>();
+        playerKits.getExecutor().execute(() -> {
+            try {
+                Connection connection = getConnection();
+                PlayerKitData playerKitData;
+                String data = getData(connection, "name", name);
+                if (data != null) {
+                    playerKitData = XPKUtils.getGson().fromJson(data, PlayerKitData.class);
+                    completableFuture.complete(playerKitData);
+                } else {
+                    completableFuture.complete(null);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.complete(null);
+            }
+        });
+        return completableFuture;
+    }
+
+    @Override
     public CompletableFuture<PlayerKitData> getPlayerData(UUID uuid, String name) {
         CompletableFuture<PlayerKitData> completableFuture = new CompletableFuture<>();
         playerKits.getExecutor().execute(() -> {
             try {
                 Connection connection = getConnection();
                 PlayerKitData playerKitData;
-                String data = getData(connection, uuid.toString());
+                String data = getData(connection, "uuid", uuid.toString());
                 if (data != null) {
                     playerKitData = XPKUtils.getGson().fromJson(data, PlayerKitData.class);
                 } else {
@@ -91,6 +113,21 @@ public class MySQLDatabase extends Database {
             }
         });
         return completableFuture;
+    }
+
+    @Override
+    public PlayerKitData getSyncPlayerData(UUID uuid, String name) {
+        Connection connection = getConnection();
+        PlayerKitData playerKitData;
+        String data = getData(connection, "uuid", uuid.toString());
+        if (data != null) {
+            playerKitData = XPKUtils.getGson().fromJson(data, PlayerKitData.class);
+        } else {
+            playerKitData = new PlayerKitData(uuid, name);
+            insertData(connection, uuid.toString(), XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
+        }
+        cachedPlayerKits.put(uuid, playerKitData);
+        return playerKitData;
     }
 
     @Override
@@ -125,9 +162,9 @@ public class MySQLDatabase extends Database {
         }
     }
 
-    private String getData(Connection connection, String uuid) {
+    private String getData(Connection connection, String key, String uuid) {
         try {
-            String selectSQL = "SELECT data FROM player_kits WHERE uuid = ?";
+            String selectSQL = "SELECT data FROM player_kits WHERE " + key + " = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
                 preparedStatement.setString(1, uuid);
 

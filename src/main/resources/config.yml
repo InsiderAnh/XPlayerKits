@@ -16,3 +16,10 @@ databases:
     database: xPlayerKits
     user: admin
     password: 123456
+migrate:
+  mysql:
+    host: localhost
+    port: 3306
+    database: xPlayerKits
+    user: admin
+    password: 123456

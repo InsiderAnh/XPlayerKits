@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class XPKUtils {
 
-    private final PlayerKits playerKits = PlayerKits.getInstance();
     public final ServerVersion SERVER_VERSION;
+    private final PlayerKits playerKits = PlayerKits.getInstance();
     @Getter
     private final Gson gson;
     @Getter
