@@ -388,7 +388,7 @@ public class XKitsCommands implements CommandExecutor {
         sender.sendMessage("§e/xkits delete <kitName> §7- §fDelete a kit.");
         sender.sendMessage("§e/xkits reset <kitName> <player> §7- §fReset a certain kit data.");
         sender.sendMessage("§e/xkits resetall <player> §7- §fReset all kit data.");
-        sender.sendMessage("§e/xkits migrate playerkits2_yml §7- §fMigrate data from kits plugin.");
+        sender.sendMessage("§e/xkits migrate playerkits2_yml/playerkits2_mysql §7- §fMigrate data from old playerkits2 plugin.");
         sender.sendMessage("§7§m--------------------------------------");
     }
 
