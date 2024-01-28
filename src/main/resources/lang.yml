@@ -1,5 +1,5 @@
 countdown:
-  noCountdown: "Listo"
+  noCountdown: "Ready"
 messages:
   enabled: "&aEnabled"
   disabled: "&cDisabled"
