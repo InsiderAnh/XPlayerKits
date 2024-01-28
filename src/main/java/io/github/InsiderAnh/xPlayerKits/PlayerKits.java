@@ -9,6 +9,7 @@ import io.github.InsiderAnh.xPlayerKits.database.MySQLDatabase;
 import io.github.InsiderAnh.xPlayerKits.database.SQLiteDatabase;
 import io.github.InsiderAnh.xPlayerKits.listeners.PlayerListener;
 import io.github.InsiderAnh.xPlayerKits.managers.KitManager;
+import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
 import io.github.InsiderAnh.xPlayerKits.superclass.Database;
 import io.github.InsiderAnh.xPlayerKits.utils.NBTEditor;
 import lombok.Getter;
@@ -58,6 +59,10 @@ public class PlayerKits extends JavaPlugin {
         getCommand("xkits").setExecutor(new XKitsCommands());
         if (getConfig().getBoolean("kitsCMD.enabled")) {
             getCommand("kits").setExecutor(new XKitsCommands());
+        }
+
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new PlayerKitsPlaceholders().register();
         }
 
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

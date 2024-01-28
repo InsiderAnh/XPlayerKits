@@ -20,6 +20,10 @@ public abstract class Database {
 
     public abstract PlayerKitData getSyncPlayerData(UUID uuid, String name);
 
+    public PlayerKitData getCachedPlayerData(UUID uuid) {
+        return cachedPlayerKits.get(uuid);
+    }
+
     public abstract void updatePlayerData(UUID uuid);
 
     public void removePlayerData(UUID uuid) {

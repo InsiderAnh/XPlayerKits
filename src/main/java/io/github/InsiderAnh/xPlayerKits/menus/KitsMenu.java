@@ -128,7 +128,7 @@ public class KitsMenu extends AInventory {
         if (kit.isNoHasRequirements(player)) {
             return "CANT_CLAIM";
         }
-        if (!kit.getPermission().equals("none") && player.hasPermission(kit.getPermission())) {
+        if (!kit.getPermission().equals("none") && !player.hasPermission(kit.getPermission())) {
             return "NO_PERMISSION";
         }
         KitData kitData = playerKitData.getKitsData().get(kit.getName());

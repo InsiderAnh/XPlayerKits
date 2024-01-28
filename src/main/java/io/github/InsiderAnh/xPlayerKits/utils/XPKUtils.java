@@ -46,7 +46,7 @@ public class XPKUtils {
             return;
         }
 
-        if (!kit.getPermission().equals("none") && player.hasPermission(kit.getPermission())) {
+        if (!kit.getPermission().equals("none") && !player.hasPermission(kit.getPermission())) {
             XPKUtils.executeActions(player, kit.getActionsOnDeny());
             player.sendMessage(playerKits.getLang().getString("messages.noPermissionKit"));
             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);

@@ -178,6 +178,24 @@ public class XKitsCommands implements CommandExecutor {
                             break;
                     }
                     break;
+                case "migratekits":
+                    if (args.length < 2) {
+                        sendHelp(sender);
+                        return true;
+                    }
+                    if (!sender.hasPermission("xkits.admin")) {
+                        sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
+                        return true;
+                    }
+                    switch (args[1].toLowerCase()) {
+                        case "playerkits2":
+                            new MigratorManager().migrateKitsFromPlayerKits2(player);
+                            break;
+                        default:
+                            sendHelp(sender);
+                            break;
+                    }
+                    break;
                 case "claim": {
                     if (args.length < 3) {
                         sendHelp(sender);

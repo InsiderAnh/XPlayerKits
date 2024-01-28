@@ -5,8 +5,11 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
+import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.sql.Connection;
@@ -19,6 +22,34 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MigratorManager {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
+
+    public void migrateKitsFromPlayerKits2(Player player) {
+        //playerkits give Dios InsiderAnh
+        File playerKitsDirectory = new File(playerKits.getServer().getWorldContainer(), "plugins/PlayerKits2/kits");
+        if (!playerKitsDirectory.exists() || !playerKitsDirectory.isDirectory()) {
+            playerKits.getLogger().info("You don´t have data yml in this plugin.");
+            return;
+        }
+        for (File file : playerKitsDirectory.listFiles()) {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            String name = file.getName().replace(".yml", "");
+            Kit kit = new Kit(name);
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "playerkits give " + name + " " + player.getName());
+            kit.setInventory(player.getInventory().getContents());
+            kit.setArmor(player.getInventory().getArmorContents());
+            kit.setOneTime(config.getBoolean("one_time"));
+            kit.setAutoArmor(config.getBoolean("auto_armor"));
+            kit.setCountdown(config.getInt("cooldown"));
+            if (config.getBoolean("permission_required")) {
+                kit.setPermission("playerkits.kit." + name);
+            }
+            kit.setPreview(true);
+            kit.save();
+            playerKits.getKitManager().addKit(kit);
+        }
+    }
 
     public void migrateFromPlayerKits2MySQL() {
         long startAt = System.currentTimeMillis();
