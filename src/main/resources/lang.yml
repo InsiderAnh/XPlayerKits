@@ -22,6 +22,7 @@ messages:
   noNumber: "&8» &cPlease write a number on this."
   longName: "&8» &cYou can't write such a long name."
   permissionNoSpace: "&8» &cPermissions cannot contain spaces."
+  noInventorySpace: "&8» &cYou don't have enough space in your inventory; it's preferable for it to be empty."
   noItemHand: "&8» &cYou don´t have item in hand."
   noPermissionKit: "&8» &cYou do not have permission to claim this kit."
   alreadyOneTime: "&8» &cYou have already claimed this kit, and it can only be claimed once."

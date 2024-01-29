@@ -70,6 +70,13 @@ public class XPKUtils {
             return;
         }
 
+        if (kit.isCheckInventorySpace() && !kit.isInventorySpace(player)) {
+            XPKUtils.executeActions(player, kit.getActionsOnDeny());
+            player.sendMessage(playerKits.getLang().getString("messages.noInventorySpace"));
+            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+            return;
+        }
+
         playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (kit.getCountdown() * 1000L), kit.isOneTime(), false));
         playerKits.getExecutor().execute(() -> {
             playerKits.getDatabase().updatePlayerData(player.getUniqueId());

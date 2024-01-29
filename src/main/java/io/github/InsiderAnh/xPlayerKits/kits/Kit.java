@@ -16,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Setter
@@ -27,7 +29,7 @@ public class Kit {
     private final ArrayList<String> actionsOnDeny = new ArrayList<>();
     private String name;
     private long countdown;
-    private boolean oneTime, autoArmor, preview;
+    private boolean oneTime, autoArmor, preview, checkInventorySpace;
     private int slot, page;
     private double price;
     private String permission;
@@ -39,6 +41,7 @@ public class Kit {
         this.oneTime = false;
         this.autoArmor = false;
         this.preview = false;
+        this.checkInventorySpace = false;
         this.slot = 10;
         this.page = 1;
         this.price = 0;
@@ -65,7 +68,8 @@ public class Kit {
         this.countdown = config.getLong("countdown");
         this.oneTime = config.getBoolean("oneTime");
         this.autoArmor = config.getBoolean("autoArmor");
-        this.preview = config.getBoolean("preview");
+        this.preview = config.getBooleanOrDefault("preview", true);
+        this.checkInventorySpace = config.getBooleanOrDefault("checkInventorySpace", true);
         this.slot = config.getInt("slot");
         this.page = config.getInt("page");
         this.price = config.getDouble("price");
@@ -89,6 +93,7 @@ public class Kit {
         config.set("oneTime", oneTime);
         config.set("autoArmor", autoArmor);
         config.set("preview", preview);
+        config.set("checkInventorySpace", checkInventorySpace);
         config.set("slot", slot);
         config.set("page", page);
         config.set("price", price);
@@ -102,6 +107,28 @@ public class Kit {
             config.set("icons." + key, InventorySerializable.itemStackToBase64(icons.get(key)));
         }
         config.save();
+    }
+
+    public boolean isInventorySpace(Player player) {
+        AtomicBoolean occupied = new AtomicBoolean(false);
+        Inventory playerInv = player.getInventory();
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack itemStack = inventory[i];
+            if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
+            ItemStack toItem = playerInv.getItem(i);
+            if (toItem != null && !toItem.getType().equals(Material.AIR)) {
+                occupied.set(true);
+            }
+        }
+        for (int i = 0; i < armor.length; i++) {
+            ItemStack itemStack = armor[i];
+            if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
+            ItemStack toItem = player.getInventory().getArmorContents()[i];
+            if (toItem != null && !toItem.getType().equals(Material.AIR)) {
+                occupied.set(true);
+            }
+        }
+        return occupied.get();
     }
 
     public void giveKit(Player player) {
