@@ -125,6 +125,7 @@ public class XPKUtils {
 
     public void executeActions(Player player, ArrayList<String> actions) {
         for (String action : actions) {
+            if (action.equals("none")) continue;
             String actionType = action.split(":")[0].toLowerCase();
             String actionData = action.split(":")[1];
             switch (actionType) {

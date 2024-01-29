@@ -1,3 +1,6 @@
+kitOnJoin:
+  enabled: false
+  kitName: starter
 kitsCMD:
   enabled: false
 databases:

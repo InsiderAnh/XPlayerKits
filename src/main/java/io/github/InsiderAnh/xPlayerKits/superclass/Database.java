@@ -18,6 +18,8 @@ public abstract class Database {
 
     public abstract CompletableFuture<PlayerKitData> getPlayerData(UUID uuid, String name);
 
+    public abstract CompletableFuture<Boolean> loadPlayerData(UUID uuid, String name);
+
     public abstract PlayerKitData getSyncPlayerData(UUID uuid, String name);
 
     public PlayerKitData getCachedPlayerData(UUID uuid) {

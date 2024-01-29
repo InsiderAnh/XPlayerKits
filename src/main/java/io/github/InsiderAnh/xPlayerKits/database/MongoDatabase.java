@@ -61,18 +61,28 @@ public class MongoDatabase extends Database {
     @Override
     public CompletableFuture<PlayerKitData> getPlayerData(UUID uuid, String name) {
         CompletableFuture<PlayerKitData> completableFuture = new CompletableFuture<>();
+        playerKits.getExecutor().execute(() -> completableFuture.complete(getSyncPlayerData(uuid, name)));
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> loadPlayerData(UUID uuid, String name) {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
         playerKits.getExecutor().execute(() -> {
             Document documentFound = collection.find(new Document("uuid", uuid.toString())).first();
             PlayerKitData playerKitData;
+            boolean firstJoin;
             if (documentFound != null) {
+                firstJoin = false;
                 playerKitData = XPKUtils.getGson().fromJson(documentFound.toJson(XPKUtils.getWriterSettings()), PlayerKitData.class);
             } else {
+                firstJoin = true;
                 playerKitData = new PlayerKitData(uuid, name);
                 Document document = Document.parse(XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
                 collection.insertOne(document);
             }
             cachedPlayerKits.put(uuid, playerKitData);
-            completableFuture.complete(playerKitData);
+            completableFuture.complete(firstJoin);
         });
         return completableFuture;
     }

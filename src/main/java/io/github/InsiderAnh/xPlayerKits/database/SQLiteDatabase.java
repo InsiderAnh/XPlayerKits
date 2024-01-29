@@ -95,17 +95,34 @@ public class SQLiteDatabase extends Database {
         CompletableFuture<PlayerKitData> completableFuture = new CompletableFuture<>();
         playerKits.getExecutor().execute(() -> {
             try {
+                completableFuture.complete(getSyncPlayerData(uuid, name));
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.complete(null);
+            }
+        });
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> loadPlayerData(UUID uuid, String name) {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+        playerKits.getExecutor().execute(() -> {
+            try {
                 Connection connection = getConnection();
                 PlayerKitData playerKitData;
+                boolean firstJoin;
                 String data = getData(connection, "uuid", uuid.toString());
                 if (data != null) {
+                    firstJoin = false;
                     playerKitData = XPKUtils.getGson().fromJson(data, PlayerKitData.class);
                 } else {
+                    firstJoin = true;
                     playerKitData = new PlayerKitData(uuid, name);
                     insertData(connection, uuid.toString(), XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
                 }
                 cachedPlayerKits.put(uuid, playerKitData);
-                completableFuture.complete(playerKitData);
+                completableFuture.complete(firstJoin);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 completableFuture.complete(null);

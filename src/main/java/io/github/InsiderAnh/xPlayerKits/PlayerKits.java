@@ -8,6 +8,7 @@ import io.github.InsiderAnh.xPlayerKits.database.MongoDatabase;
 import io.github.InsiderAnh.xPlayerKits.database.MySQLDatabase;
 import io.github.InsiderAnh.xPlayerKits.database.SQLiteDatabase;
 import io.github.InsiderAnh.xPlayerKits.listeners.PlayerListener;
+import io.github.InsiderAnh.xPlayerKits.managers.ConfigManager;
 import io.github.InsiderAnh.xPlayerKits.managers.KitManager;
 import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
 import io.github.InsiderAnh.xPlayerKits.superclass.Database;
@@ -26,6 +27,7 @@ public class PlayerKits extends JavaPlugin {
     private static PlayerKits instance;
     private final ListeningExecutorService executor;
     private final KitManager kitManager;
+    private final ConfigManager configManager;
     private final NBTEditor nbtEditor;
     private InsiderConfig lang, inventories;
     private Database database;
@@ -34,6 +36,7 @@ public class PlayerKits extends JavaPlugin {
         instance = this;
         this.executor = MoreExecutors.listeningDecorator(new ThreadPoolExecutor(2, 2, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1024)));
         this.kitManager = new KitManager();
+        this.configManager = new ConfigManager();
         this.nbtEditor = new NBTEditor();
     }
 
@@ -54,6 +57,7 @@ public class PlayerKits extends JavaPlugin {
             this.database = new SQLiteDatabase();
         }
         this.database.connect();
+        this.configManager.load();
         this.kitManager.load();
 
         getCommand("xkits").setExecutor(new XKitsCommands());

@@ -24,10 +24,9 @@ public class MigratorManager {
     private final PlayerKits playerKits = PlayerKits.getInstance();
 
     public void migrateKitsFromPlayerKits2(Player player) {
-        //playerkits give Dios InsiderAnh
         File playerKitsDirectory = new File(playerKits.getServer().getWorldContainer(), "plugins/PlayerKits2/kits");
         if (!playerKitsDirectory.exists() || !playerKitsDirectory.isDirectory()) {
-            playerKits.getLogger().info("You don´t have data yml in this plugin.");
+            playerKits.getLogger().info("You don´t have kits yml in this plugin.");
             return;
         }
         for (File file : playerKitsDirectory.listFiles()) {
