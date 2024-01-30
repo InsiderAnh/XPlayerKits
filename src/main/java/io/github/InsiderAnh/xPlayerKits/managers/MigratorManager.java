@@ -54,51 +54,53 @@ public class MigratorManager {
         long startAt = System.currentTimeMillis();
         playerKits.getLogger().info("Starting migration from PlayerKits2.");
 
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://" + playerKits.getConfig().getString("migrate.mysql.host") + ":" + playerKits.getConfig().getInt("migrate.mysql.port") + "/" + playerKits.getConfig().getString("migrate.mysql.database"));
-        config.setUsername(playerKits.getConfig().getString("migrate.mysql.user"));
-        config.setPassword(playerKits.getConfig().getString("migrate.mysql.password"));
+        playerKits.getExecutor().execute(() -> {
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl("jdbc:mysql://" + playerKits.getConfig().getString("migrate.mysql.host") + ":" + playerKits.getConfig().getInt("migrate.mysql.port") + "/" + playerKits.getConfig().getString("migrate.mysql.database"));
+            config.setUsername(playerKits.getConfig().getString("migrate.mysql.user"));
+            config.setPassword(playerKits.getConfig().getString("migrate.mysql.password"));
 
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.addDataSourceProperty("autoReconnect", "true");
-        config.addDataSourceProperty("leakDetectionThreshold", "true");
-        config.addDataSourceProperty("verifyServerCertificate", "false");
-        config.addDataSourceProperty("useSSL", "false");
-        config.setConnectionTimeout(5000);
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            config.addDataSourceProperty("autoReconnect", "true");
+            config.addDataSourceProperty("leakDetectionThreshold", "true");
+            config.addDataSourceProperty("verifyServerCertificate", "false");
+            config.addDataSourceProperty("useSSL", "false");
+            config.setConnectionTimeout(5000);
 
-        HikariDataSource dataSource = new HikariDataSource(config);
+            HikariDataSource dataSource = new HikariDataSource(config);
 
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                "SELECT playerkits_players.UUID, playerkits_players.PLAYER_NAME, " +
-                    "playerkits_players_kits.NAME, " +
-                    "playerkits_players_kits.COOLDOWN, " +
-                    "playerkits_players_kits.ONE_TIME, " +
-                    "playerkits_players_kits.BOUGHT " +
-                    "FROM playerkits_players LEFT JOIN playerkits_players_kits " +
-                    "ON playerkits_players.UUID = playerkits_players_kits.UUID");
+            try (Connection connection = dataSource.getConnection()) {
+                PreparedStatement statement = connection.prepareStatement(
+                    "SELECT playerkits_players.UUID, playerkits_players.PLAYER_NAME, " +
+                        "playerkits_players_kits.NAME, " +
+                        "playerkits_players_kits.COOLDOWN, " +
+                        "playerkits_players_kits.ONE_TIME, " +
+                        "playerkits_players_kits.BOUGHT " +
+                        "FROM playerkits_players LEFT JOIN playerkits_players_kits " +
+                        "ON playerkits_players.UUID = playerkits_players_kits.UUID");
 
-            ResultSet result = statement.executeQuery();
+                ResultSet result = statement.executeQuery();
 
-            while (result.next()) {
-                String uuid = result.getString("UUID");
-                String playerName = result.getString("PLAYER_NAME");
-                String kitName = result.getString("NAME");
-                long countdown = result.getLong("COOLDOWN");
-                boolean oneTime = result.getBoolean("ONE_TIME");
-                boolean bought = result.getBoolean("BOUGHT");
+                while (result.next()) {
+                    String uuid = result.getString("UUID");
+                    String playerName = result.getString("PLAYER_NAME");
+                    String kitName = result.getString("NAME");
+                    long countdown = result.getLong("COOLDOWN");
+                    boolean oneTime = result.getBoolean("ONE_TIME");
+                    boolean bought = result.getBoolean("BOUGHT");
 
-                PlayerKitData playerKitData = playerKits.getDatabase().getSyncPlayerData(UUID.fromString(uuid), playerName);
-                playerKitData.getKitsData().put(kitName, new KitData(kitName, countdown, oneTime, bought));
-                playerKits.getDatabase().updatePlayerData(playerKitData.getUuid());
+                    PlayerKitData playerKitData = playerKits.getDatabase().getSyncPlayerData(UUID.fromString(uuid), playerName);
+                    playerKitData.getKitsData().put(kitName, new KitData(kitName, countdown, oneTime, bought));
+                    playerKits.getDatabase().updatePlayerData(playerKitData.getUuid());
+                }
+
+                playerKits.getLogger().info("Successfully migrated all player files in " + (System.currentTimeMillis() - startAt) + "ms.");
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-            playerKits.getLogger().info("Successfully migrated all player files in " + (System.currentTimeMillis() - startAt) + "ms.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public void migrateFromPlayerKits2MoreOptimized() {

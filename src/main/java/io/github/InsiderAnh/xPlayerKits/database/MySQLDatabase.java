@@ -45,8 +45,14 @@ public class MySQLDatabase extends Database {
                 try (Statement statement = connection.createStatement()) {
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS player_kits (" +
                         "uuid VARCHAR(36) PRIMARY KEY," +
+                        "name VARCHAR(36)," +
                         "data TEXT" +
                         ")");
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try (Statement statement = connection.createStatement()) {
+                    statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN IF NOT EXISTS name VARCHAR(36);");
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -120,7 +126,7 @@ public class MySQLDatabase extends Database {
                 } else {
                     firstJoin = true;
                     playerKitData = new PlayerKitData(uuid, name);
-                    insertData(connection, uuid.toString(), XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
+                    insertData(connection, uuid.toString(), name, XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
                 }
                 cachedPlayerKits.put(uuid, playerKitData);
                 completableFuture.complete(firstJoin);
@@ -141,7 +147,7 @@ public class MySQLDatabase extends Database {
             playerKitData = XPKUtils.getGson().fromJson(data, PlayerKitData.class);
         } else {
             playerKitData = new PlayerKitData(uuid, name);
-            insertData(connection, uuid.toString(), XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
+            insertData(connection, uuid.toString(), name, XPKUtils.getGson().toJson(playerKitData, PlayerKitData.class));
         }
         cachedPlayerKits.put(uuid, playerKitData);
         return playerKitData;
@@ -165,12 +171,13 @@ public class MySQLDatabase extends Database {
         return dataSource.getConnection();
     }
 
-    private void insertData(Connection connection, String uuid, String data) {
+    private void insertData(Connection connection, String uuid, String name, String data) {
         try {
-            String insertSQL = "INSERT INTO player_kits (uuid, data) VALUES (?, ?)";
+            String insertSQL = "INSERT INTO player_kits (uuid, name, data) VALUES (?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
                 preparedStatement.setString(1, uuid);
-                preparedStatement.setString(2, data);
+                preparedStatement.setString(2, name);
+                preparedStatement.setString(3, data);
                 preparedStatement.executeUpdate();
                 close(connection, preparedStatement, null);
             }
