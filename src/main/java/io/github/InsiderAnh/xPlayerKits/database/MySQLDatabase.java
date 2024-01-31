@@ -173,7 +173,7 @@ public class MySQLDatabase extends Database {
 
     private void insertData(Connection connection, String uuid, String name, String data) {
         try {
-            String insertSQL = "INSERT INTO player_kits (uuid, name, data) VALUES (?, ?)";
+            String insertSQL = "INSERT INTO player_kits (uuid, name, data) VALUES (?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
                 preparedStatement.setString(1, uuid);
                 preparedStatement.setString(2, name);

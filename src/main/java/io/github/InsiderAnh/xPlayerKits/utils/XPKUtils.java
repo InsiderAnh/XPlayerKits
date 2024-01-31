@@ -70,7 +70,7 @@ public class XPKUtils {
             return;
         }
 
-        if (kit.isCheckInventorySpace() && !kit.isInventorySpace(player)) {
+        if (kit.isCheckInventorySpace() && kit.isNoInventorySpace(player)) {
             XPKUtils.executeActions(player, kit.getActionsOnDeny());
             player.sendMessage(playerKits.getLang().getString("messages.noInventorySpace"));
             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);

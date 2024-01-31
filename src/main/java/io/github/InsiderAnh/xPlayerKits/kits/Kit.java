@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Setter
@@ -109,14 +108,15 @@ public class Kit {
         config.save();
     }
 
-    public boolean isInventorySpace(Player player) {
+    public boolean isNoInventorySpace(Player player) {
         AtomicBoolean occupied = new AtomicBoolean(false);
         Inventory playerInv = player.getInventory();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
             ItemStack toItem = playerInv.getItem(i);
-            if (toItem != null && !toItem.getType().equals(Material.AIR)) {
+            if (toItem != null) {
+                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR")) continue;
                 occupied.set(true);
             }
         }
@@ -124,7 +124,8 @@ public class Kit {
             ItemStack itemStack = armor[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
             ItemStack toItem = player.getInventory().getArmorContents()[i];
-            if (toItem != null && !toItem.getType().equals(Material.AIR)) {
+            if (toItem != null) {
+                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR")) continue;
                 occupied.set(true);
             }
         }

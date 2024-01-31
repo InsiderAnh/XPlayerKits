@@ -51,7 +51,7 @@ public class SQLiteDatabase extends Database {
                     exception.printStackTrace();
                 }
                 try (Statement statement = connection.createStatement()) {
-                    statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN IF NOT EXISTS name VARCHAR(36);");
+                    statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN name VARCHAR(36);");
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -172,7 +172,7 @@ public class SQLiteDatabase extends Database {
 
     private void insertData(Connection connection, String uuid, String name, String data) {
         try {
-            String insertSQL = "INSERT INTO player_kits (uuid, name, data) VALUES (?, ?)";
+            String insertSQL = "INSERT INTO player_kits (uuid, name, data) VALUES (?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
                 preparedStatement.setString(1, uuid);
                 preparedStatement.setString(2, name);
