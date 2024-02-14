@@ -47,11 +47,25 @@ public class SQLiteDatabase extends Database {
                         "name VARCHAR(36)," +
                         "data TEXT" +
                         ")");
+                    close(null, statement, null);
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 try (Statement statement = connection.createStatement()) {
-                    statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN name VARCHAR(36);");
+                    ResultSet resultSet = statement.executeQuery("PRAGMA table_info(player_kits)");
+                    boolean nameColumnExists = false;
+                    while (resultSet.next()) {
+                        String columnName = resultSet.getString("name");
+                        if ("name".equals(columnName)) {
+                            nameColumnExists = true;
+                            break;
+                        }
+                    }
+                    resultSet.close();
+                    if (!nameColumnExists) {
+                        statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN name VARCHAR(36);");
+                    }
+                    close(null, statement, resultSet);
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -222,7 +236,7 @@ public class SQLiteDatabase extends Database {
         }
     }
 
-    public void close(@Nullable Connection connection, @Nullable PreparedStatement preparedStatement, @Nullable ResultSet resultSet) {
+    public void close(@Nullable Connection connection, @Nullable Statement preparedStatement, @Nullable ResultSet resultSet) {
         try {
             if (connection != null) {
                 connection.close();

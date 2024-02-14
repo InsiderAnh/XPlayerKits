@@ -77,4 +77,12 @@ public class PlayerKits extends JavaPlugin {
         database.close();
     }
 
+    public void reload() {
+        this.reloadConfig();
+        this.lang.reload();
+        this.inventories.reload();
+        this.configManager.load();
+        this.kitManager.load();
+    }
+
 }

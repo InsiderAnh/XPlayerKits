@@ -137,10 +137,10 @@ public class XPKUtils {
             String actionData = action.split(":")[1];
             switch (actionType) {
                 case "console":
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), actionData.replaceFirst("/", ""));
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), actionData.replaceAll("<player>", player.getName()).replaceFirst("/", ""));
                     break;
                 case "command":
-                    player.chat(actionData);
+                    player.chat(actionData.replaceAll("<player>", player.getName()));
                     break;
                 case "sound":
                     String[] subData = actionData.split(";");

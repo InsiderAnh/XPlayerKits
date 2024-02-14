@@ -10,12 +10,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,25 +31,47 @@ public class MigratorManager {
             playerKits.getLogger().info("You don´t have kits yml in this plugin.");
             return;
         }
+        ArrayList<File> kitFiles = new ArrayList<>();
         for (File file : playerKitsDirectory.listFiles()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            String name = file.getName().replace(".yml", "");
-            Kit kit = new Kit(name);
-            player.getInventory().clear();
-            player.getInventory().setArmorContents(null);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "playerkits give " + name + " " + player.getName());
-            kit.setInventory(player.getInventory().getContents());
-            kit.setArmor(player.getInventory().getArmorContents());
-            kit.setOneTime(config.getBoolean("one_time"));
-            kit.setAutoArmor(config.getBoolean("auto_armor"));
-            kit.setCountdown(config.getInt("cooldown"));
-            if (config.getBoolean("permission_required")) {
-                kit.setPermission("playerkits.kit." + name);
-            }
-            kit.setPreview(true);
-            kit.save();
-            playerKits.getKitManager().addKit(kit);
+            kitFiles.add(file);
         }
+        if (!kitFiles.isEmpty()) {
+            migrateKitFromPlayerKits2(player, kitFiles);
+        }
+    }
+
+    public void migrateKitFromPlayerKits2(Player player, ArrayList<File> kitFiles) {
+        File file = kitFiles.remove(0);
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+                String name = file.getName().replace(".yml", "");
+                Kit kit = new Kit(name);
+                player.getInventory().clear();
+                player.getInventory().setArmorContents(null);
+                Bukkit.getScheduler().runTaskLater(playerKits, () -> {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "playerkits give " + name + " " + player.getName());
+                }, 2);
+                Bukkit.getScheduler().runTaskLater(playerKits, () -> {
+                    kit.setInventory(player.getInventory().getContents());
+                    kit.setArmor(player.getInventory().getArmorContents());
+                    kit.setOneTime(config.getBoolean("one_time"));
+                    kit.setAutoArmor(config.getBoolean("auto_armor"));
+                    kit.setCountdown(config.getInt("cooldown"));
+                    if (config.getBoolean("permission_required")) {
+                        kit.setPermission("playerkits.kit." + name);
+                    }
+                    kit.setPreview(true);
+                    kit.save();
+                    playerKits.getKitManager().addKit(kit);
+                    player.sendMessage("§aMigrated correctly §e" + kit.getName() + "§a.");
+                    if (!kitFiles.isEmpty()) {
+                        migrateKitFromPlayerKits2(player, kitFiles);
+                    }
+                }, 4);
+            }
+        }.runTaskLater(playerKits, 5);
     }
 
     public void migrateFromPlayerKits2MySQL() {

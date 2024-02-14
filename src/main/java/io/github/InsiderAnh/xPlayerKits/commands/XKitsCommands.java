@@ -236,6 +236,10 @@ public class XKitsCommands implements CommandExecutor {
                         return null;
                     });
                     break;
+                case "reload":
+                    playerKits.reload();
+                    sender.sendMessage("§aPlugin reloaded correctly.");
+                    break;
                 default:
                     sendHelp(sender);
                     break;
@@ -387,6 +391,10 @@ public class XKitsCommands implements CommandExecutor {
                             sendHelp(sender);
                             break;
                     }
+                    break;
+                case "reload":
+                    playerKits.reload();
+                    sender.sendMessage("§aPlugin reloaded correctly.");
                     break;
                 default:
                     sendHelp(sender);

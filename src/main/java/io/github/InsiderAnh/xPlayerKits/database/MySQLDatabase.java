@@ -48,11 +48,13 @@ public class MySQLDatabase extends Database {
                         "name VARCHAR(36)," +
                         "data TEXT" +
                         ")");
+                    close(null, statement, null);
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 try (Statement statement = connection.createStatement()) {
                     statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN IF NOT EXISTS name VARCHAR(36);");
+                    close(null, statement, null);
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
@@ -223,7 +225,7 @@ public class MySQLDatabase extends Database {
         }
     }
 
-    public void close(@Nullable Connection connection, @Nullable PreparedStatement preparedStatement, @Nullable ResultSet resultSet) {
+    public void close(@Nullable Connection connection, @Nullable Statement preparedStatement, @Nullable ResultSet resultSet) {
         try {
             if (connection != null) {
                 connection.close();

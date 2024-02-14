@@ -16,6 +16,8 @@ public class KitManager {
     private int lastPage = 1;
 
     public void load() {
+        this.kits.clear();
+
         File kitsFolder = new File(playerKits.getDataFolder(), "kits");
         if (!kitsFolder.exists()) {
             kitsFolder.mkdirs();
