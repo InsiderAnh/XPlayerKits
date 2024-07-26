@@ -42,7 +42,7 @@ public class MigratorManager {
 
     public void migrateKitFromPlayerKits2(Player player, ArrayList<File> kitFiles) {
         File file = kitFiles.remove(0);
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);

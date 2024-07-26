@@ -57,6 +57,14 @@
                         <configuration>
                             <relocations>
                                 <relocation>
+                                    <pattern>org.bson</pattern>
+                                    <shadedPattern>io.github.InsiderAnh.xPlayerKits.libs.bson</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                                    <shadedPattern>io.github.InsiderAnh.xPlayerKits.libs.nbtapi</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>com.zaxxer.hikari</pattern>
                                     <shadedPattern>io.github.InsiderAnh.xPlayerKits.libs.hikaricp</shadedPattern>
                                 </relocation>
@@ -99,9 +107,20 @@
             <url>https://repo.codemc.io/repository/maven-public/</url>
             <layout>default</layout>
         </repository>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api</artifactId>
+            <version>2.13.1</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -123,25 +142,25 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
+            <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.12</version>
+            <version>3.12.14</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
+            <version>5.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>net.wesjd</groupId>
             <artifactId>anvilgui</artifactId>
-            <version>1.9.2-SNAPSHOT</version>
+            <version>1.10.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

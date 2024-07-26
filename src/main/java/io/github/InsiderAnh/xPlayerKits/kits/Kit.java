@@ -32,7 +32,8 @@ public class Kit {
     private int slot, page;
     private double price;
     private String permission;
-    private ItemStack[] armor, inventory;
+    private ItemStack[] armor = new ItemStack[10], inventory = new ItemStack[50];
+    private ItemStack offhand;
 
     public Kit(String name) {
         this.name = name;
@@ -45,8 +46,9 @@ public class Kit {
         this.page = 1;
         this.price = 0;
         this.permission = "none";
-        this.armor = new ItemStack[]{};
-        this.inventory = new ItemStack[]{};
+        this.armor = new ItemStack[10];
+        this.inventory = new ItemStack[50];
+        this.offhand = null;
         this.requirements.add("%vault_eco_balance% >= 0");
         this.actionsOnClaim.add("console:say Test allow commands.");
         this.actionsOnClaim.add("command:/test command");
@@ -76,17 +78,42 @@ public class Kit {
         this.requirements.addAll(config.getList("requirements"));
         this.actionsOnClaim.addAll(config.getList("actionsOnClaim"));
         this.actionsOnDeny.addAll(config.getList("actionsOnDeny"));
-        this.armor = InventorySerializable.itemStackArrayFromBase64(config.getString("armor"));
-        this.inventory = InventorySerializable.itemStackArrayFromBase64(config.getString("inventory"));
-        if (config.isSet("icons")) {
-            for (String key : config.getConfig().getConfigurationSection("icons").getKeys(false)) {
-                this.icons.put(key, InventorySerializable.itemStackFromBase64(config.getConfig().getString("icons." + key)));
+        if (config.isSet("armor")) {
+            this.armor = InventorySerializable.itemStackArrayFromBase64(config.getString("armor"));
+            this.inventory = InventorySerializable.itemStackArrayFromBase64(config.getString("inventory"));
+            if (config.isSet("icons")) {
+                for (String key : config.getConfig().getConfigurationSection("icons").getKeys(false)) {
+                    this.icons.put(key, InventorySerializable.itemStackFromBase64(config.getConfig().getString("icons." + key)));
+                }
             }
+            save();
+        }
+        if (config.isSet("armorSet")) {
+            for (String key : config.getConfig().getConfigurationSection("armorSet").getKeys(false)) {
+                this.armor[Integer.parseInt(key)] = config.getConfig().getItemStack("armorSet." + key);
+            }
+        }
+        if (config.isSet("inventorySet")) {
+            for (String key : config.getConfig().getConfigurationSection("inventorySet").getKeys(false)) {
+                this.inventory[Integer.parseInt(key)] = config.getConfig().getItemStack("inventorySet." + key);
+            }
+        }
+        if (config.isSet("iconSet")) {
+            for (String key : config.getConfig().getConfigurationSection("iconSet").getKeys(false)) {
+                this.icons.put(key, config.getConfig().getItemStack("iconSet." + key));
+            }
+        }
+        if (config.isSet("offhand")) {
+            this.offhand = config.getConfig().getItemStack("offhand");
         }
     }
 
     public void save() {
         InsiderConfig config = new InsiderConfig(PlayerKits.getInstance(), "kits/" + name, false, false);
+        config.set("armorSet", null);
+        config.set("inventorySet", null);
+        config.set("iconSet", null);
+        config.set("offhand", null);
         config.set("name", name);
         config.set("countdown", countdown);
         config.set("oneTime", oneTime);
@@ -100,11 +127,25 @@ public class Kit {
         config.set("requirements", requirements);
         config.set("actionsOnClaim", actionsOnClaim);
         config.set("actionsOnDeny", actionsOnDeny);
-        config.set("armor", InventorySerializable.itemStackArrayToBase64(armor));
-        config.set("inventory", InventorySerializable.itemStackArrayToBase64(inventory));
-        for (String key : icons.keySet()) {
-            config.set("icons." + key, InventorySerializable.itemStackToBase64(icons.get(key)));
+        if (offhand != null) {
+            config.set("offhand", offhand);
         }
+        for (int i = 0; i < armor.length; i++) {
+            ItemStack itemStack = armor[i];
+            if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
+            config.set("armorSet." + i, itemStack);
+        }
+        for (int i = 0; i < inventory.length; i++) {
+            ItemStack itemStack = inventory[i];
+            if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
+            config.set("inventorySet." + i, itemStack);
+        }
+        for (String key : icons.keySet()) {
+            config.set("iconSet." + key, icons.get(key));
+        }
+        config.set("armor", null);
+        config.set("inventory", null);
+        config.set("icons", null);
         config.save();
     }
 
@@ -116,7 +157,8 @@ public class Kit {
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
             ItemStack toItem = playerInv.getItem(i);
             if (toItem != null) {
-                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR")) continue;
+                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR"))
+                    continue;
                 occupied.set(true);
             }
         }
@@ -125,7 +167,8 @@ public class Kit {
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
             ItemStack toItem = player.getInventory().getArmorContents()[i];
             if (toItem != null) {
-                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR")) continue;
+                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR"))
+                    continue;
                 occupied.set(true);
             }
         }

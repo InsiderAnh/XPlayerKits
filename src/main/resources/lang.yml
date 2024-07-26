@@ -31,6 +31,25 @@ messages:
   pleaseWait: "&8» &cPlease wait a moment before running this command again."
   deletedKit: "&8» &aThe kit has been successfully deleted."
 menus:
+  kitContent:
+    title: "Kit content"
+    helmet:
+      nameItem: "&b⮟ &fHelmet &b⮟"
+    chestplate:
+      nameItem: "&b⮟ &fChestplate &b⮟"
+    leggings:
+      nameItem: "&b⮟ &fLeggings &b⮟"
+    boots:
+      nameItem: "&b⮟ &fBoots &b⮟"
+    offhand:
+      nameItem: "&b⮟ &fOffhand &b⮟"
+    save:
+      nameItem: "&aSave content"
+      loreItem: |-
+        &7Click to save the content
+        &7of this kit.
+        &7
+        &eClick to interact!
   kitPreview:
     title: "Kit preview"
   kitsMenu:

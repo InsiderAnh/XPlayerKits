@@ -1,5 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.menus;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
@@ -8,7 +9,6 @@ import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
-import io.github.InsiderAnh.xPlayerKits.utils.NBTEditor;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -47,9 +47,9 @@ public class KitsMenu extends AInventory {
     protected void onClick(InventoryClickEvent event, ItemStack currentItem, ClickType click, Consumer<Boolean> canceled) {
         canceled.accept(true);
         Player player = getPlayer();
-        NBTEditor nbtItem = playerKits.getNbtEditor();
-        if (nbtItem.hasTag(currentItem, "action")) {
-            String action = nbtItem.getString(currentItem, "action");
+        NBTItem nbtItem = new NBTItem(currentItem);
+        if (nbtItem.hasTag("action")) {
+            String action = nbtItem.getString("action");
             if (action.equals("close")) {
                 close();
             }
@@ -62,8 +62,8 @@ public class KitsMenu extends AInventory {
                 onUpdate(getInventory());
             }
         }
-        if (nbtItem.hasTag(currentItem, "kit")) {
-            Kit kit = playerKits.getKitManager().getKits().get(nbtItem.getString(currentItem, "kit"));
+        if (nbtItem.hasTag("kit")) {
+            Kit kit = playerKits.getKitManager().getKits().get(nbtItem.getString("kit"));
             if (kit == null) return;
 
             if (click.isRightClick() && kit.isPreview()) {

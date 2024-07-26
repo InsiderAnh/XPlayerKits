@@ -1,11 +1,12 @@
 package io.github.InsiderAnh.xPlayerKits.menus;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
+import io.github.InsiderAnh.xPlayerKits.enums.ServerVersion;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
-import io.github.InsiderAnh.xPlayerKits.utils.NBTEditor;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.xseries.XMaterial;
 import io.github.InsiderAnh.xPlayerKits.utils.xseries.XSound;
@@ -35,9 +36,9 @@ public class KitEditorMenu extends AInventory {
     protected void onClick(InventoryClickEvent event, ItemStack currentItem, ClickType click, Consumer<Boolean> canceled) {
         canceled.accept(true);
         Player player = getPlayer();
-        NBTEditor nbtItem = playerKits.getNbtEditor();
-        if (nbtItem.hasTag(currentItem, "icon")) {
-            String icon = nbtItem.getString(currentItem, "icon");
+        NBTItem nbtItem = new NBTItem(currentItem);
+        if (nbtItem.hasTag("icon")) {
+            String icon = nbtItem.getString("icon");
             ItemStack itemStack = player.getItemInHand();
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
                 player.sendMessage(playerKits.getLang().getString("messages.noItemHand"));
@@ -50,173 +51,170 @@ public class KitEditorMenu extends AInventory {
             onUpdate(getInventory());
             return;
         }
-        if (nbtItem.hasTag(currentItem, "action")) {
-            String action = nbtItem.getString(currentItem, "action");
-            if (action.equals("save")) {
-                kit.save();
-                player.sendMessage(playerKits.getLang().getString("messages.savedKit"));
-                player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.parseSound(), 1.0f, 1.0f);
-                close();
-                return;
-            }
-            if (action.equals("armor")) {
-                kit.setArmor(player.getInventory().getArmorContents());
-                player.sendMessage(playerKits.getLang().getString("messages.setArmor"));
-                player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                return;
-            }
-            if (action.equals("inv")) {
-                kit.setInventory(player.getInventory().getContents());
-                player.sendMessage(playerKits.getLang().getString("messages.setInventory"));
-                player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                return;
-            }
-            if (action.equals("oneTime")) {
-                kit.setOneTime(!kit.isOneTime());
-                player.sendMessage(playerKits.getLang().getString("messages.setOneTime").replace("<state>", XPKUtils.getStatus(kit.isOneTime())));
-                player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                onUpdate(getInventory());
-                return;
-            }
-            if (action.equals("autoArmor")) {
-                kit.setAutoArmor(!kit.isAutoArmor());
-                player.sendMessage(playerKits.getLang().getString("messages.setAutoArmor").replace("<state>", XPKUtils.getStatus(kit.isAutoArmor())));
-                player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                onUpdate(getInventory());
-                return;
-            }
-            if (action.equals("name")) {
-                new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        if (type.getText().length() > 36) {
-                            player.sendMessage(playerKits.getLang().getString("messages.longName"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cLong name"));
-                        }
-                        playerKits.getKitManager().getKits().remove(kit.getName());
-                        kit.setName(type.getText());
-                        playerKits.getKitManager().addKit(kit);
-                        player.sendMessage(playerKits.getLang().getString("messages.setName").replace("<name>", kit.getName()));
-                        player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a name")
-                    .title("Write a kit name")
-                    .open(player);
-                return;
-            }
-            if (action.equals("countdown")) {
-                new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        long seconds;
-                        try {
-                            seconds = Long.parseLong(type.getText());
-                        } catch (Exception exception) {
-                            player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
-                        }
-                        kit.setCountdown(seconds);
-                        player.sendMessage(playerKits.getLang().getString("messages.setCountdown").replace("<countdown>", String.valueOf(kit.getCountdown())));
-                        player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a countdown")
-                    .title("Write a kit countdown")
-                    .open(player);
-                return;
-            }
-            if (action.equals("slot")) {
-                new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        int slotI;
-                        try {
-                            slotI = Integer.parseInt(type.getText());
-                        } catch (Exception exception) {
-                            player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
-                        }
-                        kit.setSlot(slotI);
-                        player.sendMessage(playerKits.getLang().getString("messages.setSlot").replace("<slot>", String.valueOf(kit.getSlot())));
-                        player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a slot")
-                    .title("Write a kit slot")
-                    .open(player);
-                return;
-            }
-            if (action.equals("page")) {
-                new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        int page;
-                        try {
-                            page = Integer.parseInt(type.getText());
-                        } catch (Exception exception) {
-                            player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
-                        }
-                        kit.setPage(page);
-                        player.sendMessage(playerKits.getLang().getString("messages.setPage").replace("<page>", String.valueOf(kit.getPage())));
-                        player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a page")
-                    .title("Write a kit page")
-                    .open(player);
-                return;
-            }
-            if (action.equals("price")) {
-                new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        double amount;
-                        try {
-                            amount = Double.parseDouble(type.getText());
-                        } catch (Exception exception) {
-                            player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
-                        }
-                        kit.setPrice(amount);
-                        player.sendMessage(playerKits.getLang().getString("messages.setPrice").replace("<price>", String.valueOf(kit.getPrice())));
-                        player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a price")
-                    .title("Write a kit price")
-                    .open(player);
-                return;
-            }
-            if (action.equals("permission")) {
-                new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        if (type.getText().contains(" ")) {
-                            player.sendMessage(playerKits.getLang().getString("messages.permissionNoSpace"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cRemove spaces"));
-                        }
-                        kit.setName(type.getText());
-                        player.sendMessage(playerKits.getLang().getString("messages.setName").replace("<name>", kit.getName()));
-                        player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a permission")
-                    .title("Write a kit permission")
-                    .open(player);
+        if (nbtItem.hasTag("action")) {
+            String action = nbtItem.getString("action");
+            switch (action) {
+                case "save":
+                    kit.save();
+                    player.sendMessage(playerKits.getLang().getString("messages.savedKit"));
+                    player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.parseSound(), 1.0f, 1.0f);
+                    close();
+                    return;
+                case "armor":
+                    new KitContentMenu(player, kit).open();
+                    /*kit.setArmor(getPlayerArmor());
+                    player.sendMessage(playerKits.getLang().getString("messages.setArmor"));
+                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);*/
+                    return;
+                case "inv":
+                    new KitContentMenu(player, kit).open();
+                    /*kit.setInventory(getPlayerInventory());
+                    if (ServerVersion.v1_9.serverVersionGreaterEqualThan(XPKUtils.SERVER_VERSION)) {
+                        kit.setOffhand(getOffhand());
+                    }
+                    player.sendMessage(playerKits.getLang().getString("messages.setInventory"));
+                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);*/
+                    return;
+                case "oneTime":
+                    kit.setOneTime(!kit.isOneTime());
+                    player.sendMessage(playerKits.getLang().getString("messages.setOneTime").replace("<state>", XPKUtils.getStatus(kit.isOneTime())));
+                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                    onUpdate(getInventory());
+                    return;
+                case "autoArmor":
+                    kit.setAutoArmor(!kit.isAutoArmor());
+                    player.sendMessage(playerKits.getLang().getString("messages.setAutoArmor").replace("<state>", XPKUtils.getStatus(kit.isAutoArmor())));
+                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                    onUpdate(getInventory());
+                    return;
+                case "name":
+                    new AnvilGUI.Builder()
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            if (type.getText().length() > 36) {
+                                player.sendMessage(playerKits.getLang().getString("messages.longName"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cLong name"));
+                            }
+                            playerKits.getKitManager().getKits().remove(kit.getName());
+                            kit.setName(type.getText());
+                            playerKits.getKitManager().addKit(kit);
+                            player.sendMessage(playerKits.getLang().getString("messages.setName").replace("<name>", kit.getName()));
+                            player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a name")
+                        .title("Write a kit name")
+                        .open(player);
+                    return;
+                case "countdown":
+                    new AnvilGUI.Builder()
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            long seconds;
+                            try {
+                                seconds = Long.parseLong(type.getText());
+                            } catch (Exception exception) {
+                                player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
+                            }
+                            kit.setCountdown(seconds);
+                            player.sendMessage(playerKits.getLang().getString("messages.setCountdown").replace("<countdown>", String.valueOf(kit.getCountdown())));
+                            player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a countdown")
+                        .title("Write a kit countdown")
+                        .open(player);
+                    return;
+                case "slot":
+                    new AnvilGUI.Builder()
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            int slotI;
+                            try {
+                                slotI = Integer.parseInt(type.getText());
+                            } catch (Exception exception) {
+                                player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
+                            }
+                            kit.setSlot(slotI);
+                            player.sendMessage(playerKits.getLang().getString("messages.setSlot").replace("<slot>", String.valueOf(kit.getSlot())));
+                            player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a slot")
+                        .title("Write a kit slot")
+                        .open(player);
+                    return;
+                case "page":
+                    new AnvilGUI.Builder()
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            int page;
+                            try {
+                                page = Integer.parseInt(type.getText());
+                            } catch (Exception exception) {
+                                player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
+                            }
+                            kit.setPage(page);
+                            player.sendMessage(playerKits.getLang().getString("messages.setPage").replace("<page>", String.valueOf(kit.getPage())));
+                            player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a page")
+                        .title("Write a kit page")
+                        .open(player);
+                    return;
+                case "price":
+                    new AnvilGUI.Builder()
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            double amount;
+                            try {
+                                amount = Double.parseDouble(type.getText());
+                            } catch (Exception exception) {
+                                player.sendMessage(playerKits.getLang().getString("messages.noNumber"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cWrite a valid number"));
+                            }
+                            kit.setPrice(amount);
+                            player.sendMessage(playerKits.getLang().getString("messages.setPrice").replace("<price>", String.valueOf(kit.getPrice())));
+                            player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a price")
+                        .title("Write a kit price")
+                        .open(player);
+                    return;
+                case "permission":
+                    new AnvilGUI.Builder()
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            if (type.getText().contains(" ")) {
+                                player.sendMessage(playerKits.getLang().getString("messages.permissionNoSpace"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cRemove spaces"));
+                            }
+                            kit.setName(type.getText());
+                            player.sendMessage(playerKits.getLang().getString("messages.setName").replace("<name>", kit.getName()));
+                            player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a permission")
+                        .title("Write a kit permission")
+                        .open(player);
+                    break;
             }
         }
     }
@@ -260,6 +258,32 @@ public class KitEditorMenu extends AInventory {
             inventory.setItem(37 + indexIcons.getAndIncrement(), XPKUtils.applySimpleTag(icon, "icon", key));
         }
         inventory.setItem(53, XPKUtils.applySimpleTag(save, "action", "save"));
+    }
+
+    public ItemStack[] getPlayerInventory() {
+        ItemStack[] inv = new ItemStack[36];
+        for (int i = 0; i < 36; i++) {
+            ItemStack item = getPlayer().getInventory().getContents()[i];
+            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+            inv[i] = item;
+        }
+        return inv;
+    }
+
+    public ItemStack[] getPlayerArmor() {
+        ItemStack[] inv = new ItemStack[4];
+        for (int i = 0; i < 4; i++) {
+            ItemStack item = getPlayer().getInventory().getArmorContents()[i];
+            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+            inv[i] = item;
+        }
+        return inv;
+    }
+
+    public ItemStack getOffhand() {
+        ItemStack item = getPlayer().getInventory().getContents()[40];
+        if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) return null;
+        return item;
     }
 
 }

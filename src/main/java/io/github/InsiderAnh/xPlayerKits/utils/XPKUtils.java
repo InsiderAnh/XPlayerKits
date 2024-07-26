@@ -1,6 +1,7 @@
 package io.github.InsiderAnh.xPlayerKits.utils;
 
 import com.google.gson.Gson;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
@@ -36,7 +37,14 @@ public class XPKUtils {
     static {
         gson = new Gson();
         writerSettings = JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
-        SERVER_VERSION = ServerVersion.valueOf(Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.", ""));
+
+        String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
+        String detectedVersion = cbPackage.substring(cbPackage.lastIndexOf('.') + 1);
+        if (!detectedVersion.startsWith("v")) {
+            detectedVersion = Bukkit.getServer().getBukkitVersion();
+        }
+
+        SERVER_VERSION = ServerVersion.get(detectedVersion);
     }
 
     public void claimKit(Player player, Kit kit, PlayerKitData playerKitData) {
@@ -93,7 +101,7 @@ public class XPKUtils {
     }
 
     public String translateAlternateColorCodes(char altColorChar, String message) {
-        if (ServerVersion.v1_16_R1.serverVersionGreaterEqualThan(SERVER_VERSION)) {
+        if (SERVER_VERSION.serverVersionGreaterEqualThan(ServerVersion.v1_16)) {
             Matcher matcher = pattern.matcher(message);
             StringBuffer stringBuffer = new StringBuffer();
             while (matcher.find()) {
@@ -111,7 +119,10 @@ public class XPKUtils {
     }
 
     public ItemStack applySimpleTag(ItemStack item, String key, String value) {
-        return PlayerKits.getInstance().getNbtEditor().setTag(item, key, value);
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setString(key, value);
+        nbtItem.mergeNBT(item);
+        return item;
     }
 
     public boolean isHelmet(String material) {

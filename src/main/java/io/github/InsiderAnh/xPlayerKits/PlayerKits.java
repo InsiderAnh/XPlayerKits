@@ -12,7 +12,6 @@ import io.github.InsiderAnh.xPlayerKits.managers.ConfigManager;
 import io.github.InsiderAnh.xPlayerKits.managers.KitManager;
 import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
 import io.github.InsiderAnh.xPlayerKits.superclass.Database;
-import io.github.InsiderAnh.xPlayerKits.utils.NBTEditor;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,7 +27,6 @@ public class PlayerKits extends JavaPlugin {
     private final ListeningExecutorService executor;
     private final KitManager kitManager;
     private final ConfigManager configManager;
-    private final NBTEditor nbtEditor;
     private InsiderConfig lang, inventories;
     private Database database;
 
@@ -37,7 +35,6 @@ public class PlayerKits extends JavaPlugin {
         this.executor = MoreExecutors.listeningDecorator(new ThreadPoolExecutor(2, 2, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1024)));
         this.kitManager = new KitManager();
         this.configManager = new ConfigManager();
-        this.nbtEditor = new NBTEditor();
     }
 
     @Override
