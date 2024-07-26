@@ -56,10 +56,11 @@ public class KitContentMenu extends AInventory {
                     if (offhand != null && !offhand.getType().equals(XMaterial.AIR.parseMaterial())) {
                         kit.setOffhand(offhand);
                     }
-                    player.sendMessage(plugin.getLang().getString("messages.savedInventory"));
-                    player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.parseSound(), 1.0f, 1.0f);
-                    new KitEditorMenu(getPlayer(), kit).open();
                 }
+
+                player.sendMessage(plugin.getLang().getString("messages.savedInventory"));
+                player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.parseSound(), 1.0f, 1.0f);
+                new KitEditorMenu(getPlayer(), kit).open();
             }
             canceled.accept(true);
         }
@@ -67,6 +68,22 @@ public class KitContentMenu extends AInventory {
 
     @Override
     protected void onUpdate(Inventory inventory) {
+        for (int i = 0; i < 36; i++) {
+            ItemStack item = kit.getInventory()[i];
+            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+            inventory.setItem(i, item);
+        }
+        for (int i = 0; i < 4; i++) {
+            ItemStack item = kit.getArmor()[i];
+            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+            inventory.setItem(48 - i, item);
+        }
+        if (XPKUtils.SERVER_VERSION.serverVersionGreaterEqualThan(ServerVersion.v1_9)) {
+            ItemStack off = kit.getOffhand();
+            if (off != null && !off.getType().equals(XMaterial.AIR.parseMaterial())) {
+                inventory.setItem(50, off);
+            }
+        }
         ItemStack helmet = new ItemUtils(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).displayName(plugin.getLang().getString("menus.kitContent.helmet.nameItem")).build();
         ItemStack chestplate = new ItemUtils(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).displayName(plugin.getLang().getString("menus.kitContent.chestplate.nameItem")).build();
         ItemStack leggings = new ItemUtils(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).displayName(plugin.getLang().getString("menus.kitContent.leggings.nameItem")).build();
