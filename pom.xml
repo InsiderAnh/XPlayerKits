@@ -57,6 +57,10 @@
                         <configuration>
                             <relocations>
                                 <relocation>
+                                    <pattern>com.mongodb</pattern>
+                                    <shadedPattern>io.github.InsiderAnh.xPlayerKits.libs.mongodb</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.bson</pattern>
                                     <shadedPattern>io.github.InsiderAnh.xPlayerKits.libs.bson</shadedPattern>
                                 </relocation>

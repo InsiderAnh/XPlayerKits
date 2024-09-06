@@ -2,7 +2,6 @@ package io.github.InsiderAnh.xPlayerKits.menus;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
-import io.github.InsiderAnh.xPlayerKits.enums.ServerVersion;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
