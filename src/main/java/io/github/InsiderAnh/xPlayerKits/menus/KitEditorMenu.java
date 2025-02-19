@@ -61,18 +61,9 @@ public class KitEditorMenu extends AInventory {
                     return;
                 case "armor":
                     new KitContentMenu(player, kit).open();
-                    /*kit.setArmor(getPlayerArmor());
-                    player.sendMessage(playerKits.getLang().getString("messages.setArmor"));
-                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);*/
                     return;
                 case "inv":
                     new KitContentMenu(player, kit).open();
-                    /*kit.setInventory(getPlayerInventory());
-                    if (ServerVersion.v1_9.serverVersionGreaterEqualThan(XPKUtils.SERVER_VERSION)) {
-                        kit.setOffhand(getOffhand());
-                    }
-                    player.sendMessage(playerKits.getLang().getString("messages.setInventory"));
-                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);*/
                     return;
                 case "oneTime":
                     kit.setOneTime(!kit.isOneTime());
@@ -257,32 +248,6 @@ public class KitEditorMenu extends AInventory {
             inventory.setItem(37 + indexIcons.getAndIncrement(), XPKUtils.applySimpleTag(icon, "icon", key));
         }
         inventory.setItem(53, XPKUtils.applySimpleTag(save, "action", "save"));
-    }
-
-    public ItemStack[] getPlayerInventory() {
-        ItemStack[] inv = new ItemStack[36];
-        for (int i = 0; i < 36; i++) {
-            ItemStack item = getPlayer().getInventory().getContents()[i];
-            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
-            inv[i] = item;
-        }
-        return inv;
-    }
-
-    public ItemStack[] getPlayerArmor() {
-        ItemStack[] inv = new ItemStack[4];
-        for (int i = 0; i < 4; i++) {
-            ItemStack item = getPlayer().getInventory().getArmorContents()[i];
-            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
-            inv[i] = item;
-        }
-        return inv;
-    }
-
-    public ItemStack getOffhand() {
-        ItemStack item = getPlayer().getInventory().getContents()[40];
-        if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) return null;
-        return item;
     }
 
 }

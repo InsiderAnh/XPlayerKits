@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ItemUtils {
 
-    public final ItemMeta itemMeta;
+    public ItemMeta itemMeta;
     public ItemStack item;
 
     public ItemUtils(@Nullable Material material) {
@@ -44,6 +44,12 @@ public class ItemUtils {
     }
 
     public ItemUtils displayName(String displayName) {
+        if (itemMeta == null) {
+            itemMeta = item.getItemMeta();
+        }
+        if (itemMeta == null) {
+            return this;
+        }
         itemMeta.setDisplayName(XPKUtils.color(displayName));
         item.setItemMeta(itemMeta);
         return this;
@@ -85,6 +91,12 @@ public class ItemUtils {
     }
 
     public ItemUtils lore(Player p, String lore, boolean placeholders) {
+        if (itemMeta == null) {
+            itemMeta = item.getItemMeta();
+        }
+        if (itemMeta == null) {
+            return this;
+        }
         if (placeholders) {
             itemMeta.setLore(lore.isEmpty() ? new ArrayList<>() : Arrays.asList(PlaceholderAPI.setPlaceholders(p, lore).split("\\n")));
         } else {
