@@ -1,5 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.utils;
 
+import com.cryptomorin.xseries.XSound;
 import com.google.gson.Gson;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
@@ -7,7 +8,6 @@ import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.enums.ServerVersion;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
-import io.github.InsiderAnh.xPlayerKits.utils.xseries.XSound;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -33,6 +33,7 @@ public class XPKUtils {
     @Getter
     private final JsonWriterSettings writerSettings;
     private final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+    public int[] SLOTS = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
 
     static {
         gson = new Gson();

@@ -1,5 +1,7 @@
-package io.github.InsiderAnh.xPlayerKits.menus;
+package io.github.InsiderAnh.xPlayerKits.menus.setup;
 
+import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
@@ -7,8 +9,6 @@ import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
-import io.github.InsiderAnh.xPlayerKits.utils.xseries.XMaterial;
-import io.github.InsiderAnh.xPlayerKits.utils.xseries.XSound;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

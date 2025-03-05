@@ -6,7 +6,7 @@ import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.managers.MigratorManager;
 import io.github.InsiderAnh.xPlayerKits.menus.KitSlotEditorMenu;
 import io.github.InsiderAnh.xPlayerKits.menus.KitsMenu;
-import io.github.InsiderAnh.xPlayerKits.menus.MainKitEditorMenu;
+import io.github.InsiderAnh.xPlayerKits.menus.setup.MainKitEditorMenu;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -54,7 +54,7 @@ public class XKitsCommands implements CommandExecutor {
                         player.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    new MainKitEditorMenu(player).open();
+                    new MainKitEditorMenu(player, 1).open();
                     countdownPlayer.resetCountdown("kitCommandCountdown");
                     break;
                 case "slots":

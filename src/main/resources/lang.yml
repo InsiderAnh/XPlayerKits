@@ -283,3 +283,9 @@ menus:
         &7configuration.
         &7
         &eClick to interact!
+    next:
+      nameItem: '&fNext page &8»'
+    last:
+      nameItem: '&8« &fLast page'
+    close:
+      nameItem: "&cClose"
