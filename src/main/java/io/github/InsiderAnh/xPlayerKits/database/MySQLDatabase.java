@@ -52,12 +52,6 @@ public class MySQLDatabase extends Database {
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
-                try (Statement statement = connection.createStatement()) {
-                    statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN IF NOT EXISTS name VARCHAR(36);");
-                    close(null, statement, null);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
                 close(connection, null, null);
             } catch (Exception exception) {
                 exception.printStackTrace();

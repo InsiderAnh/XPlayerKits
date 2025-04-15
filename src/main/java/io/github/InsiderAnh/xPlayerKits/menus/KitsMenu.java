@@ -63,7 +63,7 @@ public class KitsMenu extends AInventory {
             }
         }
         if (nbtItem.hasTag("kit")) {
-            Kit kit = playerKits.getKitManager().getKits().get(nbtItem.getString("kit"));
+            Kit kit = playerKits.getKitManager().getKit(nbtItem.getString("kit"));
             if (kit == null) return;
 
             if (click.isRightClick() && kit.isPreview()) {

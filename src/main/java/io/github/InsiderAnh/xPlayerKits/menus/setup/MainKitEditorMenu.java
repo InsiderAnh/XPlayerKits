@@ -24,8 +24,8 @@ import java.util.function.Consumer;
 public class MainKitEditorMenu extends AInventory {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
-    private int page;
-    private int passedSlots = 0;
+    private final int page;
+    private final int passedSlots;
 
     public MainKitEditorMenu(Player player, int page) {
         super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getLang().getString("menus.mainKitEditor.title"));
@@ -70,7 +70,7 @@ public class MainKitEditorMenu extends AInventory {
             }
         }
         if (nbtItem.hasTag("kit")) {
-            Kit kit = playerKits.getKitManager().getKits().get(nbtItem.getString("kit"));
+            Kit kit = playerKits.getKitManager().getKit(nbtItem.getString("kit"));
             if (kit == null) {
                 player.sendMessage(playerKits.getLang().getString("messages.noExistsKit"));
                 player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
@@ -96,10 +96,14 @@ public class MainKitEditorMenu extends AInventory {
         ItemStack newKit = new ItemUtils(XMaterial.EMERALD.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.newKit.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.newKit.loreItem")).build();
         ItemStack lastPage = new ItemUtils(XMaterial.ARROW.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.last.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.last.loreItem")).build();
         ItemStack nextPage = new ItemUtils(XMaterial.ARROW.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.next.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.next.loreItem")).build();
-        inventory.setItem(44, XPKUtils.applySimpleTag(lastPage, "action", "last"));
         inventory.setItem(45, XPKUtils.applySimpleTag(close, "action", "close"));
         inventory.setItem(50, XPKUtils.applySimpleTag(newKit, "action", "newKit"));
-        inventory.setItem(52, XPKUtils.applySimpleTag(nextPage, "action", "next"));
+        if (page > 1) {
+            inventory.setItem(44, XPKUtils.applySimpleTag(lastPage, "action", "last"));
+        }
+        if (page < playerKits.getKitManager().getLastPage()) {
+            inventory.setItem(52, XPKUtils.applySimpleTag(nextPage, "action", "next"));
+        }
     }
 
 }

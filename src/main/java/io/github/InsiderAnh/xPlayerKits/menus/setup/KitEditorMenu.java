@@ -86,7 +86,7 @@ public class KitEditorMenu extends AInventory {
                                 player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
                                 return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cLong name"));
                             }
-                            playerKits.getKitManager().getKits().remove(kit.getName());
+                            playerKits.getKitManager().removeKit(kit.getName());
                             kit.setName(type.getText());
                             playerKits.getKitManager().addKit(kit);
                             player.sendMessage(playerKits.getLang().getString("messages.setName").replace("<name>", kit.getName()));

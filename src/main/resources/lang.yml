@@ -78,6 +78,12 @@ menus:
         &7Edit this kit.
         &7
         &eClick to edit!
+    next:
+      nameItem: '&fNext page &8»'
+    last:
+      nameItem: '&8« &fLast page'
+    close:
+      nameItem: "&cClose"
   newKit:
     title: "New kit"
     name:

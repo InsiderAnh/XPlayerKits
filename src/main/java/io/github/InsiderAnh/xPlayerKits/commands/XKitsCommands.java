@@ -74,7 +74,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Kit kit = playerKits.getKitManager().getKit(args[1]);
                     Player online = Bukkit.getPlayer(args[2]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
@@ -96,7 +96,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().remove(args[1]);
+                    Kit kit = playerKits.getKitManager().removeKit(args[1]);
                     if (kit != null) {
                         File fileKit = new File(playerKits.getDataFolder(), kit.getName() + ".yml");
                         if (fileKit.exists()) {
@@ -117,7 +117,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Kit kit = playerKits.getKitManager().getKit(args[1]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
                         return true;
@@ -136,7 +136,7 @@ public class XKitsCommands implements CommandExecutor {
                     break;
                 }
                 case "resetall": {
-                    if (args.length < 3) {
+                    if (args.length < 2) {
                         sendHelp(sender);
                         return true;
                     }
@@ -205,7 +205,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Kit kit = playerKits.getKitManager().getKit(args[1]);
                     Player online = Bukkit.getPlayer(args[2]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
@@ -259,7 +259,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Kit kit = playerKits.getKitManager().getKit(args[1]);
                     Player online = Bukkit.getPlayer(args[2]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
@@ -281,7 +281,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Kit kit = playerKits.getKitManager().getKit(args[1]);
                     Player online = Bukkit.getPlayer(args[2]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
@@ -310,7 +310,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().remove(args[1]);
+                    Kit kit = playerKits.getKitManager().removeKit(args[1]);
                     if (kit != null) {
                         File fileKit = new File(playerKits.getDataFolder(), kit.getName() + ".yml");
                         if (fileKit.exists()) {
@@ -331,7 +331,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().getKits().get(args[1]);
+                    Kit kit = playerKits.getKitManager().getKit(args[1]);
                     if (kit == null) {
                         sender.sendMessage("§cThis kit don´t exists.");
                         return true;

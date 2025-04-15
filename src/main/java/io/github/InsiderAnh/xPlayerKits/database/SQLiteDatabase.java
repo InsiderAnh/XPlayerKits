@@ -31,6 +31,7 @@ public class SQLiteDatabase extends Database {
                 dbFile.createNewFile();
             }
 
+            config.setDriverClassName("io.github.InsiderAnh.xPlayerKits.libs.sqlite.JDBC");
             config.setJdbcUrl("jdbc:sqlite:" + dbFile.getPath());
 
             config.addDataSourceProperty("cachePrepStmts", "true");
@@ -48,24 +49,6 @@ public class SQLiteDatabase extends Database {
                         "data TEXT" +
                         ")");
                     close(null, statement, null);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                try (Statement statement = connection.createStatement()) {
-                    ResultSet resultSet = statement.executeQuery("PRAGMA table_info(player_kits)");
-                    boolean nameColumnExists = false;
-                    while (resultSet.next()) {
-                        String columnName = resultSet.getString("name");
-                        if ("name".equals(columnName)) {
-                            nameColumnExists = true;
-                            break;
-                        }
-                    }
-                    resultSet.close();
-                    if (!nameColumnExists) {
-                        statement.executeUpdate("ALTER TABLE player_kits ADD COLUMN name VARCHAR(36);");
-                    }
-                    close(null, statement, resultSet);
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }

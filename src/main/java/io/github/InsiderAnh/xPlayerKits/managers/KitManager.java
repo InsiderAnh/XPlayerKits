@@ -25,13 +25,21 @@ public class KitManager {
         for (File file : kitsFolder.listFiles()) {
             InsiderConfig config = new InsiderConfig(playerKits, "kits/" + file.getName().replace(".yml", ""), false, false);
             Kit kit = new Kit(config);
-            kits.put(kit.getName(), kit);
+            kits.put(kit.getName().toLowerCase(), kit);
             playerKits.getLogger().info("Correctly loaded kit " + kit.getName() + ".");
         }
     }
 
+    public Kit removeKit(String name) {
+        return kits.remove(name.toLowerCase());
+    }
+
+    public Kit getKit(String name) {
+        return kits.get(name.toLowerCase());
+    }
+
     public void addKit(Kit kit) {
-        kits.put(kit.getName(), kit);
+        kits.put(kit.getName().toLowerCase(), kit);
         if (kit.getPage() > lastPage) {
             lastPage = kit.getPage();
         }

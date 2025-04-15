@@ -20,7 +20,7 @@ public class PlayerListener implements Listener {
         playerKits.getDatabase().loadPlayerData(player.getUniqueId(), player.getName()).thenAccept(firstJoin -> {
             if (!firstJoin || !playerKits.getConfigManager().isKitOnJoin()) return;
 
-            Kit kit = playerKits.getKitManager().getKits().get(playerKits.getConfigManager().getKitOnJoinName());
+            Kit kit = playerKits.getKitManager().getKit(playerKits.getConfigManager().getKitOnJoinName());
             if (kit == null) return;
 
             Bukkit.getScheduler().runTask(playerKits, () -> kit.giveKit(player));

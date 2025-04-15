@@ -37,7 +37,7 @@ public class PlayerKitsPlaceholders extends PlaceholderExpansion {
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String placeholder) {
         PlayerKitData playerKitData = playerKits.getDatabase().getCachedPlayerData(player.getUniqueId());
         if (placeholder.startsWith("cooldown")) {
-            Kit kit = playerKits.getKitManager().getKits().get(placeholder.replace("cooldown_", ""));
+            Kit kit = playerKits.getKitManager().getKit(placeholder.replace("cooldown_", ""));
             if (kit == null) {
                 return "No exits kit";
             }
