@@ -1,7 +1,5 @@
 package io.github.InsiderAnh.xPlayerKits.database;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.superclass.Database;
@@ -10,35 +8,29 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class SQLiteDatabase extends Database {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
-    private HikariDataSource dataSource;
+    private Connection connection;
 
     @Override
     public void connect() {
         try {
-            HikariConfig config = new HikariConfig();
             File dbFile = new File(playerKits.getDataFolder(), playerKits.getConfig().getString("databases.h2.database") + ".db");
             if (!dbFile.exists()) {
                 dbFile.createNewFile();
             }
 
-            config.setDriverClassName("org.sqlite.jdbc4.JDBC4Connection");
-            config.setJdbcUrl("jdbc:sqlite:" + dbFile.getPath());
-
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-
-            dataSource = new HikariDataSource(config);
+            Class.forName("org.sqlite.JDBC");
+            try {
+                connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             try {
                 Connection connection = getConnection();
@@ -68,7 +60,11 @@ public class SQLiteDatabase extends Database {
 
     @Override
     public void close() {
-        dataSource.close();
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -164,7 +160,7 @@ public class SQLiteDatabase extends Database {
 
     @SneakyThrows
     public Connection getConnection() {
-        return dataSource.getConnection();
+        return connection;
     }
 
     private void insertData(Connection connection, String uuid, String name, String data) {
@@ -221,9 +217,6 @@ public class SQLiteDatabase extends Database {
 
     public void close(@Nullable Connection connection, @Nullable Statement preparedStatement, @Nullable ResultSet resultSet) {
         try {
-            if (connection != null) {
-                connection.close();
-            }
             if (preparedStatement != null) {
                 preparedStatement.close();
             }
