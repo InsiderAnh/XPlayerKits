@@ -31,7 +31,7 @@ public class SQLiteDatabase extends Database {
                 dbFile.createNewFile();
             }
 
-            config.setDriverClassName("io.github.InsiderAnh.xPlayerKits.libs.sqlite.JDBC");
+            config.setDriverClassName("org.sqlite.jdbc4.JDBC4Connection");
             config.setJdbcUrl("jdbc:sqlite:" + dbFile.getPath());
 
             config.addDataSourceProperty("cachePrepStmts", "true");
