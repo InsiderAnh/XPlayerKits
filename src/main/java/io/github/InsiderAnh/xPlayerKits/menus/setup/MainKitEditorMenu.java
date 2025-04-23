@@ -30,7 +30,7 @@ public class MainKitEditorMenu extends AInventory {
     public MainKitEditorMenu(Player player, int page) {
         super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getLang().getString("menus.mainKitEditor.title"));
         this.page = page;
-        this.passedSlots = page * 21;
+        this.passedSlots = (page - 1) * 21;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class MainKitEditorMenu extends AInventory {
                             return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cLong name"));
                         }
                         String line = type.getText();
-                        Kit kit = new Kit(line);
+                        Kit kit = new Kit(line, 10 + playerKits.getKitManager().getKits().size());
                         playerKits.getKitManager().addKit(kit);
                         new KitEditorMenu(player, kit).open();
                         return Collections.singletonList(AnvilGUI.ResponseAction.close());

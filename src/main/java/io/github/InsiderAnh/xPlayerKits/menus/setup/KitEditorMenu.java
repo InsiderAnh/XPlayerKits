@@ -55,6 +55,7 @@ public class KitEditorMenu extends AInventory {
             switch (action) {
                 case "save":
                     kit.save();
+                    playerKits.getKitManager().load();
                     player.sendMessage(playerKits.getLang().getString("messages.savedKit"));
                     player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.parseSound(), 1.0f, 1.0f);
                     close();

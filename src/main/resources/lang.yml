@@ -80,10 +80,13 @@ menus:
         &eClick to edit!
     next:
       nameItem: '&fNext page &8»'
+      loreItem: ""
     last:
       nameItem: '&8« &fLast page'
+      loreItem: ""
     close:
       nameItem: "&cClose"
+      loreItem: ""
   newKit:
     title: "New kit"
     name:
@@ -291,7 +294,10 @@ menus:
         &eClick to interact!
     next:
       nameItem: '&fNext page &8»'
+      loreItem: ""
     last:
       nameItem: '&8« &fLast page'
+      loreItem: ""
     close:
       nameItem: "&cClose"
+      loreItem: ""

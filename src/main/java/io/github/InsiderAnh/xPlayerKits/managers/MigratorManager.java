@@ -47,7 +47,7 @@ public class MigratorManager {
             public void run() {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 String name = file.getName().replace(".yml", "");
-                Kit kit = new Kit(name);
+                Kit kit = new Kit(name, 10);
                 player.getInventory().clear();
                 player.getInventory().setArmorContents(null);
                 Bukkit.getScheduler().runTaskLater(playerKits, () -> {

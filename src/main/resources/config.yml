@@ -2,6 +2,7 @@ kitOnJoin:
   enabled: false
   kitName: starter
 kitsCMD:
+  # Enable /kits command it is disabled by default to avoid conflicts with other plugins
   enabled: false
 databases:
   databaseType: "h2"

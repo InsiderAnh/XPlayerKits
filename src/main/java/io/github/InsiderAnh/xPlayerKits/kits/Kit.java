@@ -35,14 +35,14 @@ public class Kit {
     private ItemStack[] armor = new ItemStack[10], inventory = new ItemStack[50];
     private ItemStack offhand;
 
-    public Kit(String name) {
+    public Kit(String name, int slot) {
         this.name = name;
         this.countdown = TimeUnit.MINUTES.toSeconds(5);
         this.oneTime = false;
         this.autoArmor = false;
         this.preview = false;
         this.checkInventorySpace = false;
-        this.slot = 10;
+        this.slot = slot;
         this.page = 1;
         this.price = 0;
         this.permission = "none";

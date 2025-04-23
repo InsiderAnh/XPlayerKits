@@ -75,11 +75,17 @@ public class PlayerKits extends JavaPlugin {
     }
 
     public void reload() {
+        boolean lasEnabled = getConfig().getBoolean("kitsCMD.enabled");
+
         this.reloadConfig();
         this.lang.reload();
         this.inventories.reload();
         this.configManager.load();
         this.kitManager.load();
+
+        if (!lasEnabled && getConfig().getBoolean("kitsCMD.enabled")) {
+            getCommand("kits").setExecutor(new XKitsCommands());
+        }
     }
 
 }
