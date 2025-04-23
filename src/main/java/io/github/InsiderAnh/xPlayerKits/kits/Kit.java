@@ -41,7 +41,7 @@ public class Kit {
         this.oneTime = false;
         this.autoArmor = false;
         this.preview = false;
-        this.checkInventorySpace = false;
+        this.checkInventorySpace = true;
         this.slot = slot;
         this.page = 1;
         this.price = 0;

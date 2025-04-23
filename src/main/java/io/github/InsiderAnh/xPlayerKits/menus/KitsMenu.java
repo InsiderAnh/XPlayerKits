@@ -95,18 +95,17 @@ public class KitsMenu extends AInventory {
     protected void onUpdate(Inventory inventory) {
         inventory.clear();
         Player player = getPlayer();
-        int slotClose = slotsNumbers.getOrDefault("{CLOSE_SLOT}", -1);
-        if (slotClose > 0) {
-            ItemStack close = new ItemUtils(kitsMenu.get(slotClose)).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
-            inventory.setItem(slotClose, XPKUtils.applySimpleTag(close, "action", "close"));
-        }
         for (int slot : kitsMenu.keySet()) {
-            if (slotsNumbers.containsValue(slot)) continue;
             inventory.setItem(slot, kitsMenu.get(slot));
         }
         for (Kit kit : playerKits.getKitManager().getKits().values()) {
             if (kit.getPage() != page) continue;
             inventory.setItem(kit.getSlot(), XPKUtils.applySimpleTag(kit.getIcons().get(getIcon(player, kit, playerKitData)), "kit", kit.getName()));
+        }
+        int slotClose = slotsNumbers.getOrDefault("{CLOSE_SLOT}", -1);
+        if (slotClose > 0) {
+            ItemStack close = new ItemUtils(kitsMenu.get(slotClose)).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
+            inventory.setItem(slotClose, XPKUtils.applySimpleTag(close, "action", "close"));
         }
         if (page > 1) {
             int slotLast = slotsNumbers.getOrDefault("{LAST_SLOT}", -1);
