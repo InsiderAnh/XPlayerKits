@@ -107,18 +107,22 @@ public class KitsMenu extends AInventory {
             ItemStack close = new ItemUtils(kitsMenu.get(slotClose)).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
             inventory.setItem(slotClose, XPKUtils.applySimpleTag(close, "action", "close"));
         }
-        if (page > 1) {
-            int slotLast = slotsNumbers.getOrDefault("{LAST_SLOT}", -1);
-            if (slotLast > 0) {
+        int slotLast = slotsNumbers.getOrDefault("{LAST_SLOT}", -1);
+        if (slotLast > 0) {
+            if (page > 1) {
                 ItemStack last = new ItemUtils(kitsMenu.get(slotLast)).displayName(playerKits.getLang().getString("menus.kitsMenu.last.nameItem")).build();
                 inventory.setItem(slotLast, XPKUtils.applySimpleTag(last, "action", "last"));
+            } else {
+                inventory.setItem(slotClose, null);
             }
         }
-        if (page < playerKits.getKitManager().getLastPage()) {
-            int slotNext = slotsNumbers.getOrDefault("{NEXT_SLOT}", -1);
-            if (slotNext > 0) {
+        int slotNext = slotsNumbers.getOrDefault("{NEXT_SLOT}", -1);
+        if (slotNext > 0) {
+            if (page < playerKits.getKitManager().getLastPage()) {
                 ItemStack next = new ItemUtils(kitsMenu.get(slotNext)).displayName(playerKits.getLang().getString("menus.kitsMenu.next.nameItem")).build();
                 inventory.setItem(slotNext, XPKUtils.applySimpleTag(next, "action", "next"));
+            } else {
+                inventory.setItem(slotNext, null);
             }
         }
     }
