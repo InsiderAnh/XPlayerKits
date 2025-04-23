@@ -113,7 +113,7 @@ public class KitsMenu extends AInventory {
                 ItemStack last = new ItemUtils(kitsMenu.get(slotLast)).displayName(playerKits.getLang().getString("menus.kitsMenu.last.nameItem")).build();
                 inventory.setItem(slotLast, XPKUtils.applySimpleTag(last, "action", "last"));
             } else {
-                inventory.setItem(slotClose, null);
+                inventory.setItem(slotLast, null);
             }
         }
         int slotNext = slotsNumbers.getOrDefault("{NEXT_SLOT}", -1);
