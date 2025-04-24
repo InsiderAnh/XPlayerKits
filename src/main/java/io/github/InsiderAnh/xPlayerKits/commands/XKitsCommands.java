@@ -1,5 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.commands;
 
+import com.google.common.base.Joiner;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.CountdownPlayer;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class XKitsCommands implements CommandExecutor {
@@ -310,7 +312,7 @@ public class XKitsCommands implements CommandExecutor {
                         sender.sendMessage(playerKits.getLang().getString("messages.noPermission"));
                         return true;
                     }
-                    Kit kit = playerKits.getKitManager().removeKit(args[1]);
+                    Kit kit = playerKits.getKitManager().removeKit(Joiner.on(" ").join(Arrays.copyOfRange(args, 2, args.length)));
                     if (kit != null) {
                         File fileKit = new File(playerKits.getDataFolder(), kit.getName() + ".yml");
                         if (fileKit.exists()) {

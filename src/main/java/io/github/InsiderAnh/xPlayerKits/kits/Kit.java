@@ -49,7 +49,7 @@ public class Kit {
         this.armor = new ItemStack[10];
         this.inventory = new ItemStack[50];
         this.offhand = null;
-        this.requirements.add("%vault_eco_balance% >= 0");
+        this.requirements.add("none");
         this.actionsOnClaim.add("console:say Test allow commands.");
         this.actionsOnClaim.add("command:/test command");
         this.actionsOnClaim.add("sound:ENTITY_PLAYER_LEVELUP;1.0f;1.0f");
