@@ -100,7 +100,9 @@ public class KitsMenu extends AInventory {
         }
         for (Kit kit : playerKits.getKitManager().getKits().values()) {
             if (kit.getPage() != page) continue;
-            inventory.setItem(kit.getSlot(), XPKUtils.applySimpleTag(kit.getIcons().get(getIcon(player, kit, playerKitData)), "kit", kit.getName()));
+            String state = getState(player, kit, playerKitData);
+            ItemStack icon = kit.getIcons().get(state);
+            inventory.setItem(kit.getSlot(), XPKUtils.applySimpleTag(new ItemUtils(icon).displayName(playerKits.getLang().getString("menus.kitsMenu." + state + ".nameItem").replace("<name>", kit.getName())).build(), "kit", kit.getName()));
         }
         int slotClose = slotsNumbers.getOrDefault("{CLOSE_SLOT}", -1);
         if (slotClose > 0) {
@@ -127,7 +129,7 @@ public class KitsMenu extends AInventory {
         }
     }
 
-    private String getIcon(Player player, Kit kit, PlayerKitData playerKitData) {
+    private String getState(Player player, Kit kit, PlayerKitData playerKitData) {
         if (kit.isNoHasRequirements(player)) {
             return "CANT_CLAIM";
         }

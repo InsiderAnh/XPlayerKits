@@ -62,6 +62,18 @@ menus:
       nameItem: '&fNext page &8»'
     last:
       nameItem: '&8« &fLast page'
+    COUNTDOWN:
+      nameItem: "&c<name>"
+    NO_PERMISSION:
+      nameItem: "&c<name>"
+    ONE_TIME_REQUIREMENT:
+      nameItem: "&c<name>"
+    CANT_CLAIM:
+      nameItem: "&c<name>"
+    ONE_TIME_CLAIMED:
+      nameItem: "&a<name>"
+    CAN_CLAIM:
+      nameItem: "&a<name>"
   kitSlot:
     title: "Slots Editor"
   mainKitEditor:

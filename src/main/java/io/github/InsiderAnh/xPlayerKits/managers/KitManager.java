@@ -21,6 +21,7 @@ public class KitManager {
         File kitsFolder = new File(playerKits.getDataFolder(), "kits");
         if (!kitsFolder.exists()) {
             kitsFolder.mkdirs();
+            playerKits.saveResource("kits/example_kit.yml", false);
         }
         for (File file : kitsFolder.listFiles()) {
             InsiderConfig config = new InsiderConfig(playerKits, "kits/" + file.getName().replace(".yml", ""), false, false);
