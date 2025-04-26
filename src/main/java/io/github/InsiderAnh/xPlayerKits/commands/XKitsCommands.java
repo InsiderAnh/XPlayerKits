@@ -13,14 +13,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class XKitsCommands implements CommandExecutor {
+public class XKitsCommands implements TabExecutor {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
 
@@ -419,6 +424,32 @@ public class XKitsCommands implements CommandExecutor {
         sender.sendMessage("§e/xkits migrate playerkits2_yml/playerkits2_mysql §7- §fMigrate data from playerkits2 plugin.");
         sender.sendMessage("§e/xkits migratekits playerkits2 §7- §fMigrate kit from playerkits2 plugin.");
         sender.sendMessage("§7§m--------------------------------------");
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+        if (args.length <= 1) {
+            return new ArrayList<>(Arrays.asList("editor", "slots", "kits", "give", "claim", "delete", "reset", "resetall", "migrate", "migratekits", "reload"));
+        }
+        switch (args[0].toLowerCase()) {
+            case "give":
+            case "claim":
+            case "reset":
+                if (args.length == 3) {
+                    return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> name.toLowerCase().contains(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
+                }
+                return playerKits.getKitManager().getKits().values().stream().map(Kit::getName).collect(Collectors.toList());
+            case "delete":
+                return playerKits.getKitManager().getKits().values().stream().map(Kit::getName).collect(Collectors.toList());
+            case "resetall":
+                return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> name.toLowerCase().contains(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
+            case "migrate":
+                return new ArrayList<>(Arrays.asList("playerkits2_yml", "playerkits2_mysql"));
+            case "migratekits":
+                return new ArrayList<>(Arrays.asList("playerkits2"));
+            default:
+                return null;
+        }
     }
 
 }

@@ -168,6 +168,9 @@ public class XPKUtils {
                         PlayerKits.getInstance().getLogger().warning("Error on execute sound format.");
                     }
                     break;
+                case "message":
+                    player.sendMessage(actionData);
+                    break;
             }
         }
     }
