@@ -33,13 +33,12 @@ public class ClaimArgument extends StellarArgument {
             sender.sendMessage("§cThis player is not online.");
             return;
         }
-        playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData -> {
-            Bukkit.getScheduler().runTask(playerKits, () -> {
-                XPKUtils.claimKit(online, kit, playerKitData);
-            });
-        }).exceptionally(throwable -> {
-            throwable.printStackTrace();
-            return null;
+        playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData ->
+            playerKits.getStellarTaskHook(() ->
+                XPKUtils.claimKit(online, kit, playerKitData)).runTask(online.getLocation()))
+            .exceptionally(throwable -> {
+                throwable.printStackTrace();
+                return null;
         });
     }
 

@@ -15,11 +15,11 @@ public class KitsArgument extends StellarArgument {
     @Override
     public void onCommand(@NotNull CommandSender sender, String[] arguments) {
         Player player = (Player) sender;
-        playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData -> {
-            Bukkit.getScheduler().runTask(playerKits, () -> new KitsMenu(player, playerKitData, 1).open());
-        }).exceptionally(throwable -> {
-            throwable.printStackTrace();
-            return null;
+        playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData ->
+            playerKits.getStellarTaskHook(() -> new KitsMenu(player, playerKitData, 1).open()).runTask(player.getLocation()))
+            .exceptionally(throwable -> {
+                throwable.printStackTrace();
+                return null;
         });
     }
 

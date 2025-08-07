@@ -85,7 +85,7 @@ public class XPKUtils {
         playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (kit.getCountdown() * 1000L), kit.isOneTime(), false));
         playerKits.getExecutor().execute(() -> {
             playerKits.getDatabase().updatePlayerData(player.getUniqueId());
-            Bukkit.getScheduler().runTask(playerKits, () -> kit.giveKit(player));
+            playerKits.getStellarTaskHook(() -> kit.giveKit(player)).runTask(player.getLocation());
         });
     }
 

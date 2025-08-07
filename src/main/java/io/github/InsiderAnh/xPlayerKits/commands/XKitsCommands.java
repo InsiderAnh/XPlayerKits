@@ -56,10 +56,10 @@ public class XKitsCommands implements TabExecutor {
             if (args.length < 1) {
                 if (playerKits.getConfig().getBoolean("kitsCMD.enabled")) {
                     playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData -> {
-                        Bukkit.getScheduler().runTask(playerKits, () -> {
+                        playerKits.getStellarTaskHook(() -> {
                             new KitsMenu(player, playerKitData, 1).open();
                             countdownPlayer.resetCountdown("kitCommandCountdown");
-                        });
+                        }).runTask(player.getLocation());
                     }).exceptionally(throwable -> {
                         throwable.printStackTrace();
                         return null;
