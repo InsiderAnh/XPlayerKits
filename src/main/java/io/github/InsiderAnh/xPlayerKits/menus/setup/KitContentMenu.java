@@ -1,13 +1,13 @@
 package io.github.InsiderAnh.xPlayerKits.menus.setup;
 
-import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
-import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.entity.Player;

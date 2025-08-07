@@ -3,6 +3,7 @@ package io.github.InsiderAnh.xPlayerKits.kits;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
 import io.github.InsiderAnh.xPlayerKits.items.ItemSerializer;
+import io.github.InsiderAnh.xPlayerKits.utils.InventorySerializable;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -28,11 +30,16 @@ public class Kit {
     private final ArrayList<String> actionsOnDeny = new ArrayList<>();
     private String name;
     private long countdown;
-    private boolean oneTime, autoArmor, preview, checkInventorySpace;
-    private int slot, page;
+    private boolean oneTime;
+    private boolean autoArmor;
+    private boolean preview;
+    private boolean checkInventorySpace;
+    private int slot;
+    private int page;
     private double price;
     private String permission;
-    private ItemStack[] armor = new ItemStack[10], inventory = new ItemStack[50];
+    private ItemStack[] armor = new ItemStack[10];
+    private ItemStack[] inventory = new ItemStack[50];
     private ItemStack offhand;
 
     public Kit(String name, int slot) {
@@ -79,40 +86,69 @@ public class Kit {
         this.actionsOnClaim.addAll(config.getList("actionsOnClaim"));
         this.actionsOnDeny.addAll(config.getList("actionsOnDeny"));
 
-        if (config.isSet("armorSet")) {
-
+        if (config.isSet("armor")) {
+            this.armor = InventorySerializable.itemStackArrayFromBase64(config.getString("armor"));
+            this.inventory = InventorySerializable.itemStackArrayFromBase64(config.getString("inventory"));
+            if (config.isSet("icons")) {
+                for (String key : config.getConfig().getConfigurationSection("icons").getKeys(false)) {
+                    this.icons.put(key, InventorySerializable.itemStackFromBase64(config.getConfig().getString("icons." + key)));
+                }
+            }
+            save();
         }
 
-        if (config.isSet("armors")) {
-            for (String key : config.getConfig().getConfigurationSection("armors").getKeys(false)) {
-                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("armors." + key).getValues(false));
+        if (config.isSet("armorSet")) {
+            for (String key : config.getConfig().getConfigurationSection("armorSet").getKeys(false)) {
+                this.armor[Integer.parseInt(key)] = config.getConfig().getItemStack("armorSet." + key);
+            }
+            if (config.isSet("inventorySet")) {
+                for (String key : config.getConfig().getConfigurationSection("inventorySet").getKeys(false)) {
+                    this.inventory[Integer.parseInt(key)] = config.getConfig().getItemStack("inventorySet." + key);
+                }
+            }
+            if (config.isSet("iconSet")) {
+                for (String key : config.getConfig().getConfigurationSection("iconSet").getKeys(false)) {
+                    this.icons.put(key, config.getConfig().getItemStack("iconSet." + key));
+                }
+            }
+            if (config.isSet("offhand")) {
+                this.offhand = config.getConfig().getItemStack("offhand");
+            }
+
+            save();
+            PlayerKits.getInstance().sendDebugMessage("Kit " + name + " migrated correctly.");
+        }
+
+        if (config.isSet("playerArmor")) {
+            for (String key : config.getConfig().getConfigurationSection("playerArmor").getKeys(false)) {
+                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("playerArmor." + key).getValues(false));
                 this.armor[Integer.parseInt(key)] = ItemSerializer.deserialize(data);
             }
         }
-        if (config.isSet("inventories")) {
-            for (String key : config.getConfig().getConfigurationSection("inventories").getKeys(false)) {
-                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("inventories." + key).getValues(false));
+        if (config.isSet("playerInventory")) {
+            for (String key : config.getConfig().getConfigurationSection("playerInventory").getKeys(false)) {
+                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("playerInventory." + key).getValues(false));
                 this.inventory[Integer.parseInt(key)] = ItemSerializer.deserialize(data);
             }
         }
-        if (config.isSet("icons")) {
-            for (String key : config.getConfig().getConfigurationSection("icons").getKeys(false)) {
-                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("icons." + key).getValues(false));
+        if (config.isSet("kitIcons")) {
+            for (String key : config.getConfig().getConfigurationSection("kitIcons").getKeys(false)) {
+                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("kitIcons." + key).getValues(false));
                 this.icons.put(key, ItemSerializer.deserialize(data));
             }
         }
-        if (config.isSet("offhand")) {
-            HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("offhand").getValues(false));
+        if (config.isSet("playerOffhand")) {
+            HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("playerOffhand").getValues(false));
             this.offhand = ItemSerializer.deserialize(data);
         }
     }
 
     public void save() {
         InsiderConfig config = new InsiderConfig(PlayerKits.getInstance(), "kits/" + name, false, false);
-        config.set("armors", null);
-        config.set("inventories", null);
-        config.set("icons", null);
-        config.set("offhand", null);
+        config.set("playerArmor", null);
+        config.set("playerInventory", null);
+        config.set("kitIcons", null);
+        config.set("playerOffhand", null);
         config.set("name", name);
         config.set("countdown", countdown);
         config.set("oneTime", oneTime);
@@ -132,22 +168,25 @@ public class Kit {
         for (int i = 0; i < armor.length; i++) {
             ItemStack itemStack = armor[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            //config.set("armorSet." + i, itemStack);
             ItemSerializer.serialize(itemStack, config.getConfig(), "armors." + i);
         }
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            //config.set("inventorySet." + i, itemStack);
             ItemSerializer.serialize(itemStack, config.getConfig(), "inventories." + i);
         }
-        for (String key : icons.keySet()) {
-            //config.set("iconSet." + key, icons.get(key));
-            ItemSerializer.serialize(icons.get(key), config.getConfig(), "icons." + key);
+        for (Map.Entry<String, ItemStack> entry : icons.entrySet()) {
+            String key = entry.getKey();
+            ItemStack itemStack = entry.getValue();
+            ItemSerializer.serialize(itemStack, config.getConfig(), "icons." + key);
         }
         config.set("armor", null);
         config.set("inventory", null);
         config.set("icons", null);
+        config.set("offhand", null);
+        config.set("iconsSet", null);
+        config.set("armorSet", null);
+        config.set("inventorySet", null);
         config.save();
     }
 

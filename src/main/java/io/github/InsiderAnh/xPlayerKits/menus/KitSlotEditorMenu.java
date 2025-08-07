@@ -1,11 +1,11 @@
 package io.github.InsiderAnh.xPlayerKits.menus;
 
-import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
-import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

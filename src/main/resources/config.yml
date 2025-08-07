@@ -1,3 +1,4 @@
+check-updates: true
 kitOnJoin:
   enabled: false
   kitName: starter

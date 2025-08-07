@@ -3,7 +3,6 @@ package io.github.InsiderAnh.xPlayerKits.listeners;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.CountdownPlayer;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,8 +22,13 @@ public class PlayerListener implements Listener {
             Kit kit = playerKits.getKitManager().getKit(playerKits.getConfigManager().getKitOnJoinName());
             if (kit == null) return;
 
-            Bukkit.getScheduler().runTask(playerKits, () -> kit.giveKit(player));
+            playerKits.getStellarTaskHook(() -> kit.giveKit(player)).runTask(player.getLocation());
         });
+
+        if (!playerKits.getConfigManager().isCheckUpdates()) return;
+        if (!player.hasPermission("xkits.admin") || playerKits.getUpdateChecker() == null) return;
+
+        playerKits.getUpdateChecker().sendUpdateMessage(player);
     }
 
     @EventHandler

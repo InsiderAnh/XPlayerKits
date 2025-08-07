@@ -143,6 +143,7 @@ public final class XRegistry<XForm extends XBase<XForm, BukkitForm>, BukkitForm>
 
         registerModule(this, xFormClass);
     }
+
     @ApiStatus.Internal
     public XRegistry(Class<BukkitForm> bukkitFormClass, Class<XForm> xFormClass, Function<Integer, XForm[]> createArray) {
         this(bukkitFormClass, xFormClass, null, null, createArray);

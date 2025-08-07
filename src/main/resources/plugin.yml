@@ -1,6 +1,6 @@
 name: XPlayerKits
 main: io.github.InsiderAnh.xPlayerKits.PlayerKits
-version: 1.0.0
+version: 2.0.0
 author: InsiderAnh
 api-version: 1.13
 folia-supported: true
