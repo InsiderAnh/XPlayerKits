@@ -14,12 +14,6 @@ databases:
     database: xPlayerKits
     user: admin
     password: 123456
-  mongodb:
-    host: localhost
-    port: 27017
-    database: xPlayerKits
-    user: admin
-    password: 123456
 migrate:
   mysql:
     host: localhost

@@ -11,7 +11,6 @@ import io.github.InsiderAnh.xPlayerKits.menus.setup.MainKitEditorMenu;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;

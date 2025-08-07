@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.github.InsiderAnh.xPlayerKits.commands.XKitsCommands;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
-import io.github.InsiderAnh.xPlayerKits.database.MongoDatabase;
 import io.github.InsiderAnh.xPlayerKits.database.MySQLDatabase;
 import io.github.InsiderAnh.xPlayerKits.database.SQLiteDatabase;
 import io.github.InsiderAnh.xPlayerKits.listeners.PlayerListener;
@@ -27,7 +26,8 @@ public class PlayerKits extends JavaPlugin {
     private final ListeningExecutorService executor;
     private final KitManager kitManager;
     private final ConfigManager configManager;
-    private InsiderConfig lang, inventories;
+    private InsiderConfig lang;
+    private InsiderConfig inventories;
     private Database database;
 
     public PlayerKits() {
@@ -48,8 +48,6 @@ public class PlayerKits extends JavaPlugin {
         String databaseType = getConfig().getString("databases.databaseType", "h2");
         if (databaseType.equalsIgnoreCase("mysql")) {
             this.database = new MySQLDatabase();
-        } else if (databaseType.equalsIgnoreCase("mongodb")) {
-            this.database = new MongoDatabase();
         } else {
             this.database = new SQLiteDatabase();
         }

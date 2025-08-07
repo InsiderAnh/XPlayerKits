@@ -1,7 +1,7 @@
 package io.github.InsiderAnh.xPlayerKits.menus;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;

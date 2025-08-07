@@ -1,7 +1,7 @@
 package io.github.InsiderAnh.xPlayerKits.menus.setup;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
@@ -212,20 +212,20 @@ public class KitEditorMenu extends AInventory {
 
     @Override
     protected void onUpdate(Inventory inventory) {
-        ItemStack name = new ItemUtils(XMaterial.PAPER.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.name.nameItem")).lore(playerKits.getLang().getString("menus.newKit.name.loreItem").replace("<name>", kit.getName())).build();
-        ItemStack countdown = new ItemUtils(XMaterial.CLOCK.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.countdown.nameItem")).lore(playerKits.getLang().getString("menus.newKit.countdown.loreItem").replace("<countdown>", String.valueOf(kit.getCountdown()))).build();
-        ItemStack oneTime = new ItemUtils(XMaterial.EMERALD.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.oneTime.nameItem")).lore(playerKits.getLang().getString("menus.newKit.oneTime.loreItem").replace("<state>", XPKUtils.getStatus(kit.isOneTime()))).build();
-        ItemStack autoArmor = new ItemUtils(XMaterial.DIAMOND_HELMET.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.autoArmor.nameItem")).lore(playerKits.getLang().getString("menus.newKit.autoArmor.loreItem").replace("<state>", XPKUtils.getStatus(kit.isAutoArmor()))).build();
-        ItemStack permission = new ItemUtils(XMaterial.BARRIER.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.permission.nameItem")).lore(playerKits.getLang().getString("menus.newKit.permission.loreItem").replace("<permission>", kit.getPermission())).build();
-        ItemStack armor = new ItemUtils(XMaterial.IRON_CHESTPLATE.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.armor.nameItem")).lore(playerKits.getLang().getString("menus.newKit.armor.loreItem")).build();
-        ItemStack inv = new ItemUtils(XMaterial.CHEST.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.inv.nameItem")).lore(playerKits.getLang().getString("menus.newKit.inv.loreItem")).build();
-        ItemStack slot = new ItemUtils(XMaterial.GHAST_TEAR.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.slot.nameItem")).lore(playerKits.getLang().getString("menus.newKit.slot.loreItem").replace("<slot>", String.valueOf(kit.getSlot()))).build();
-        ItemStack page = new ItemUtils(XMaterial.MAP.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.page.nameItem")).lore(playerKits.getLang().getString("menus.newKit.page.loreItem").replace("<page>", String.valueOf(kit.getPage()))).build();
-        ItemStack price = new ItemUtils(XMaterial.GOLD_NUGGET.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.price.nameItem")).lore(playerKits.getLang().getString("menus.newKit.price.loreItem").replace("<price>", String.valueOf(kit.getPrice()))).build();
-        ItemStack requirements = new ItemUtils(XMaterial.BOOK.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.requirements.nameItem")).lore(playerKits.getLang().getString("menus.newKit.requirements.loreItem").replace("<requirements>", kit.getRequirementsString())).build();
-        ItemStack claimCommands = new ItemUtils(XMaterial.GOLD_INGOT.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.claimCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.claimCommands.loreItem").replace("<claimCommands>", kit.getActionsOnClaimString())).build();
-        ItemStack denyCommands = new ItemUtils(XMaterial.REDSTONE.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.denyCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.denyCommands.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
-        ItemStack save = new ItemUtils(XMaterial.NETHER_STAR.parseMaterial()).displayName(playerKits.getLang().getString("menus.newKit.save.nameItem")).lore(playerKits.getLang().getString("menus.newKit.save.loreItem")).build();
+        ItemStack name = new ItemUtils(XMaterial.PAPER.get()).displayName(playerKits.getLang().getString("menus.newKit.name.nameItem")).lore(playerKits.getLang().getString("menus.newKit.name.loreItem").replace("<name>", kit.getName())).build();
+        ItemStack countdown = new ItemUtils(XMaterial.CLOCK.get()).displayName(playerKits.getLang().getString("menus.newKit.countdown.nameItem")).lore(playerKits.getLang().getString("menus.newKit.countdown.loreItem").replace("<countdown>", String.valueOf(kit.getCountdown()))).build();
+        ItemStack oneTime = new ItemUtils(XMaterial.EMERALD.get()).displayName(playerKits.getLang().getString("menus.newKit.oneTime.nameItem")).lore(playerKits.getLang().getString("menus.newKit.oneTime.loreItem").replace("<state>", XPKUtils.getStatus(kit.isOneTime()))).build();
+        ItemStack autoArmor = new ItemUtils(XMaterial.DIAMOND_HELMET.get()).displayName(playerKits.getLang().getString("menus.newKit.autoArmor.nameItem")).lore(playerKits.getLang().getString("menus.newKit.autoArmor.loreItem").replace("<state>", XPKUtils.getStatus(kit.isAutoArmor()))).build();
+        ItemStack permission = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.newKit.permission.nameItem")).lore(playerKits.getLang().getString("menus.newKit.permission.loreItem").replace("<permission>", kit.getPermission())).build();
+        ItemStack armor = new ItemUtils(XMaterial.IRON_CHESTPLATE.get()).displayName(playerKits.getLang().getString("menus.newKit.armor.nameItem")).lore(playerKits.getLang().getString("menus.newKit.armor.loreItem")).build();
+        ItemStack inv = new ItemUtils(XMaterial.CHEST.get()).displayName(playerKits.getLang().getString("menus.newKit.inv.nameItem")).lore(playerKits.getLang().getString("menus.newKit.inv.loreItem")).build();
+        ItemStack slot = new ItemUtils(XMaterial.GHAST_TEAR.get()).displayName(playerKits.getLang().getString("menus.newKit.slot.nameItem")).lore(playerKits.getLang().getString("menus.newKit.slot.loreItem").replace("<slot>", String.valueOf(kit.getSlot()))).build();
+        ItemStack page = new ItemUtils(XMaterial.MAP.get()).displayName(playerKits.getLang().getString("menus.newKit.page.nameItem")).lore(playerKits.getLang().getString("menus.newKit.page.loreItem").replace("<page>", String.valueOf(kit.getPage()))).build();
+        ItemStack price = new ItemUtils(XMaterial.GOLD_NUGGET.get()).displayName(playerKits.getLang().getString("menus.newKit.price.nameItem")).lore(playerKits.getLang().getString("menus.newKit.price.loreItem").replace("<price>", String.valueOf(kit.getPrice()))).build();
+        ItemStack requirements = new ItemUtils(XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.newKit.requirements.nameItem")).lore(playerKits.getLang().getString("menus.newKit.requirements.loreItem").replace("<requirements>", kit.getRequirementsString())).build();
+        ItemStack claimCommands = new ItemUtils(XMaterial.GOLD_INGOT.get()).displayName(playerKits.getLang().getString("menus.newKit.claimCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.claimCommands.loreItem").replace("<claimCommands>", kit.getActionsOnClaimString())).build();
+        ItemStack denyCommands = new ItemUtils(XMaterial.REDSTONE.get()).displayName(playerKits.getLang().getString("menus.newKit.denyCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.denyCommands.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
+        ItemStack save = new ItemUtils(XMaterial.NETHER_STAR.get()).displayName(playerKits.getLang().getString("menus.newKit.save.nameItem")).lore(playerKits.getLang().getString("menus.newKit.save.loreItem")).build();
         inventory.setItem(10, XPKUtils.applySimpleTag(name, "action", "name"));
         inventory.setItem(11, XPKUtils.applySimpleTag(countdown, "action", "countdown"));
         inventory.setItem(12, XPKUtils.applySimpleTag(oneTime, "action", "oneTime"));

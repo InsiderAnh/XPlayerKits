@@ -1,7 +1,7 @@
 package io.github.InsiderAnh.xPlayerKits.menus.setup;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
@@ -92,10 +92,10 @@ public class MainKitEditorMenu extends AInventory {
             ItemStack kitItem = new ItemUtils(kit.getIcons().getOrDefault("CAN_CLAIM", new ItemStack(Material.PAPER))).displayName(playerKits.getLang().getString("menus.mainKitEditor.kit.nameItem").replace("<name>", kit.getName())).lore(playerKits.getLang().getString("menus.mainKitEditor.kit.loreItem")).build();
             inventory.setItem(XPKUtils.SLOTS[index.getAndIncrement()], XPKUtils.applySimpleTag(kitItem, "kit", kit.getName()));
         }
-        ItemStack close = new ItemUtils(XMaterial.BARRIER.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.close.loreItem")).build();
-        ItemStack newKit = new ItemUtils(XMaterial.EMERALD.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.newKit.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.newKit.loreItem")).build();
-        ItemStack lastPage = new ItemUtils(XMaterial.ARROW.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.last.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.last.loreItem")).build();
-        ItemStack nextPage = new ItemUtils(XMaterial.ARROW.parseMaterial()).displayName(playerKits.getLang().getString("menus.mainKitEditor.next.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.next.loreItem")).build();
+        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.close.loreItem")).build();
+        ItemStack newKit = new ItemUtils(XMaterial.EMERALD.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.newKit.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.newKit.loreItem")).build();
+        ItemStack lastPage = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.last.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.last.loreItem")).build();
+        ItemStack nextPage = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.next.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.next.loreItem")).build();
         inventory.setItem(45, XPKUtils.applySimpleTag(close, "action", "close"));
         inventory.setItem(50, XPKUtils.applySimpleTag(newKit, "action", "newKit"));
         if (page > 1) {

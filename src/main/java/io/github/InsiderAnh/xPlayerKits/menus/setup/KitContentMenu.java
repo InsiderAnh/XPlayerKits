@@ -1,10 +1,10 @@
 package io.github.InsiderAnh.xPlayerKits.menus.setup;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.cryptomorin.xseries.XSound;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
-import io.github.InsiderAnh.xPlayerKits.enums.ServerVersion;
+import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
@@ -39,21 +39,21 @@ public class KitContentMenu extends AInventory {
                 ItemStack[] inv = new ItemStack[36];
                 for (int i = 0; i < 36; i++) {
                     ItemStack item = inventory.getItem(i);
-                    if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+                    if (item == null || item.getType().equals(XMaterial.AIR.get())) continue;
                     inv[i] = item;
                 }
                 kit.setInventory(inv);
                 ItemStack[] armor = new ItemStack[4];
                 for (int i = 0; i < 4; i++) {
                     ItemStack item = inventory.getItem(i + 45);
-                    if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+                    if (item == null || item.getType().equals(XMaterial.AIR.get())) continue;
                     armor[3 - i] = item;
                 }
                 kit.setArmor(armor);
 
-                if (XPKUtils.SERVER_VERSION.serverVersionGreaterEqualThan(ServerVersion.v1_9)) {
+                if (XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_9)) {
                     ItemStack offhand = inventory.getItem(50);
-                    if (offhand != null && !offhand.getType().equals(XMaterial.AIR.parseMaterial())) {
+                    if (offhand != null && !offhand.getType().equals(XMaterial.AIR.get())) {
                         kit.setOffhand(offhand);
                     }
                 }
@@ -70,17 +70,17 @@ public class KitContentMenu extends AInventory {
     protected void onUpdate(Inventory inventory) {
         for (int i = 0; i < 36; i++) {
             ItemStack item = kit.getInventory()[i];
-            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+            if (item == null || item.getType().equals(XMaterial.AIR.get())) continue;
             inventory.setItem(i, item);
         }
         for (int i = 0; i < 4; i++) {
             ItemStack item = kit.getArmor()[i];
-            if (item == null || item.getType().equals(XMaterial.AIR.parseMaterial())) continue;
+            if (item == null || item.getType().equals(XMaterial.AIR.get())) continue;
             inventory.setItem(48 - i, item);
         }
-        if (XPKUtils.SERVER_VERSION.serverVersionGreaterEqualThan(ServerVersion.v1_9)) {
+        if (XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_9)) {
             ItemStack off = kit.getOffhand();
-            if (off != null && !off.getType().equals(XMaterial.AIR.parseMaterial())) {
+            if (off != null && !off.getType().equals(XMaterial.AIR.get())) {
                 inventory.setItem(50, off);
             }
         }
@@ -104,7 +104,7 @@ public class KitContentMenu extends AInventory {
         inventory.setItem(52, glass);
         inventory.setItem(53, XPKUtils.applySimpleTag(save, "itemId", "save"));
 
-        if (XPKUtils.SERVER_VERSION.serverVersionGreaterEqualThan(ServerVersion.v1_9)) {
+        if (XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_9)) {
             ItemStack offhand = new ItemUtils(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem()).displayName(plugin.getLang().getString("menus.kitContent.offhand.nameItem")).build();
             inventory.setItem(41, XPKUtils.applySimpleTag(offhand, "itemId", "offhand"));
         } else {

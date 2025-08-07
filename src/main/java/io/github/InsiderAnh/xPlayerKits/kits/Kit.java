@@ -2,7 +2,7 @@ package io.github.InsiderAnh.xPlayerKits.kits;
 
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
-import io.github.InsiderAnh.xPlayerKits.utils.InventorySerializable;
+import io.github.InsiderAnh.xPlayerKits.items.ItemSerializer;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import lombok.Getter;
@@ -78,41 +78,40 @@ public class Kit {
         this.requirements.addAll(config.getList("requirements"));
         this.actionsOnClaim.addAll(config.getList("actionsOnClaim"));
         this.actionsOnDeny.addAll(config.getList("actionsOnDeny"));
-        if (config.isSet("armor")) {
-            this.armor = InventorySerializable.itemStackArrayFromBase64(config.getString("armor"));
-            this.inventory = InventorySerializable.itemStackArrayFromBase64(config.getString("inventory"));
-            if (config.isSet("icons")) {
-                for (String key : config.getConfig().getConfigurationSection("icons").getKeys(false)) {
-                    this.icons.put(key, InventorySerializable.itemStackFromBase64(config.getConfig().getString("icons." + key)));
-                }
-            }
-            save();
-        }
+
         if (config.isSet("armorSet")) {
-            for (String key : config.getConfig().getConfigurationSection("armorSet").getKeys(false)) {
-                this.armor[Integer.parseInt(key)] = config.getConfig().getItemStack("armorSet." + key);
+
+        }
+
+        if (config.isSet("armors")) {
+            for (String key : config.getConfig().getConfigurationSection("armors").getKeys(false)) {
+                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("armors." + key).getValues(false));
+                this.armor[Integer.parseInt(key)] = ItemSerializer.deserialize(data);
             }
         }
-        if (config.isSet("inventorySet")) {
-            for (String key : config.getConfig().getConfigurationSection("inventorySet").getKeys(false)) {
-                this.inventory[Integer.parseInt(key)] = config.getConfig().getItemStack("inventorySet." + key);
+        if (config.isSet("inventories")) {
+            for (String key : config.getConfig().getConfigurationSection("inventories").getKeys(false)) {
+                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("inventories." + key).getValues(false));
+                this.inventory[Integer.parseInt(key)] = ItemSerializer.deserialize(data);
             }
         }
-        if (config.isSet("iconSet")) {
-            for (String key : config.getConfig().getConfigurationSection("iconSet").getKeys(false)) {
-                this.icons.put(key, config.getConfig().getItemStack("iconSet." + key));
+        if (config.isSet("icons")) {
+            for (String key : config.getConfig().getConfigurationSection("icons").getKeys(false)) {
+                HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("icons." + key).getValues(false));
+                this.icons.put(key, ItemSerializer.deserialize(data));
             }
         }
         if (config.isSet("offhand")) {
-            this.offhand = config.getConfig().getItemStack("offhand");
+            HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("offhand").getValues(false));
+            this.offhand = ItemSerializer.deserialize(data);
         }
     }
 
     public void save() {
         InsiderConfig config = new InsiderConfig(PlayerKits.getInstance(), "kits/" + name, false, false);
-        config.set("armorSet", null);
-        config.set("inventorySet", null);
-        config.set("iconSet", null);
+        config.set("armors", null);
+        config.set("inventories", null);
+        config.set("icons", null);
         config.set("offhand", null);
         config.set("name", name);
         config.set("countdown", countdown);
@@ -133,15 +132,18 @@ public class Kit {
         for (int i = 0; i < armor.length; i++) {
             ItemStack itemStack = armor[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            config.set("armorSet." + i, itemStack);
+            //config.set("armorSet." + i, itemStack);
+            ItemSerializer.serialize(itemStack, config.getConfig(), "armors." + i);
         }
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            config.set("inventorySet." + i, itemStack);
+            //config.set("inventorySet." + i, itemStack);
+            ItemSerializer.serialize(itemStack, config.getConfig(), "inventories." + i);
         }
         for (String key : icons.keySet()) {
-            config.set("iconSet." + key, icons.get(key));
+            //config.set("iconSet." + key, icons.get(key));
+            ItemSerializer.serialize(icons.get(key), config.getConfig(), "icons." + key);
         }
         config.set("armor", null);
         config.set("inventory", null);

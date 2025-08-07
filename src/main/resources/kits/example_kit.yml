@@ -1,210 +1,131 @@
 name: miner
-# The kit will be claimed for 300 seconds.
 countdown: 300
-# The kit will be claimed only once.
 oneTime: false
-# The kit will auto armor the player.
 autoArmor: false
-# The kit will show a preview of the kit in the inventory.
 preview: false
-# The kit will check the inventory space for the player, avoiding claiming the kit if
-# the player doesn't have enough space and losing items.
 checkInventorySpace: false
 slot: 10
 page: 1
 price: 0.0
 permission: none
-#requirements:
-#  - '%vault_eco_balance% >= 0'
 requirements: { }
-#actionsOnClaim:
-#  - console:say Test allow commands.
-#  - command:/test command
-#  - sound:ENTITY_PLAYER_LEVELUP;1.0f;1.0f
 actionsOnClaim: { }
-#actionsOnDeny:
-#  - console:say Test allow commands.
-#  - command:/test command
-#  - sound:ENTITY_ENDERMAN_TELEPORT;1.0f;1.0f
 actionsOnDeny: { }
+
 inventorySet:
   '0':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"
   '1':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:mending: 1
-        minecraft:silk_touch: 3
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "mending:1"
+      - "silk_touch:3"
+      - "unbreaking:5"
   '2':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_AXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_AXE
+    enchants:
+      - "efficiency:10"
+      - "mending:1"
+      - "unbreaking:5"
   '3':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_SHOVEL
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_SHOVEL
+    enchants:
+      - "efficiency:10"
+      - "mending:1"
+      - "unbreaking:5"
   '4':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_HELMET
-    meta:
-      ==: ItemMeta
-      meta-type: ARMOR
-      enchants:
-        minecraft:blast_protection: 5
-        minecraft:mending: 1
-        minecraft:protection: 5
-        minecraft:respiration: 3
+    material: NETHERITE_HELMET
+    enchants:
+      - "blast_protection:5"
+      - "mending:1"
+      - "protection:5"
+      - "respiration:3"
   '5':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_CHESTPLATE
-    meta:
-      ==: ItemMeta
-      meta-type: ARMOR
-      enchants:
-        minecraft:blast_protection: 5
-        minecraft:mending: 1
-        minecraft:protection: 5
+    material: NETHERITE_CHESTPLATE
+    enchants:
+      - "blast_protection:5"
+      - "mending:1"
+      - "protection:5"
   '6':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_LEGGINGS
-    meta:
-      ==: ItemMeta
-      meta-type: ARMOR
-      enchants:
-        minecraft:blast_protection: 5
-        minecraft:mending: 1
-        minecraft:protection: 5
+    material: NETHERITE_LEGGINGS
+    enchants:
+      - "blast_protection:5"
+      - "mending:1"
+      - "protection:5"
   '7':
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_BOOTS
-    meta:
-      ==: ItemMeta
-      meta-type: ARMOR
-      enchants:
-        minecraft:blast_protection: 5
-        minecraft:feather_falling: 5
-        minecraft:mending: 1
-        minecraft:protection: 5
+    material: NETHERITE_BOOTS
+    enchants:
+      - "blast_protection:5"
+      - "feather_falling:5"
+      - "mending:1"
+      - "protection:5"
   '9':
-    ==: org.bukkit.inventory.ItemStack
-    type: FLINT_AND_STEEL
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:mending: 1
-        minecraft:unbreaking: 10
+    material: FLINT_AND_STEEL
+    enchants:
+      - "mending:1"
+      - "unbreaking:10"
   '10':
-    ==: org.bukkit.inventory.ItemStack
-    type: CANDLE
+    material: CANDLE
     amount: 64
   '11':
-    ==: org.bukkit.inventory.ItemStack
-    type: CANDLE
+    material: CANDLE
     amount: 64
   '12':
-    ==: org.bukkit.inventory.ItemStack
-    type: CANDLE
+    material: CANDLE
     amount: 64
   '13':
-    ==: org.bukkit.inventory.ItemStack
-    type: GOLDEN_APPLE
+    material: GOLDEN_APPLE
     amount: 32
   '14':
-    ==: org.bukkit.inventory.ItemStack
-    type: ENCHANTED_GOLDEN_APPLE
+    material: ENCHANTED_GOLDEN_APPLE
     amount: 6
+
 iconSet:
   COUNTDOWN:
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"
   NO_PERMISSION:
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"
   ONE_TIME_CLAIMED:
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"
   CAN_CLAIM:
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"
   ONE_TIME_REQUIREMENT:
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"
   CANT_CLAIM:
-    ==: org.bukkit.inventory.ItemStack
-    type: NETHERITE_PICKAXE
-    meta:
-      ==: ItemMeta
-      meta-type: UNSPECIFIC
-      enchants:
-        minecraft:efficiency: 10
-        minecraft:fortune: 3
-        minecraft:mending: 1
-        minecraft:unbreaking: 5
+    material: NETHERITE_PICKAXE
+    enchants:
+      - "efficiency:10"
+      - "fortune:3"
+      - "mending:1"
+      - "unbreaking:5"

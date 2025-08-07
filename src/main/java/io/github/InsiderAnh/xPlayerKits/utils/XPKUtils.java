@@ -1,19 +1,17 @@
 package io.github.InsiderAnh.xPlayerKits.utils;
 
-import com.cryptomorin.xseries.XSound;
 import com.google.gson.Gson;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
-import io.github.InsiderAnh.xPlayerKits.enums.ServerVersion;
+import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
-import org.bson.json.JsonMode;
-import org.bson.json.JsonWriterSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -26,18 +24,16 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class XPKUtils {
 
-    public final ServerVersion SERVER_VERSION;
+    public final MinecraftVersion SERVER_VERSION;
     private final PlayerKits playerKits = PlayerKits.getInstance();
     @Getter
     private final Gson gson;
     @Getter
-    private final JsonWriterSettings writerSettings;
     private final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
     public int[] SLOTS = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34};
 
     static {
         gson = new Gson();
-        writerSettings = JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
 
         String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
         String detectedVersion = cbPackage.substring(cbPackage.lastIndexOf('.') + 1);
@@ -45,7 +41,7 @@ public class XPKUtils {
             detectedVersion = Bukkit.getServer().getBukkitVersion();
         }
 
-        SERVER_VERSION = ServerVersion.get(detectedVersion);
+        SERVER_VERSION = MinecraftVersion.get(detectedVersion);
     }
 
     public void claimKit(Player player, Kit kit, PlayerKitData playerKitData) {
@@ -102,7 +98,7 @@ public class XPKUtils {
     }
 
     public String translateAlternateColorCodes(char altColorChar, String message) {
-        if (SERVER_VERSION.serverVersionGreaterEqualThan(ServerVersion.v1_16)) {
+        if (SERVER_VERSION.lessThanOrEqualTo(MinecraftVersion.v1_16)) {
             Matcher matcher = pattern.matcher(message);
             StringBuffer stringBuffer = new StringBuffer();
             while (matcher.find()) {
