@@ -163,22 +163,22 @@ public class Kit {
         config.set("actionsOnClaim", actionsOnClaim);
         config.set("actionsOnDeny", actionsOnDeny);
         if (offhand != null) {
-            config.set("offhand", offhand);
+            ItemSerializer.serialize(offhand, config.getConfig(), "playerOffhand");
         }
         for (int i = 0; i < armor.length; i++) {
             ItemStack itemStack = armor[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            ItemSerializer.serialize(itemStack, config.getConfig(), "armors." + i);
+            ItemSerializer.serialize(itemStack, config.getConfig(), "playerArmor." + i);
         }
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            ItemSerializer.serialize(itemStack, config.getConfig(), "inventories." + i);
+            ItemSerializer.serialize(itemStack, config.getConfig(), "playerInventory." + i);
         }
         for (Map.Entry<String, ItemStack> entry : icons.entrySet()) {
             String key = entry.getKey();
             ItemStack itemStack = entry.getValue();
-            ItemSerializer.serialize(itemStack, config.getConfig(), "icons." + key);
+            ItemSerializer.serialize(itemStack, config.getConfig(), "kitIcons." + key);
         }
         config.set("armor", null);
         config.set("inventory", null);

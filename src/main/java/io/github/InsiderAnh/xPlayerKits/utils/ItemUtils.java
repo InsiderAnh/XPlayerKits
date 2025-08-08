@@ -146,6 +146,7 @@ public class ItemUtils {
     }
 
     public ItemStack build() {
+        hideAttributes();
         item.setItemMeta(itemMeta);
         return item;
     }

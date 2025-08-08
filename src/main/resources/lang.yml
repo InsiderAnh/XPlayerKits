@@ -99,29 +99,8 @@ menus:
     close:
       nameItem: "&cClose"
       loreItem: ""
-  newKit:
-    title: "New kit"
-    name:
-      nameItem: "&aKit name"
-      loreItem: |-
-        &7With this property, you set the name of
-        &7the kit this is also used as the identifier. 
-        &7
-        &cNote: Avoid using color codes or special symbols.
-        &7
-        &fName: &e<name>
-        &7
-        &eClick to interact!
-    countdown:
-      nameItem: "&aKit countdown"
-      loreItem: |-
-        &7With this property, you set the number
-        &7of seconds the user must wait to
-        &7claim this kit.
-        &7
-        &fCountdown seconds: &e<countdown>
-        &7
-        &eClick to interact!
+  kitClaims:
+    title: "Kit claims"
     oneTime:
       nameItem: "&aKit onetime"
       loreItem: |-
@@ -142,33 +121,18 @@ menus:
         &fOne Time: &e<state>
         &7
         &eClick to toggle!
-    permission:
-      nameItem: "&aKit permission"
+    countdown:
+      nameItem: "&aKit countdown"
       loreItem: |-
-        &7With this property, you determine
-        &7whether the kit requires a specific
-        &7permission or can be claimed by
-        &7anyone. 
+        &7With this property, you set the number
+        &7of seconds the user must wait to
+        &7claim this kit.
         &7
-        &7Use "none" if you want it to be claimable by anyone.
-        &7
-        &fPermission: &e<permission>
+        &fCountdown seconds: &e<countdown>
         &7
         &eClick to interact!
-    armor:
-      nameItem: "&aArmor contents"
-      loreItem: |-
-        &7Here you can change the armor
-        &7content of the kit.
-        &7
-        &eClick to set!
-    inv:
-      nameItem: "&aInventory contents"
-      loreItem: |-
-        &7Here you can change the inventory
-        &7content of the kit.
-        &7
-        &eClick to set!
+  inventorySettings:
+    title: "Inventory settings"
     slot:
       nameItem: "&aKit slot"
       loreItem: |-
@@ -187,6 +151,47 @@ menus:
         &fPage: &e<page>
         &7
         &eClick to interact!
+  newKit:
+    title: "New kit"
+    name:
+      nameItem: "&aKit name"
+      loreItem: |-
+        &7With this property, you set the name of
+        &7the kit this is also used as the identifier. 
+        &7
+        &cNote: Avoid using color codes or special symbols.
+        &7
+        &fName: &e<name>
+        &7
+        &eClick to interact!
+    claimsSettings:
+      nameItem: "&aClaims settings"
+      loreItem: |-
+        &7With this property, you set the claims settings
+        &7of the kit.
+        &7
+        &eClick to interact!
+    armor:
+      nameItem: "&aArmor contents"
+      loreItem: |-
+        &7Here you can change the armor
+        &7content of the kit.
+        &7
+        &eClick to set!
+    inv:
+      nameItem: "&aInventory contents"
+      loreItem: |-
+        &7Here you can change the inventory
+        &7content of the kit.
+        &7
+        &eClick to set!
+    inventorySettings:
+      nameItem: "&aInventory settings"
+      loreItem: |-
+        &7With this property, you set the inventory settings
+        &7of the kit.
+        &7
+        &eClick to open!
     price:
       nameItem: "&aKit price"
       loreItem: |-
@@ -208,6 +213,19 @@ menus:
         &eRequirements:
         <requirements>
         &c&lEdit in config!
+    permission:
+      nameItem: "&aKit permission"
+      loreItem: |-
+        &7With this property, you determine
+        &7whether the kit requires a specific
+        &7permission or can be claimed by
+        &7anyone. 
+        &7
+        &7Use "none" if you want it to be claimable by anyone.
+        &7
+        &fPermission: &e<permission>
+        &7
+        &eClick to interact!
     claimCommands:
       nameItem: "&aExtra actions on claim"
       loreItem: |-

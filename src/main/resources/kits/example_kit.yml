@@ -12,7 +12,7 @@ requirements: { }
 actionsOnClaim: { }
 actionsOnDeny: { }
 
-inventorySet:
+playerInventory:
   '0':
     material: NETHERITE_PICKAXE
     enchants:
@@ -86,7 +86,7 @@ inventorySet:
     material: ENCHANTED_GOLDEN_APPLE
     amount: 6
 
-iconSet:
+kitIcons:
   COUNTDOWN:
     material: NETHERITE_PICKAXE
     enchants:

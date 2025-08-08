@@ -34,12 +34,12 @@ public class ClaimArgument extends StellarArgument {
             return;
         }
         playerKits.getDatabase().getPlayerData(online.getUniqueId(), online.getName()).thenAccept(playerKitData ->
-            playerKits.getStellarTaskHook(() ->
-                XPKUtils.claimKit(online, kit, playerKitData)).runTask(online.getLocation()))
+                playerKits.getStellarTaskHook(() ->
+                    XPKUtils.claimKit(online, kit, playerKitData)).runTask(online.getLocation()))
             .exceptionally(throwable -> {
                 throwable.printStackTrace();
                 return null;
-        });
+            });
     }
 
 }
