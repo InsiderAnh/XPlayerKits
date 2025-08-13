@@ -1,0 +1,28 @@
+rows: 6
+title: "Kit preview"
+varItems:
+  inventoryItem:
+    slots: "0-8;9-17;18-26;27-35"
+  armorItem:
+    slots: "45-48"
+  offhandItem:
+    slots: 50
+items:
+  separator:
+    material: BLACK_STAINED_GLASS_PANE
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&7"
+    slots: "36-44;49;51-53"
+  close:
+    material: BOOK
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&cClose"
+    lore:
+      - "&7Close this menu."
+    slots: 52
+    actions:
+      - "close_menu"
