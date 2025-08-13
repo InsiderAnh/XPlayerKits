@@ -21,7 +21,7 @@ public class Menu {
 
         if (configuration.isSet("items")) {
             for (String itemId : configuration.getConfigurationSection("items").getKeys(false)) {
-                MenuItem menuItem = new MenuItem(configuration, "items." + itemId);
+                MenuItem menuItem = new MenuItem(configuration, itemId, "items." + itemId);
                 items.put(itemId, menuItem);
             }
         }

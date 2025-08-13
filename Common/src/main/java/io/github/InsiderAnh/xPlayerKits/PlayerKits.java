@@ -25,7 +25,6 @@ import io.github.InsiderAnh.xPlayerKits.utils.UpdateChecker;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ArrayBlockingQueue;

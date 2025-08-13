@@ -20,7 +20,7 @@ public class MenuSlots {
                 String[] slotSplit = slot.split("-");
                 if (slotSplit.length == 0) continue;
 
-                int start = slotSplit.length == 1 ? Integer.parseInt(slotSplit[0]) : 0;
+                int start = Integer.parseInt(slotSplit[0]);
                 int end = slotSplit.length >= 2 ? Integer.parseInt(slotSplit[1]) : start;
 
                 for (int i = start; i <= end; i++) {
@@ -30,6 +30,13 @@ public class MenuSlots {
         } else if (configSlots instanceof Integer) {
             this.slots.add((int) configSlots);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MenuSlots{" +
+            "slots=" + slots +
+            '}';
     }
 
     public int getSlot(int index) {

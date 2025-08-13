@@ -21,8 +21,17 @@ public class MenuVarItem {
 
     public MenuVarItem(YamlConfiguration configuration, String path) {
         this.displayName = PlayerKits.getInstance().getColorUtils().color(configuration.getString(path + ".display-name", ""));
-        this.lore = PlayerKits.getInstance().getColorUtils().color(configuration.isList(path + ".lore") ? configuration.getStringList(path + ".lore") : Collections.emptyList());
+        this.lore = PlayerKits.getInstance().getColorUtils().color(configuration.isSet(path + ".lore") ? configuration.getStringList(path + ".lore") : Collections.emptyList());
         this.slots = new MenuSlots(configuration, path + ".slots");
+    }
+
+    @Override
+    public String toString() {
+        return "MenuVarItem{" +
+            "displayName='" + displayName + '\'' +
+            ", lore=" + lore +
+            ", slots=" + slots +
+            '}';
     }
 
     public ItemStack buildItem(Player player, ItemStack itemStack, Placeholder... placeholders) {

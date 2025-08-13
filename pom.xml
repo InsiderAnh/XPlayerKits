@@ -84,7 +84,6 @@
                                     </excludes>
                                 </filter>
                             </filters>
-
                         </configuration>
                     </execution>
                 </executions>
@@ -92,7 +91,7 @@
         </plugins>
         <resources>
             <resource>
-                <directory>Common/src/main/resources/resources</directory>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
