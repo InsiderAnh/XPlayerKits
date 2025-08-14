@@ -1,5 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.items;
 
+import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionBannerPattern;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionEnchantment;
@@ -130,24 +131,19 @@ public class ItemSerializer {
 
     private static void applyUnbreakable(ItemMeta meta, Map<String, Object> data) {
         if (!data.containsKey("unbreakable")) return;
-        if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_11)) return;
 
-        try {
-            Method setUnbreakable = meta.getClass().getMethod("setUnbreakable", boolean.class);
-            setUnbreakable.invoke(meta, data.get("unbreakable"));
-        } catch (Exception ignored) {
-        }
+        boolean unbreakable = (boolean) data.get("unbreakable");
+        PlayerKits.getInstance().getPlayerKitsNMS().setUnbreakable(meta, unbreakable);
     }
 
     private static void applyCustomModelData(ItemMeta meta, Map<String, Object> data) {
         if (!data.containsKey("custom_model_data")) return;
         if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_13)) return;
 
-        try {
-            Method setCustomModelData = meta.getClass().getMethod("setCustomModelData", Integer.class);
-            setCustomModelData.invoke(meta, data.get("custom_model_data"));
-        } catch (Exception ignored) {
-        }
+        int customModelData = (Integer) data.get("custom_model_data");
+        if (customModelData == 0) return;
+
+        PlayerKits.getInstance().getPlayerKitsNMS().setCustomModelData(meta, customModelData);
     }
 
     private static void deserializeSpecificMeta(ItemMeta meta, Map<String, Object> data) {

@@ -3,6 +3,7 @@ package io.github.InsiderAnh.xPlayerKits.utils;
 import com.google.gson.Gson;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
+import io.github.InsiderAnh.xPlayerKits.commands.XKitsCommands;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
@@ -15,12 +16,15 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -301,5 +305,23 @@ public class XPKUtils {
         }
     }
 
+
+    public void registerCommandDynamic(XKitsCommands command) {
+        try {
+            Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, org.bukkit.plugin.Plugin.class);
+            constructor.setAccessible(true);
+            PluginCommand pluginCommand = constructor.newInstance("kits", playerKits);
+
+            pluginCommand.setExecutor(command);
+            pluginCommand.setTabCompleter(command);
+
+            Field commandMapField = playerKits.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            org.bukkit.command.CommandMap commandMap = (org.bukkit.command.CommandMap) commandMapField.get(playerKits.getServer());
+
+            commandMap.register("kits", pluginCommand);
+        } catch (Exception e) {
+        }
+    }
 
 }

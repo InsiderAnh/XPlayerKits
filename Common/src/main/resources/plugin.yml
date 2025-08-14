@@ -8,7 +8,6 @@ depend:
   - PlaceholderAPI
 commands:
   xkits:
-  kits:
 permissions:
   xkits.admin:
     description: "Allow use /xkits editor."

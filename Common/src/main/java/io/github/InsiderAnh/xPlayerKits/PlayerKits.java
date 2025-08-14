@@ -22,6 +22,7 @@ import io.github.InsiderAnh.xPlayerKits.managers.MenuManager;
 import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
 import io.github.InsiderAnh.xPlayerKits.superclass.Database;
 import io.github.InsiderAnh.xPlayerKits.utils.UpdateChecker;
+import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
@@ -78,7 +79,7 @@ public class PlayerKits extends JavaPlugin {
 
         getCommand("xkits").setExecutor(new XKitsCommands());
         if (getConfig().getBoolean("kitsCMD.enabled")) {
-            getCommand("kits").setExecutor(new XKitsCommands());
+            XPKUtils.registerCommandDynamic(new XKitsCommands());
         }
 
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -107,7 +108,7 @@ public class PlayerKits extends JavaPlugin {
         this.menuManager.load();
 
         if (!lasEnabled && getConfig().getBoolean("kitsCMD.enabled")) {
-            getCommand("kits").setExecutor(new XKitsCommands());
+            XPKUtils.registerCommandDynamic(new XKitsCommands());
         }
     }
 

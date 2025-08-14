@@ -16,6 +16,23 @@ import java.util.UUID;
 public class PlayerKitsNMS_v1_8_R3 extends PlayerKitsNMS {
 
     @Override
+    public void setUnbreakable(ItemMeta itemMeta, boolean unbreakable) {
+        if (itemMeta == null) return;
+
+        itemMeta.spigot().setUnbreakable(unbreakable);
+    }
+    
+    @Override
+    public boolean isUnbreakable(ItemMeta itemMeta) {
+        return itemMeta.spigot().isUnbreakable();
+    }
+    
+    @Override
+    public int getCustomModelData(ItemMeta itemMeta) {
+        return 0;
+    }
+
+    @Override
     public void setCustomModelData(ItemMeta itemStack, int customModelData) {
     }
 

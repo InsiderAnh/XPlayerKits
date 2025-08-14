@@ -11,6 +11,12 @@ public abstract class PlayerKitsNMS {
 
     public abstract void setCustomModelData(ItemMeta itemMeta, int customModelData);
 
+    public abstract void setUnbreakable(ItemMeta itemMeta, boolean unbreakable);
+
     public abstract void setGlowing(ItemMeta itemMeta, boolean glowing);
+
+    public abstract boolean isUnbreakable(ItemMeta itemMeta);
+
+    public abstract int getCustomModelData(ItemMeta itemMeta);
 
 }

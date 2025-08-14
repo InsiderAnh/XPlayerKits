@@ -19,6 +19,23 @@ import java.util.UUID;
 public class PlayerKitsNMS_v1_21_R7 extends PlayerKitsNMS {
 
     private final Gson GSON = new Gson();
+    
+    @Override
+    public void setUnbreakable(ItemMeta itemMeta, boolean unbreakable) {
+        if (itemMeta == null) return;
+
+        itemMeta.setUnbreakable(unbreakable);
+    }
+
+    @Override
+    public boolean isUnbreakable(ItemMeta itemMeta) {
+        return itemMeta.isUnbreakable();
+    }
+
+    @Override
+    public int getCustomModelData(ItemMeta itemMeta) {
+        return itemMeta.getCustomModelData();
+    }
 
     @Override
     public void setCustomModelData(ItemMeta itemMeta, int customModelData) {
