@@ -30,7 +30,7 @@ public class KitsMenu extends AInventory {
     private int page;
 
     public KitsMenu(Player player, PlayerKitData playerKitData, int page) {
-        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getLang().getString("menus.kitsMenu.title"));
+        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getMenuManager().getTitle("kits", "Kits"));
         this.menu = playerKits.getMenuManager().getMenu("kits");
         this.playerKitData = playerKitData;
         this.page = page;

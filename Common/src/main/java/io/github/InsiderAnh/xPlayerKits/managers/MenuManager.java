@@ -43,6 +43,13 @@ public class MenuManager {
         }
     }
 
+    public String getTitle(String menuId, String defaultTitle) {
+        Menu menu = this.menus.get(menuId);
+        if (menu == null) return defaultTitle;
+
+        return menu.getTitle();
+    }
+
     @Nullable
     public Menu getMenu(String menuId) {
         return this.menus.get(menuId);

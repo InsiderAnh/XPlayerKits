@@ -25,7 +25,7 @@ public class KitPreviewMenu extends AInventory {
     private final Kit kit;
 
     public KitPreviewMenu(Player player, Kit kit) {
-        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getLang().getString("menus.kitPreview.title"));
+        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getMenuManager().getTitle("preview", "Kit Preview"));
         this.menu = PlayerKits.getInstance().getMenuManager().getMenu("preview");
         this.kit = kit;
     }

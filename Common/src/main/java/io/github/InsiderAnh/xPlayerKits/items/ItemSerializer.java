@@ -10,6 +10,7 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionEffect;
@@ -116,10 +117,8 @@ public class ItemSerializer {
 
     private static void applyItemFlag(ItemMeta meta, String flagName) {
         try {
-            Class<?> itemFlagClass = Class.forName("org.bukkit.inventory.ItemFlag");
-            Object flag = Enum.valueOf((Class<Enum>) itemFlagClass, flagName);
-            Method addItemFlags = meta.getClass().getMethod("addItemFlags", itemFlagClass);
-            addItemFlags.invoke(meta, flag);
+            ItemFlag itemFlag = ItemFlag.valueOf(flagName);
+            meta.addItemFlags(itemFlag);
         } catch (Exception ignored) {
         }
     }
