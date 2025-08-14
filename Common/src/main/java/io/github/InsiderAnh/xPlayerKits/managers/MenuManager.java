@@ -21,10 +21,8 @@ public class MenuManager {
             menuFolder.mkdirs();
         }
 
-        File preview = new File(menuFolder, "preview.yml");
-        if (!preview.exists()) {
-            playerKits.saveResource("menus/preview.yml", false);
-        }
+        checkFile(menuFolder, "preview");
+        checkFile(menuFolder, "kits");
 
         playerKits.sendDebugMessage("Loading menus...");
         for (File file : menuFolder.listFiles()) {
@@ -35,6 +33,13 @@ public class MenuManager {
             this.menus.put(menuId, new Menu(configuration, menuId));
 
             playerKits.sendDebugMessage("Loaded menu " + menuId);
+        }
+    }
+
+    void checkFile(File menuFolder, String menuId) {
+        File file = new File(menuFolder, menuId + ".yml");
+        if (!file.exists()) {
+            playerKits.saveResource("menus/" + menuId + ".yml", false);
         }
     }
 

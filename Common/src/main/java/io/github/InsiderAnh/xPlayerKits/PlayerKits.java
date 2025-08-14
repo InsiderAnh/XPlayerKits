@@ -41,7 +41,6 @@ public class PlayerKits extends JavaPlugin {
     private final ConfigManager configManager;
     private final MenuManager menuManager;
     private InsiderConfig lang;
-    private InsiderConfig inventories;
     private Database database;
     private PlayerKitsNMS playerKitsNMS;
     private ColorUtils colorUtils;
@@ -65,7 +64,6 @@ public class PlayerKits extends JavaPlugin {
         saveConfig();
 
         this.lang = new InsiderConfig(this, "lang", true, false);
-        this.inventories = new InsiderConfig(this, "inventories", true, false);
 
         String databaseType = getConfig().getString("databases.databaseType", "h2");
         if (databaseType.equalsIgnoreCase("mysql")) {
@@ -104,7 +102,6 @@ public class PlayerKits extends JavaPlugin {
 
         this.reloadConfig();
         this.lang.reload();
-        this.inventories.reload();
         this.configManager.load();
         this.kitManager.load();
         this.menuManager.load();

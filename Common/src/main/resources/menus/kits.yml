@@ -1,0 +1,40 @@
+rows: 6
+title: "Kits"
+maxPerPage: 21
+varItems:
+  kitSlots:
+    slots: "10-16;19-25;28-34"
+items:
+  close:
+    material: BOOK
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&cClose"
+    lore:
+      - "&7Close this menu."
+    slots: 49
+    actions:
+      - "close_menu"
+  last_page:
+    material: ARROW
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&8« &fLast page"
+    lore:
+      - "&7Go to the last page."
+    slots: 45
+    actions:
+      - "last_page"
+  next_page:
+    material: ARROW
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&fNext page &8»"
+    lore:
+      - "&7Go to the next page."
+    slots: 53
+    actions:
+      - "next_page"

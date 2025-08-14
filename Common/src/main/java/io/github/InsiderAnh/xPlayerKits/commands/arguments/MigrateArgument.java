@@ -1,14 +1,11 @@
 package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
-import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
 import io.github.InsiderAnh.xPlayerKits.managers.MigratorManager;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class MigrateArgument extends StellarArgument {
-
-    private final PlayerKits playerKits = PlayerKits.getInstance();
 
     @Override
     public void onCommand(@NotNull CommandSender sender, String[] arguments) {
@@ -22,7 +19,7 @@ public class MigrateArgument extends StellarArgument {
         }
         switch (arguments[0].toLowerCase()) {
             case "playerkits2_yml":
-                new MigratorManager().migrateFromPlayerKits2MoreOptimized();
+                new MigratorManager().migrateFromPlayerKits2Yaml();
                 break;
             case "playerkits2_mysql":
                 new MigratorManager().migrateFromPlayerKits2MySQL();

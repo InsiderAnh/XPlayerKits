@@ -127,7 +127,7 @@ public class MigratorManager {
         });
     }
 
-    public void migrateFromPlayerKits2MoreOptimized() {
+    public void migrateFromPlayerKits2Yaml() {
         long startAt = System.currentTimeMillis();
         playerKits.getLogger().info("Starting migration from PlayerKits2.");
         playerKits.getExecutor().execute(() -> {
@@ -136,7 +136,8 @@ public class MigratorManager {
                 playerKits.getLogger().info("You don´t have data yml in this plugin.");
                 return;
             }
-            AtomicInteger migratedPlayers = new AtomicInteger(), noHaveKitDataPlayers = new AtomicInteger();
+            AtomicInteger migratedPlayers = new AtomicInteger();
+            AtomicInteger noHaveKitDataPlayers = new AtomicInteger();
             for (File file : playerKitsDirectory.listFiles()) {
                 FileConfiguration config = YamlConfiguration.loadConfiguration(file);
                 String uuid = file.getName().replace(".yml", "");

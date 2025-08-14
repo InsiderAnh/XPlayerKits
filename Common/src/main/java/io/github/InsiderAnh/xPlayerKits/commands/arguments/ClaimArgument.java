@@ -1,6 +1,5 @@
 package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
-import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
@@ -10,8 +9,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ClaimArgument extends StellarArgument {
-
-    private final PlayerKits playerKits = PlayerKits.getInstance();
 
     @Override
     public void onCommand(@NotNull CommandSender sender, String[] arguments) {

@@ -2,7 +2,10 @@ package io.github.InsiderAnh.xPlayerKits.menus;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
-import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
+import io.github.InsiderAnh.xPlayerKits.customize.Menu;
+import io.github.InsiderAnh.xPlayerKits.customize.MenuItem;
+import io.github.InsiderAnh.xPlayerKits.customize.MenuSlots;
+import io.github.InsiderAnh.xPlayerKits.customize.MenuVarItem;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
@@ -16,30 +19,21 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class KitsMenu extends AInventory {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
-    private final HashMap<Integer, ItemStack> kitsMenu = new HashMap<>();
-    private final HashMap<String, Integer> slotsNumbers = new HashMap<>();
+    private final Menu menu;
     private final PlayerKitData playerKitData;
     private int page;
 
     public KitsMenu(Player player, PlayerKitData playerKitData, int page) {
         super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getLang().getString("menus.kitsMenu.title"));
+        this.menu = playerKits.getMenuManager().getMenu("kits");
         this.playerKitData = playerKitData;
         this.page = page;
-        InsiderConfig inventories = playerKits.getInventories();
-        for (int slot = 0; slot < 54; slot++) {
-            if (!inventories.isSet("inventories.kits." + slot)) continue;
-            ItemStack itemStack = inventories.getConfig().getItemStack("inventories.kits." + slot);
-            kitsMenu.put(slot, itemStack);
-            if (itemStack != null && itemStack.getItemMeta() != null && itemStack.getItemMeta().hasDisplayName()) {
-                slotsNumbers.put(itemStack.getItemMeta().getDisplayName(), slot);
-            }
-        }
         onUpdate(getInventory());
     }
 
@@ -48,16 +42,16 @@ public class KitsMenu extends AInventory {
         canceled.accept(true);
         Player player = getPlayer();
         NBTItem nbtItem = new NBTItem(currentItem);
-        if (nbtItem.hasTag("action")) {
-            String action = nbtItem.getString("action");
+        if (nbtItem.hasTag("xpk-menu:item")) {
+            String action = nbtItem.getString("xpk-menu:item");
             if (action.equals("close")) {
                 close();
             }
-            if (action.equals("last")) {
+            if (action.equals("last_page")) {
                 page = page + 1;
                 onUpdate(getInventory());
             }
-            if (action.equals("next")) {
+            if (action.equals("next_page")) {
                 page = page - 1;
                 onUpdate(getInventory());
             }
@@ -95,37 +89,27 @@ public class KitsMenu extends AInventory {
     protected void onUpdate(Inventory inventory) {
         inventory.clear();
         Player player = getPlayer();
-        for (int slot : kitsMenu.keySet()) {
-            inventory.setItem(slot, kitsMenu.get(slot));
+        for (MenuItem menuItem : menu.getItems().values()) {
+            MenuSlots menuSlots = menuItem.getSlots();
+
+            ItemStack itemStack = menuItem.buildItem(player);
+            for (int slot : menuSlots.getSlots()) {
+                inventory.setItem(slot, itemStack);
+            }
         }
+
+        MenuVarItem menuVarItem = menu.getVarItems().get("kitSlots");
+        if (menuVarItem != null) {
+            MenuSlots menuSlots = menuVarItem.getSlots();
+            AtomicInteger index = new AtomicInteger();
+
+        }
+
         for (Kit kit : playerKits.getKitManager().getKits().values()) {
             if (kit.getPage() != page) continue;
             String state = getState(player, kit, playerKitData);
             ItemStack icon = kit.getIcons().get(state);
             inventory.setItem(kit.getSlot(), XPKUtils.applySimpleTag(new ItemUtils(icon).displayName(playerKits.getLang().getString("menus.kitsMenu." + state + ".nameItem").replace("<name>", kit.getName())).build(), "kit", kit.getName()));
-        }
-        int slotClose = slotsNumbers.getOrDefault("{CLOSE_SLOT}", -1);
-        if (slotClose > 0) {
-            ItemStack close = new ItemUtils(kitsMenu.get(slotClose)).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
-            inventory.setItem(slotClose, XPKUtils.applySimpleTag(close, "action", "close"));
-        }
-        int slotLast = slotsNumbers.getOrDefault("{LAST_SLOT}", -1);
-        if (slotLast > 0) {
-            if (page > 1) {
-                ItemStack last = new ItemUtils(kitsMenu.get(slotLast)).displayName(playerKits.getLang().getString("menus.kitsMenu.last.nameItem")).build();
-                inventory.setItem(slotLast, XPKUtils.applySimpleTag(last, "action", "last"));
-            } else {
-                inventory.setItem(slotLast, null);
-            }
-        }
-        int slotNext = slotsNumbers.getOrDefault("{NEXT_SLOT}", -1);
-        if (slotNext > 0) {
-            if (page < playerKits.getKitManager().getLastPage()) {
-                ItemStack next = new ItemUtils(kitsMenu.get(slotNext)).displayName(playerKits.getLang().getString("menus.kitsMenu.next.nameItem")).build();
-                inventory.setItem(slotNext, XPKUtils.applySimpleTag(next, "action", "next"));
-            } else {
-                inventory.setItem(slotNext, null);
-            }
         }
     }
 

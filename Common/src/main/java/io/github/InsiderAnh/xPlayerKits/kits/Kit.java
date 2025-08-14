@@ -78,8 +78,8 @@ public class Kit {
         this.autoArmor = config.getBoolean("autoArmor");
         this.preview = config.getBooleanOrDefault("preview", true);
         this.checkInventorySpace = config.getBooleanOrDefault("checkInventorySpace", true);
-        this.slot = config.getInt("slot");
-        this.page = config.getInt("page");
+        this.slot = config.getConfig().get("slot") instanceof Integer ? config.getInt("slot") : -1;
+        this.page = config.getConfig().get("page") instanceof Integer ? config.getInt("page") : -1;
         this.price = config.getDouble("price");
         this.permission = config.getString("permission");
         this.requirements.addAll(config.getList("requirements"));

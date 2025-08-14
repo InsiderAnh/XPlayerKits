@@ -27,11 +27,11 @@ public class XKitsCommands implements TabExecutor {
 
     public XKitsCommands() {
         arguments.put("editor", new EditorArgument());
-        arguments.put("slots", new SlotsArgument());
         arguments.put("give", new GiveArgument());
         arguments.put("delete", new DeleteArgument());
         arguments.put("reset", new ResetArgument());
         arguments.put("resetall", new ResetAllArgument());
+        arguments.put("preview", new PreviewArgument());
 
         arguments.put("migrate", new MigrateArgument());
         arguments.put("migratekits", new MigrateKitsArgument());
@@ -41,6 +41,7 @@ public class XKitsCommands implements TabExecutor {
         arguments.put("kits", new KitsArgument());
         arguments.put("claim", new ClaimArgument());
 
+        completers.put("preview", new PreviewCompleter());
         completers.put("give", new GiveCompleter());
         completers.put("delete", new DeleteCompleter());
         completers.put("resetall", new ResetAllCompleter());
@@ -83,7 +84,6 @@ public class XKitsCommands implements TabExecutor {
 
         switch (args[0].toLowerCase()) {
             case "editor":
-            case "slots":
             case "migratekits":
             case "kits": {
                 if (!(sender instanceof Player)) {
@@ -100,6 +100,7 @@ public class XKitsCommands implements TabExecutor {
             case "reset":
             case "resetall":
             case "migrate":
+            case "preview":
             case "reload": {
                 String argument = args[0].toLowerCase();
                 arguments.get(argument).onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -114,14 +115,14 @@ public class XKitsCommands implements TabExecutor {
 
     void sendHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "+---------------------------------------+");
-        sender.sendMessage(ChatColor.DARK_GRAY + "[!] " + ChatColor.RED + "StellarProtect " + ChatColor.DARK_GRAY + "[!]");
+        sender.sendMessage(ChatColor.DARK_GRAY + "[!] " + ChatColor.RED + "XPlayerKits " + ChatColor.DARK_GRAY + "[!]");
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "+---------------------------------------+");
         sender.sendMessage("§e/xkits editor §7- §fOpens the kit editor.");
-        sender.sendMessage("§e/xkits slots §7- §fOpens the kit slot editor.");
         sender.sendMessage("§e/xkits kits §7- §fOpens the kit menu.");
         sender.sendMessage("§e/xkits give <kitName> <player> §7- §fDirectly give kits to players without verifications..");
         sender.sendMessage("§e/xkits claim <kitName> <player> §7- §fGive kits to players with verifications.");
         sender.sendMessage("§e/xkits delete <kitName> §7- §fDelete a kit.");
+        sender.sendMessage("§e/xkits preview <kitName> §7- §fPreview a kit.");
         sender.sendMessage("§e/xkits reset <kitName> <player> §7- §fReset a certain kit data.");
         sender.sendMessage("§e/xkits resetall <player> §7- §fReset all kit data.");
         sender.sendMessage("§e/xkits migrate playerkits2_yml/playerkits2_mysql §7- §fMigrate data from playerkits2 plugin.");
@@ -140,6 +141,7 @@ public class XKitsCommands implements TabExecutor {
             case "reset":
                 return completers.get("give").onTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
             case "delete":
+            case "preview":
             case "resetall":
             case "migrate":
             case "migratekits":

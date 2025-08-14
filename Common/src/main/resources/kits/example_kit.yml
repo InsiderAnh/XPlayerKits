@@ -4,8 +4,8 @@ oneTime: false
 autoArmor: false
 preview: false
 checkInventorySpace: false
-slot: 10
-page: 1
+slot: auto
+page: auto
 price: 0.0
 permission: none
 requirements: { }
@@ -89,6 +89,11 @@ playerInventory:
 kitIcons:
   COUNTDOWN:
     material: NETHERITE_PICKAXE
+    displayname: "&cKit test"
+    lore:
+      - "&7You can´t claim this kit."
+      - "&7"
+      - "&cIn countdown &6%cooldown_miner%!"
     enchants:
       - "efficiency:10"
       - "fortune:3"
@@ -96,6 +101,11 @@ kitIcons:
       - "unbreaking:5"
   NO_PERMISSION:
     material: NETHERITE_PICKAXE
+    displayname: "&cKit test"
+    lore:
+      - "&7You can´t claim this kit."
+      - "&7"
+      - "&cYou don´t have permission!"
     enchants:
       - "efficiency:10"
       - "fortune:3"
@@ -103,6 +113,11 @@ kitIcons:
       - "unbreaking:5"
   ONE_TIME_CLAIMED:
     material: NETHERITE_PICKAXE
+    displayname: "&cKit test"
+    lore:
+      - "&7You can´t claim this kit."
+      - "&7"
+      - "&cAlready claimed!"
     enchants:
       - "efficiency:10"
       - "fortune:3"
@@ -110,6 +125,11 @@ kitIcons:
       - "unbreaking:5"
   CAN_CLAIM:
     material: NETHERITE_PICKAXE
+    displayname: "&aKit test"
+    lore:
+      - "&7You can claim this kit."
+      - "&7"
+      - "&eClick to claim!"
     enchants:
       - "efficiency:10"
       - "fortune:3"
@@ -117,6 +137,11 @@ kitIcons:
       - "unbreaking:5"
   ONE_TIME_REQUIREMENT:
     material: NETHERITE_PICKAXE
+    displayname: "&cKit test"
+    lore:
+      - "&7You can´t claim this kit."
+      - "&7"
+      - "&cYou can´t claim this kit!"
     enchants:
       - "efficiency:10"
       - "fortune:3"
@@ -124,6 +149,11 @@ kitIcons:
       - "unbreaking:5"
   CANT_CLAIM:
     material: NETHERITE_PICKAXE
+    displayname: "&cKit test"
+    lore:
+      - "&7You can´t claim this kit."
+      - "&7"
+      - "&cYou can´t claim this kit!"
     enchants:
       - "efficiency:10"
       - "fortune:3"

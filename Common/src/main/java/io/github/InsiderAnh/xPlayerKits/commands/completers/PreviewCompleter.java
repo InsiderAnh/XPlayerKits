@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DeleteCompleter extends StellarCompleter {
+public class PreviewCompleter extends StellarCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, String[] arguments) {
