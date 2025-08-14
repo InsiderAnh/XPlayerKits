@@ -41,7 +41,7 @@ public class MenuItem {
         this.lore = configuration.isSet(path + ".lore") ? configuration.getStringList(path + ".lore") : Collections.emptyList();
         this.slots = new MenuSlots(configuration, path + ".slots");
         for (String action : configuration.getStringList(path + ".actions")) {
-            this.actions.add(new MenuAction(action));
+            this.actions.add(getAction(action));
         }
     }
 
@@ -51,6 +51,9 @@ public class MenuItem {
         }
         if (action.startsWith("command:")) {
             return new MenuActionArg("command", action.replaceFirst("command:", "").replaceFirst("command: ", ""));
+        }
+        if (action.startsWith("console:")) {
+            return new MenuActionArg("console", action.replaceFirst("console:", "").replaceFirst("console: ", ""));
         }
         if (action.startsWith("message:")) {
             return new MenuActionArg("message", action.replaceFirst("message:", "").replaceFirst("command: ", ""));
