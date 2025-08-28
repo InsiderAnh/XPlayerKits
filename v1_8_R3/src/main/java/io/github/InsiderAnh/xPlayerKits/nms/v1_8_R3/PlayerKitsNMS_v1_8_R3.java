@@ -21,12 +21,12 @@ public class PlayerKitsNMS_v1_8_R3 extends PlayerKitsNMS {
 
         itemMeta.spigot().setUnbreakable(unbreakable);
     }
-    
+
     @Override
     public boolean isUnbreakable(ItemMeta itemMeta) {
         return itemMeta.spigot().isUnbreakable();
     }
-    
+
     @Override
     public int getCustomModelData(ItemMeta itemMeta) {
         return 0;

@@ -1,11 +1,16 @@
 name: miner
-countdown: 300
-oneTime: false
-autoArmor: false
+timing:
+  countdown: 300
+  oneTime: false
+  rotationEnabled: false
+  rotationTime: 0
+  rotationCooldown: 0
+inventory:
+  checkInventorySpace: false
+  autoArmor: false
+  slot: auto
+  page: auto
 preview: false
-checkInventorySpace: false
-slot: auto
-page: auto
 price: 0.0
 permission: none
 requirements: { }

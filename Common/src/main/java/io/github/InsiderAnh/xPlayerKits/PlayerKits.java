@@ -74,8 +74,8 @@ public class PlayerKits extends JavaPlugin {
         }
         this.database.connect();
         this.configManager.load();
-        this.kitManager.load();
         this.menuManager.load();
+        this.kitManager.load();
 
         getCommand("xkits").setExecutor(new XKitsCommands());
         if (getConfig().getBoolean("kitsCMD.enabled")) {
@@ -104,8 +104,8 @@ public class PlayerKits extends JavaPlugin {
         this.reloadConfig();
         this.lang.reload();
         this.configManager.load();
-        this.kitManager.load();
         this.menuManager.load();
+        this.kitManager.load();
 
         if (!lasEnabled && getConfig().getBoolean("kitsCMD.enabled")) {
             XPKUtils.registerCommandDynamic(new XKitsCommands());

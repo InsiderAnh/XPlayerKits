@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class KitsMenu extends AInventory {
@@ -101,16 +101,22 @@ public class KitsMenu extends AInventory {
         MenuVarItem menuVarItem = menu.getVarItems().get("kitSlots");
         if (menuVarItem != null) {
             MenuSlots menuSlots = menuVarItem.getSlots();
-            AtomicInteger index = new AtomicInteger();
+            int skipSlot = menuSlots.getPerPage() * (page - 1);
+            Map<String, Kit> kits = playerKits.getKitManager().getSubMap(skipSlot, menuSlots.getPerPage());
 
-        }
+            for (Map.Entry<String, Kit> entry : kits.entrySet()) {
+                Kit kitSlot = entry.getValue();
+                if (kitSlot == null) continue;
 
-        for (Kit kit : playerKits.getKitManager().getKits().values()) {
-            if (kit.getPage() != page) continue;
-            String state = getState(player, kit, playerKitData);
-            ItemStack icon = kit.getIcons().get(state);
-            inventory.setItem(kit.getSlot(), XPKUtils.applySimpleTag(new ItemUtils(icon).displayName(playerKits.getLang().getString("menus.kitsMenu." + state + ".nameItem").replace("<name>", kit.getName())).build(), "kit", kit.getName()));
+                buildAndSet(player, kitSlot.getPropertyInventory().getSlot(), kitSlot);
+            }
         }
+    }
+
+    public void buildAndSet(Player player, int slot, Kit kit) {
+        String state = getState(player, kit, playerKitData);
+        ItemStack icon = kit.getIcons().get(state);
+        getInventory().setItem(slot, XPKUtils.applySimpleTag(new ItemUtils(icon).displayName(playerKits.getLang().getString("menus.kitsMenu." + state + ".nameItem").replace("<name>", kit.getName())).build(), "kit", kit.getName()));
     }
 
     private String getState(Player player, Kit kit, PlayerKitData playerKitData) {
@@ -121,7 +127,7 @@ public class KitsMenu extends AInventory {
             return "NO_PERMISSION";
         }
         KitData kitData = playerKitData.getKitsData().get(kit.getName());
-        if (kit.isOneTime()) {
+        if (kit.getPropertyTiming().isOneTime()) {
             if (kitData != null && kitData.isOneTime() && !player.hasPermission("xkits.onetime.bypass")) {
                 return "ONE_TIME_CLAIMED";
             }

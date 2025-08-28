@@ -3,6 +3,8 @@ package io.github.InsiderAnh.xPlayerKits.kits;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
 import io.github.InsiderAnh.xPlayerKits.items.ItemSerializer;
+import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyInventory;
+import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyTiming;
 import io.github.InsiderAnh.xPlayerKits.utils.InventorySerializable;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
@@ -17,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
@@ -29,13 +30,9 @@ public class Kit {
     private final ArrayList<String> actionsOnClaim = new ArrayList<>();
     private final ArrayList<String> actionsOnDeny = new ArrayList<>();
     private String name;
-    private long countdown;
-    private boolean oneTime;
-    private boolean autoArmor;
+    private PropertyTiming propertyTiming;
+    private PropertyInventory propertyInventory;
     private boolean preview;
-    private boolean checkInventorySpace;
-    private int slot;
-    private int page;
     private double price;
     private String permission;
     private ItemStack[] armor = new ItemStack[10];
@@ -44,13 +41,10 @@ public class Kit {
 
     public Kit(String name, int slot) {
         this.name = name;
-        this.countdown = TimeUnit.MINUTES.toSeconds(5);
-        this.oneTime = false;
-        this.autoArmor = false;
+        this.propertyTiming = new PropertyTiming();
+        this.propertyInventory = new PropertyInventory();
+        this.propertyInventory.setSlot(slot);
         this.preview = false;
-        this.checkInventorySpace = true;
-        this.slot = slot;
-        this.page = 1;
         this.price = 0;
         this.permission = "none";
         this.armor = new ItemStack[10];
@@ -73,13 +67,9 @@ public class Kit {
 
     public Kit(@NotNull InsiderConfig config) {
         this.name = config.getString("name");
-        this.countdown = config.getLong("countdown");
-        this.oneTime = config.getBoolean("oneTime");
-        this.autoArmor = config.getBoolean("autoArmor");
+        this.propertyTiming = new PropertyTiming(config);
+        this.propertyInventory = new PropertyInventory(config);
         this.preview = config.getBooleanOrDefault("preview", true);
-        this.checkInventorySpace = config.getBooleanOrDefault("checkInventorySpace", true);
-        this.slot = config.getConfig().get("slot") instanceof Integer ? config.getInt("slot") : -1;
-        this.page = config.getConfig().get("page") instanceof Integer ? config.getInt("page") : -1;
         this.price = config.getDouble("price");
         this.permission = config.getString("permission");
         this.requirements.addAll(config.getList("requirements"));
@@ -145,18 +135,16 @@ public class Kit {
 
     public void save() {
         InsiderConfig config = new InsiderConfig(PlayerKits.getInstance(), "kits/" + name, false, false);
+        propertyTiming.save(config);
+        propertyInventory.save(config);
+
         config.set("playerArmor", null);
         config.set("playerInventory", null);
         config.set("kitIcons", null);
         config.set("playerOffhand", null);
+
         config.set("name", name);
-        config.set("countdown", countdown);
-        config.set("oneTime", oneTime);
-        config.set("autoArmor", autoArmor);
         config.set("preview", preview);
-        config.set("checkInventorySpace", checkInventorySpace);
-        config.set("slot", slot);
-        config.set("page", page);
         config.set("price", price);
         config.set("permission", permission);
         config.set("requirements", requirements);

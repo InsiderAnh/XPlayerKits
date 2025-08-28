@@ -5,6 +5,8 @@ import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyInventory;
+import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyTiming;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
@@ -34,19 +36,23 @@ public class KitClaimsSettingsMenu extends AInventory {
     protected void onClick(InventoryClickEvent event, ItemStack currentItem, ClickType click, Consumer<Boolean> canceled) {
         canceled.accept(true);
         Player player = getPlayer();
+
+        PropertyTiming propertyTiming = kit.getPropertyTiming();
+        PropertyInventory propertyInventory = kit.getPropertyInventory();
+
         NBTItem nbtItem = new NBTItem(currentItem);
         if (nbtItem.hasTag("action")) {
             String action = nbtItem.getString("action");
             switch (action) {
                 case "oneTime":
-                    kit.setOneTime(!kit.isOneTime());
-                    player.sendMessage(playerKits.getLang().getString("messages.setOneTime").replace("<state>", XPKUtils.getStatus(kit.isOneTime())));
+                    propertyTiming.setOneTime(!propertyTiming.isOneTime());
+                    player.sendMessage(playerKits.getLang().getString("messages.setOneTime").replace("<state>", XPKUtils.getStatus(propertyTiming.isOneTime())));
                     player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                     onUpdate(getInventory());
                     return;
                 case "autoArmor":
-                    kit.setAutoArmor(!kit.isAutoArmor());
-                    player.sendMessage(playerKits.getLang().getString("messages.setAutoArmor").replace("<state>", XPKUtils.getStatus(kit.isAutoArmor())));
+                    propertyInventory.setAutoArmor(!propertyInventory.isAutoArmor());
+                    player.sendMessage(playerKits.getLang().getString("messages.setAutoArmor").replace("<state>", XPKUtils.getStatus(propertyInventory.isAutoArmor())));
                     player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                     onUpdate(getInventory());
                     return;
@@ -60,8 +66,8 @@ public class KitClaimsSettingsMenu extends AInventory {
                             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
                             return;
                         }
-                        kit.setCountdown(seconds);
-                        player.sendMessage(playerKits.getLang().getString("messages.setCountdown").replace("<countdown>", String.valueOf(kit.getCountdown())));
+                        propertyTiming.setCountdown(seconds);
+                        player.sendMessage(playerKits.getLang().getString("messages.setCountdown").replace("<countdown>", String.valueOf(propertyTiming.getCountdown())));
                         player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                         new KitEditorMenu(player, kit).open();
                     });
@@ -92,9 +98,12 @@ public class KitClaimsSettingsMenu extends AInventory {
 
     @Override
     protected void onUpdate(Inventory inventory) {
-        ItemStack countdown = new ItemUtils(XMaterial.CLOCK.get()).displayName(playerKits.getLang().getString("menus.kitClaims.countdown.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.countdown.loreItem").replace("<countdown>", String.valueOf(kit.getCountdown()))).build();
-        ItemStack oneTime = new ItemUtils(XMaterial.EMERALD.get()).displayName(playerKits.getLang().getString("menus.kitClaims.oneTime.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.oneTime.loreItem").replace("<state>", XPKUtils.getStatus(kit.isOneTime()))).build();
-        ItemStack autoArmor = new ItemUtils(XMaterial.DIAMOND_HELMET.get()).displayName(playerKits.getLang().getString("menus.kitClaims.autoArmor.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.autoArmor.loreItem").replace("<state>", XPKUtils.getStatus(kit.isAutoArmor()))).build();
+        PropertyTiming propertyTiming = kit.getPropertyTiming();
+        PropertyInventory propertyInventory = kit.getPropertyInventory();
+
+        ItemStack countdown = new ItemUtils(XMaterial.CLOCK.get()).displayName(playerKits.getLang().getString("menus.kitClaims.countdown.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.countdown.loreItem").replace("<countdown>", String.valueOf(propertyTiming.getCountdown()))).build();
+        ItemStack oneTime = new ItemUtils(XMaterial.EMERALD.get()).displayName(playerKits.getLang().getString("menus.kitClaims.oneTime.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.oneTime.loreItem").replace("<state>", XPKUtils.getStatus(propertyTiming.isOneTime()))).build();
+        ItemStack autoArmor = new ItemUtils(XMaterial.DIAMOND_HELMET.get()).displayName(playerKits.getLang().getString("menus.kitClaims.autoArmor.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.autoArmor.loreItem").replace("<state>", XPKUtils.getStatus(propertyInventory.isAutoArmor()))).build();
 
         ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
         ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();

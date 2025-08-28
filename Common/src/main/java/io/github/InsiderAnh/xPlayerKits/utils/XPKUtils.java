@@ -8,6 +8,7 @@ import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyTiming;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -67,7 +68,8 @@ public class XPKUtils {
         }
 
         KitData kitData = playerKitData.getKitsData().get(kit.getName());
-        if (kit.isOneTime()) {
+        PropertyTiming timing = kit.getPropertyTiming();
+        if (timing.isOneTime()) {
             if (kitData != null && kitData.isOneTime() && !player.hasPermission("xkits.onetime.bypass")) {
                 XPKUtils.executeActions(player, kit.getActionsOnDeny());
                 player.sendMessage(playerKits.getLang().getString("messages.alreadyOneTime"));
@@ -83,14 +85,14 @@ public class XPKUtils {
             return;
         }
 
-        if (kit.isCheckInventorySpace() && kit.isNoInventorySpace(player)) {
+        if (kit.getPropertyInventory().isCheckInventorySpace() && kit.isNoInventorySpace(player)) {
             XPKUtils.executeActions(player, kit.getActionsOnDeny());
             player.sendMessage(playerKits.getLang().getString("messages.noInventorySpace"));
             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
             return;
         }
 
-        playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (kit.getCountdown() * 1000L), kit.isOneTime(), false));
+        playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (timing.getCountdown() * 1000L), timing.isOneTime(), false));
         playerKits.getExecutor().execute(() -> {
             playerKits.getDatabase().updatePlayerData(player.getUniqueId());
             playerKits.getStellarTaskHook(() -> kit.giveKit(player)).runTask(player.getLocation());
@@ -188,8 +190,10 @@ public class XPKUtils {
 
         try {
             switch (conditional) {
-                case "==": return variable.equals(sep[2]);
-                case "!=": return !variable.equals(sep[2]);
+                case "==":
+                    return variable.equals(sep[2]);
+                case "!=":
+                    return !variable.equals(sep[2]);
                 case ">=":
                 case "<=":
                 case ">":
@@ -197,13 +201,19 @@ public class XPKUtils {
                     double valueFinal = Double.parseDouble(sep[2]);
                     double valueFinalVariable = Double.parseDouble(variable);
                     switch (conditional) {
-                        case ">=": return valueFinalVariable >= valueFinal;
-                        case "<=": return valueFinalVariable <= valueFinal;
-                        case ">": return valueFinalVariable > valueFinal;
-                        case "<": return valueFinalVariable < valueFinal;
-                        default: return false;
+                        case ">=":
+                            return valueFinalVariable >= valueFinal;
+                        case "<=":
+                            return valueFinalVariable <= valueFinal;
+                        case ">":
+                            return valueFinalVariable > valueFinal;
+                        case "<":
+                            return valueFinalVariable < valueFinal;
+                        default:
+                            return false;
                     }
-                default: return false;
+                default:
+                    return false;
             }
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             return false;

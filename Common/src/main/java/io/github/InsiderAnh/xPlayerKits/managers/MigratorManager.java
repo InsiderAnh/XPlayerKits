@@ -56,9 +56,11 @@ public class MigratorManager {
                 Bukkit.getScheduler().runTaskLater(playerKits, () -> {
                     kit.setInventory(player.getInventory().getContents());
                     kit.setArmor(player.getInventory().getArmorContents());
-                    kit.setOneTime(config.getBoolean("one_time"));
-                    kit.setAutoArmor(config.getBoolean("auto_armor"));
-                    kit.setCountdown(config.getInt("cooldown"));
+
+                    kit.getPropertyTiming().setOneTime(config.getBoolean("one_time"));
+                    kit.getPropertyInventory().setAutoArmor(config.getBoolean("auto_armor"));
+                    kit.getPropertyTiming().setCountdown(config.getInt("cooldown"));
+
                     if (config.getBoolean("permission_required")) {
                         kit.setPermission("playerkits.kit." + name);
                     }

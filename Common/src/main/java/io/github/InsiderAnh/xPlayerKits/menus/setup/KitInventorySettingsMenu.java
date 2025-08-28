@@ -5,6 +5,7 @@ import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyInventory;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
@@ -34,6 +35,8 @@ public class KitInventorySettingsMenu extends AInventory {
     protected void onClick(InventoryClickEvent event, ItemStack currentItem, ClickType click, Consumer<Boolean> canceled) {
         canceled.accept(true);
         Player player = getPlayer();
+        PropertyInventory propertyInventory = kit.getPropertyInventory();
+
         NBTItem nbtItem = new NBTItem(currentItem);
         if (nbtItem.hasTag("action")) {
             String action = nbtItem.getString("action");
@@ -48,8 +51,8 @@ public class KitInventorySettingsMenu extends AInventory {
                             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
                             return;
                         }
-                        kit.setSlot(slotI);
-                        player.sendMessage(playerKits.getLang().getString("messages.setSlot").replace("<slot>", String.valueOf(kit.getSlot())));
+                        propertyInventory.setSlot(slotI);
+                        player.sendMessage(playerKits.getLang().getString("messages.setSlot").replace("<slot>", String.valueOf(propertyInventory.getSlot())));
                         player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                         new KitEditorMenu(player, kit).open();
                     });
@@ -64,8 +67,8 @@ public class KitInventorySettingsMenu extends AInventory {
                             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
                             return;
                         }
-                        kit.setPage(page);
-                        player.sendMessage(playerKits.getLang().getString("messages.setPage").replace("<page>", String.valueOf(kit.getPage())));
+                        propertyInventory.setPage(page);
+                        player.sendMessage(playerKits.getLang().getString("messages.setPage").replace("<page>", String.valueOf(propertyInventory.getPage())));
                         player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                         new KitEditorMenu(player, kit).open();
                     });
@@ -96,8 +99,10 @@ public class KitInventorySettingsMenu extends AInventory {
 
     @Override
     protected void onUpdate(Inventory inventory) {
-        ItemStack slot = new ItemUtils(XMaterial.GHAST_TEAR.get()).displayName(playerKits.getLang().getString("menus.newKit.slot.nameItem")).lore(playerKits.getLang().getString("menus.newKit.slot.loreItem").replace("<slot>", String.valueOf(kit.getSlot()))).build();
-        ItemStack page = new ItemUtils(XMaterial.MAP.get()).displayName(playerKits.getLang().getString("menus.newKit.page.nameItem")).lore(playerKits.getLang().getString("menus.newKit.page.loreItem").replace("<page>", String.valueOf(kit.getPage()))).build();
+        PropertyInventory propertyInventory = kit.getPropertyInventory();
+
+        ItemStack slot = new ItemUtils(XMaterial.GHAST_TEAR.get()).displayName(playerKits.getLang().getString("menus.newKit.slot.nameItem")).lore(playerKits.getLang().getString("menus.newKit.slot.loreItem").replace("<slot>", String.valueOf(propertyInventory.getSlot()))).build();
+        ItemStack page = new ItemUtils(XMaterial.MAP.get()).displayName(playerKits.getLang().getString("menus.newKit.page.nameItem")).lore(playerKits.getLang().getString("menus.newKit.page.loreItem").replace("<page>", String.valueOf(propertyInventory.getPage()))).build();
 
         ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
         ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();

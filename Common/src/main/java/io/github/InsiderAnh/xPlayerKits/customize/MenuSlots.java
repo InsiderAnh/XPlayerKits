@@ -9,6 +9,7 @@ import java.util.LinkedList;
 public class MenuSlots {
 
     private final LinkedList<Integer> slots = new LinkedList<>();
+    private int perPage = 1;
 
     public MenuSlots(YamlConfiguration configuration, String path) {
         Object configSlots = configuration.get(path);
@@ -30,6 +31,7 @@ public class MenuSlots {
         } else if (configSlots instanceof Integer) {
             this.slots.add((int) configSlots);
         }
+        this.perPage = this.slots.size();
     }
 
     @Override

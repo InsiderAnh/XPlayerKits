@@ -18,7 +18,7 @@ public class PlayerKitsNMS_v1_17_R1 extends PlayerKitsNMS {
     @Override
     public void setUnbreakable(ItemMeta itemMeta, boolean unbreakable) {
         if (itemMeta == null) return;
-        
+
         itemMeta.setUnbreakable(unbreakable);
     }
 
