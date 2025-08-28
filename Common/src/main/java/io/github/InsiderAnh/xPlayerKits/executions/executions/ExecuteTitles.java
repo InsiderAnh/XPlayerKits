@@ -16,7 +16,8 @@ public class ExecuteTitles extends Execution {
     private final int stay;
     private final int fadeOut;
 
-    public ExecuteTitles(String data) {
+    public ExecuteTitles(String action, String data) {
+        super(action);
         String[] sep = data.split(";");
         title = sep[0];
         subtitle = sep.length >= 2 ? sep[1] : "";

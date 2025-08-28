@@ -13,7 +13,8 @@ public class ExecuteWaitTicks extends Execution {
 
     private final int ticks;
 
-    public ExecuteWaitTicks(int ticks) {
+    public ExecuteWaitTicks(String action, int ticks) {
+        super(action);
         this.ticks = ticks;
     }
 

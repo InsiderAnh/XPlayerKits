@@ -17,7 +17,8 @@ public class ExecuteSound extends Execution {
     private final String data;
     private final SoundType soundType;
 
-    public ExecuteSound(SoundType soundType, String data) {
+    public ExecuteSound(String action, SoundType soundType, String data) {
+        super(action);
         this.soundType = soundType;
         this.data = data;
         String[] sep = data.split(";");

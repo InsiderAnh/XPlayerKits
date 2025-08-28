@@ -5,11 +5,15 @@ import io.github.InsiderAnh.xPlayerKits.executions.enums.CommandType;
 import io.github.InsiderAnh.xPlayerKits.executions.enums.MessageType;
 import io.github.InsiderAnh.xPlayerKits.executions.enums.SoundType;
 import io.github.InsiderAnh.xPlayerKits.executions.executions.*;
+import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
+import org.bukkit.entity.Player;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExecutionsManager {
+public class ExecutionManager {
 
     private static final Pattern MESSAGE_PATTERN = Pattern.compile("^(?:message:|\\[message])\\s*(.*)$");
     private static final Pattern CENTER_MESSAGE_PATTERN = Pattern.compile("^(?:center_message:|\\[center_message])\\s*(.*)$");
@@ -31,57 +35,71 @@ public class ExecutionsManager {
 
         matcher = MESSAGE_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteMessage(MessageType.NORMAL, matcher.group(1));
+            return new ExecuteMessage(action, MessageType.NORMAL, matcher.group(1));
         }
 
         matcher = CENTER_MESSAGE_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteMessage(MessageType.CENTERED, matcher.group(1));
+            return new ExecuteMessage(action, MessageType.CENTERED, matcher.group(1));
         }
 
         matcher = MINI_MESSAGE_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteMessage(MessageType.MINI_MESSAGE, matcher.group(1));
+            return new ExecuteMessage(action, MessageType.MINI_MESSAGE, matcher.group(1));
         }
 
         matcher = BROADCAST_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteMessage(MessageType.BROADCAST, matcher.group(1));
+            return new ExecuteMessage(action, MessageType.BROADCAST, matcher.group(1));
         }
 
         matcher = SOUND_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteSound(SoundType.NORMAL_SOUND, matcher.group(1));
+            return new ExecuteSound(action, SoundType.NORMAL_SOUND, matcher.group(1));
         }
 
         matcher = PLAYSOUND_RESOURCE_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteSound(SoundType.RESOURCE_PACK_SOUND, matcher.group(1));
+            return new ExecuteSound(action, SoundType.RESOURCE_PACK_SOUND, matcher.group(1));
         }
 
         matcher = PLAYER_COMMAND_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteCommand(CommandType.PLAYER_COMMAND, matcher.group(1));
+            return new ExecuteCommand(action, CommandType.PLAYER_COMMAND, matcher.group(1));
         }
 
         matcher = CONSOLE_COMMAND_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteCommand(CommandType.CONSOLE_COMMAND, matcher.group(1));
+            return new ExecuteCommand(action, CommandType.CONSOLE_COMMAND, matcher.group(1));
         }
 
         matcher = TITLES_PATTERN.matcher(action);
         if (matcher.matches()) {
-            return new ExecuteTitles(matcher.group(1));
+            return new ExecuteTitles(action, matcher.group(1));
         }
 
         matcher = WAIT_TICKS_PATTERN.matcher(action);
         if (matcher.matches()) {
             try {
-                return new ExecuteWaitTicks(Integer.parseInt(matcher.group(1)));
+                return new ExecuteWaitTicks(action, Integer.parseInt(matcher.group(1)));
             } catch (NumberFormatException e) {
                 return null;
             }
         }
         return null;
     }
+
+    public void execute(Player player, List<Execution> listToExecute, Placeholder... placeholders) {
+        LinkedList<Execution> executions = new LinkedList<>(listToExecute);
+        for (Execution execution : new LinkedList<>(executions)) {
+            executions.remove(execution);
+            if (execution instanceof ExecuteWaitTicks) {
+                ExecuteWaitTicks waitTicks = (ExecuteWaitTicks) execution;
+                waitTicks.executeActions(executions, player, placeholders);
+            } else {
+                execution.execute(player, placeholders);
+            }
+        }
+    }
+
 }

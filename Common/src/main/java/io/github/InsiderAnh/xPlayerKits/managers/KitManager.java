@@ -17,6 +17,7 @@ public class KitManager {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
     private final LinkedHashMap<String, Kit> kits = new LinkedHashMap<>();
+    private final LinkedList<Integer> kitSlots = new LinkedList<>();
     private int lastPage = 1;
 
     public void load() {
@@ -35,6 +36,7 @@ public class KitManager {
             if (menuVarItem != null) {
                 MenuSlots menuSlots = menuVarItem.getSlots();
                 perPage = menuSlots.getPerPage();
+                this.kitSlots.addAll(menuSlots.getSlots());
             }
         }
 
@@ -135,8 +137,9 @@ public class KitManager {
                     finalStructure.put(forcedKit.getName().toLowerCase(), forcedKit);
                 } else if (flexibleIterator.hasNext()) {
                     Kit flexibleKit = flexibleIterator.next();
+                    int kitSlot = kitSlots.size() <= slot ? 0 : kitSlots.get(slot);
                     flexibleKit.getPropertyInventory().setPage(page);
-                    flexibleKit.getPropertyInventory().setSlot(slot);
+                    flexibleKit.getPropertyInventory().setSlot(kitSlot);
                     finalStructure.put(flexibleKit.getName().toLowerCase(), flexibleKit);
                 } else {
                     finalStructure.put(UUID.randomUUID().toString(), null);

@@ -18,6 +18,7 @@ import io.github.InsiderAnh.xPlayerKits.hooks.tasks.BukkitTaskHook;
 import io.github.InsiderAnh.xPlayerKits.hooks.tasks.FoliaTaskHook;
 import io.github.InsiderAnh.xPlayerKits.listeners.PlayerListener;
 import io.github.InsiderAnh.xPlayerKits.managers.ConfigManager;
+import io.github.InsiderAnh.xPlayerKits.managers.ExecutionManager;
 import io.github.InsiderAnh.xPlayerKits.managers.KitManager;
 import io.github.InsiderAnh.xPlayerKits.managers.MenuManager;
 import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
@@ -41,6 +42,7 @@ public class PlayerKits extends JavaPlugin {
     private final KitManager kitManager;
     private final ConfigManager configManager;
     private final MenuManager menuManager;
+    private final ExecutionManager executionManager;
     private InsiderConfig lang;
     private Database database;
     private PlayerKitsNMS playerKitsNMS;
@@ -54,6 +56,7 @@ public class PlayerKits extends JavaPlugin {
     public PlayerKits() {
         instance = this;
         this.executor = MoreExecutors.listeningDecorator(new ThreadPoolExecutor(2, 2, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1024)));
+        this.executionManager = new ExecutionManager();
         this.kitManager = new KitManager();
         this.configManager = new ConfigManager();
         this.menuManager = new MenuManager();

@@ -7,16 +7,17 @@ import io.github.InsiderAnh.xPlayerKits.commands.XKitsCommands;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
+import io.github.InsiderAnh.xPlayerKits.executions.Execution;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyTiming;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
+import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,37 +151,8 @@ public class XPKUtils {
         return material.endsWith("_BOOTS");
     }
 
-    public void executeActions(Player player, ArrayList<String> actions) {
-        for (String action : actions) {
-            if (action.equals("none")) continue;
-            String actionType = action.split(":")[0].toLowerCase();
-            String actionData = action.split(":")[1];
-            switch (actionType) {
-                case "console":
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), actionData.replaceAll("<player>", player.getName()).replaceFirst("/", ""));
-                    break;
-                case "command":
-                    player.chat(actionData.replaceAll("<player>", player.getName()));
-                    break;
-                case "sound":
-                    String[] subData = actionData.split(";");
-                    try {
-                        Sound sound = XSound.matchXSound(subData[0]).orElse(XSound.BLOCK_NOTE_BLOCK_PLING).parseSound();
-                        float volume = Float.parseFloat(subData[1]);
-                        float pitch = Float.parseFloat(subData[2]);
-                        if (sound != null) {
-                            player.playSound(player.getLocation(), sound, volume, pitch);
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                        PlayerKits.getInstance().getLogger().warning("Error on execute sound format.");
-                    }
-                    break;
-                case "message":
-                    player.sendMessage(actionData);
-                    break;
-            }
-        }
+    public void executeActions(Player player, List<Execution> listToExecute) {
+        PlayerKits.getInstance().getExecutionManager().execute(player, listToExecute, new Placeholder("<player>", player.getName()));
     }
 
     public boolean passCondition(Player player, String condition) {

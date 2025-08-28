@@ -3,7 +3,6 @@ package io.github.InsiderAnh.xPlayerKits.nms.v1_9_R4;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.InsiderAnh.xPlayerKits.api.PlayerKitsNMS;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.Location;
 import org.bukkit.Sound;

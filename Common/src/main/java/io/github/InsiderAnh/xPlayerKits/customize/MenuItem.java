@@ -3,7 +3,7 @@ package io.github.InsiderAnh.xPlayerKits.customize;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.api.ColorUtils;
 import io.github.InsiderAnh.xPlayerKits.customize.actions.MenuAction;
-import io.github.InsiderAnh.xPlayerKits.customize.actions.MenuActionArg;
+import io.github.InsiderAnh.xPlayerKits.executions.Execution;
 import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
 import io.github.InsiderAnh.xPlayerKits.utils.LanguageUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
@@ -29,6 +29,7 @@ public class MenuItem {
     private final List<String> lore;
     private final MenuSlots slots;
     private final LinkedList<MenuAction> actions = new LinkedList<>();
+    private final LinkedList<Execution> executions = new LinkedList<>();
     private final String itemId;
 
     public MenuItem(YamlConfiguration configuration, String itemId, String path) {
@@ -40,25 +41,28 @@ public class MenuItem {
         this.displayName = configuration.getString(path + ".display-name", "");
         this.lore = configuration.isSet(path + ".lore") ? configuration.getStringList(path + ".lore") : Collections.emptyList();
         this.slots = new MenuSlots(configuration, path + ".slots");
-        for (String action : configuration.getStringList(path + ".actions")) {
-            this.actions.add(getAction(action));
+        if (configuration.isSet(path + ".actions")) {
+            for (String action : configuration.getStringList(path + ".actions")) {
+                if (action.equals("close_menu") || action.equals("last_page") || action.equals("next_page")) {
+                    this.actions.add(getAction(action));
+                } else {
+                    this.executions.add(PlayerKits.getInstance().getExecutionManager().getExecution(action));
+                }
+            }
         }
     }
 
     public static MenuAction getAction(String action) {
-        if (action.equals("close_menu")) {
-            return new MenuAction(action);
+        switch (action) {
+            case "close_menu":
+                return new MenuAction(action);
+            case "last_page":
+                return new MenuAction(action);
+            case "next_page":
+                return new MenuAction(action);
+            default:
+                return null;
         }
-        if (action.startsWith("command:")) {
-            return new MenuActionArg("command", action.replaceFirst("command:", "").replaceFirst("command: ", ""));
-        }
-        if (action.startsWith("console:")) {
-            return new MenuActionArg("console", action.replaceFirst("console:", "").replaceFirst("console: ", ""));
-        }
-        if (action.startsWith("message:")) {
-            return new MenuActionArg("message", action.replaceFirst("message:", "").replaceFirst("command: ", ""));
-        }
-        return null;
     }
 
     @Override

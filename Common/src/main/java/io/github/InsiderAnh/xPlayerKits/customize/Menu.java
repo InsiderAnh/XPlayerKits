@@ -30,6 +30,8 @@ public class Menu {
                 items.put(itemId, menuItem);
 
                 for (MenuAction action : menuItem.getActions()) {
+                    if (action == null || action.getAction() == null) continue;
+
                     if (action.getAction().equals("last_page")) {
                         lastPageItems.add(itemId);
                     }

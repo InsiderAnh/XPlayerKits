@@ -12,7 +12,8 @@ public class ExecuteCommand extends Execution {
     private final CommandType commandType;
     private final String command;
 
-    public ExecuteCommand(CommandType commandType, String command) {
+    public ExecuteCommand(String action, CommandType commandType, String command) {
+        super(action);
         this.commandType = commandType;
         this.command = command;
     }

@@ -1,0 +1,5 @@
+rotations:
+  example_data:
+    rotated_at: 1617472000000
+    next_finish_cooldown: -1
+    kitId: example

@@ -17,7 +17,8 @@ public class ExecuteMessage extends Execution {
     private final MessageType messageType;
     private final String message;
 
-    public ExecuteMessage(MessageType messageType, String message) {
+    public ExecuteMessage(String action, MessageType messageType, String message) {
+        super(action);
         this.messageType = messageType;
         this.message = message;
     }

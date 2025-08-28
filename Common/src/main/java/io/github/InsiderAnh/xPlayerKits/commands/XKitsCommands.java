@@ -13,11 +13,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class XKitsCommands implements TabExecutor {
 
@@ -40,6 +41,7 @@ public class XKitsCommands implements TabExecutor {
 
         arguments.put("kits", new KitsArgument());
         arguments.put("claim", new ClaimArgument());
+        arguments.put("open", new KitsOpenArgument());
 
         completers.put("preview", new PreviewCompleter());
         completers.put("give", new GiveCompleter());
@@ -47,6 +49,7 @@ public class XKitsCommands implements TabExecutor {
         completers.put("resetall", new ResetAllCompleter());
         completers.put("migrate", new MigrateCompleter());
         completers.put("migratekits", new MigrateKitsCompleter());
+        completers.put("open", new KitsOpenCompleter());
     }
 
     @Override
@@ -85,6 +88,7 @@ public class XKitsCommands implements TabExecutor {
         switch (args[0].toLowerCase()) {
             case "editor":
             case "migratekits":
+            case "open":
             case "kits": {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage("§cThis command is only for players.");
@@ -119,6 +123,7 @@ public class XKitsCommands implements TabExecutor {
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "+---------------------------------------+");
         sender.sendMessage("§e/xkits editor §7- §fOpens the kit editor.");
         sender.sendMessage("§e/xkits kits §7- §fOpens the kit menu.");
+        sender.sendMessage("§e/xkits open [rotation/category] §7- §fOpens the kit menu.");
         sender.sendMessage("§e/xkits give <kitName> <player> §7- §fDirectly give kits to players without verifications..");
         sender.sendMessage("§e/xkits claim <kitName> <player> §7- §fGive kits to players with verifications.");
         sender.sendMessage("§e/xkits delete <kitName> §7- §fDelete a kit.");
@@ -133,7 +138,8 @@ public class XKitsCommands implements TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (args.length <= 1) {
-            return new ArrayList<>(Arrays.asList("editor", "slots", "kits", "give", "claim", "delete", "reset", "resetall", "migrate", "migratekits", "reload"));
+            String argument = args.length == 0 ? "" : args[0].toLowerCase();
+            return Stream.of("editor", "slots", "kits", "give", "claim", "delete", "reset", "resetall", "migrate", "migratekits", "reload", "open").filter(s -> s.contains(argument)).collect(Collectors.toList());
         }
         switch (args[0].toLowerCase()) {
             case "give":
@@ -145,6 +151,7 @@ public class XKitsCommands implements TabExecutor {
             case "resetall":
             case "migrate":
             case "migratekits":
+            case "open":
                 return completers.get(args[0].toLowerCase()).onTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
             default:
                 return null;

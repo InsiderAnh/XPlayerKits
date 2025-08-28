@@ -2,9 +2,12 @@ package io.github.InsiderAnh.xPlayerKits.kits;
 
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.config.InsiderConfig;
+import io.github.InsiderAnh.xPlayerKits.executions.Execution;
 import io.github.InsiderAnh.xPlayerKits.items.ItemSerializer;
 import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyInventory;
 import io.github.InsiderAnh.xPlayerKits.kits.properties.PropertyTiming;
+import io.github.InsiderAnh.xPlayerKits.managers.ExecutionManager;
+import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
 import io.github.InsiderAnh.xPlayerKits.utils.InventorySerializable;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
@@ -27,8 +30,8 @@ public class Kit {
 
     private final ArrayList<String> requirements = new ArrayList<>();
     private final HashMap<String, ItemStack> icons = new HashMap<>();
-    private final ArrayList<String> actionsOnClaim = new ArrayList<>();
-    private final ArrayList<String> actionsOnDeny = new ArrayList<>();
+    private final ArrayList<Execution> actionsOnClaim = new ArrayList<>();
+    private final ArrayList<Execution> actionsOnDeny = new ArrayList<>();
     private String name;
     private PropertyTiming propertyTiming;
     private PropertyInventory propertyInventory;
@@ -51,12 +54,15 @@ public class Kit {
         this.inventory = new ItemStack[50];
         this.offhand = null;
         this.requirements.add("none");
-        this.actionsOnClaim.add("console:say Test allow commands.");
-        this.actionsOnClaim.add("command:/test command");
-        this.actionsOnClaim.add("sound:ENTITY_PLAYER_LEVELUP;1.0f;1.0f");
-        this.actionsOnDeny.add("console:say Test allow commands.");
-        this.actionsOnDeny.add("command:/test command");
-        this.actionsOnDeny.add("sound:ENTITY_ENDERMAN_TELEPORT;1.0f;1.0f");
+
+        ExecutionManager executionManager = PlayerKits.getInstance().getExecutionManager();
+
+        this.actionsOnClaim.add(executionManager.getExecution("console:say Test allow commands."));
+        this.actionsOnClaim.add(executionManager.getExecution("command:/test command"));
+        this.actionsOnClaim.add(executionManager.getExecution("sound:ENTITY_PLAYER_LEVELUP;1.0f;1.0f"));
+        this.actionsOnDeny.add(executionManager.getExecution("console:say Test allow commands."));
+        this.actionsOnDeny.add(executionManager.getExecution("command:/test command"));
+        this.actionsOnDeny.add(executionManager.getExecution("sound:ENTITY_ENDERMAN_TELEPORT;1.0f;1.0f"));
         this.icons.put("CAN_CLAIM", new ItemUtils(Material.STONE).displayName("§aKit test").lore("§7You can claim this kit.\n\n§eClick to claim!").build());
         this.icons.put("CANT_CLAIM", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cYou can´t claim this kit!").build());
         this.icons.put("NO_PERMISSION", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cYou don´t have permission!").build());
@@ -73,8 +79,13 @@ public class Kit {
         this.price = config.getDouble("price");
         this.permission = config.getString("permission");
         this.requirements.addAll(config.getList("requirements"));
-        this.actionsOnClaim.addAll(config.getList("actionsOnClaim"));
-        this.actionsOnDeny.addAll(config.getList("actionsOnDeny"));
+
+        for (String action : config.getList("actionsOnClaim")) {
+            this.actionsOnClaim.add(PlayerKits.getInstance().getExecutionManager().getExecution(action));
+        }
+        for (String action : config.getList("actionsOnDeny")) {
+            this.actionsOnDeny.add(PlayerKits.getInstance().getExecutionManager().getExecution(action));
+        }
 
         if (config.isSet("armor")) {
             this.armor = InventorySerializable.itemStackArrayFromBase64(config.getString("armor"));
@@ -205,7 +216,8 @@ public class Kit {
     }
 
     public void giveKit(Player player) {
-        XPKUtils.executeActions(player, actionsOnClaim);
+        PlayerKits.getInstance().getExecutionManager().execute(player, actionsOnClaim, new Placeholder("<player>", player.getName()));
+
         Inventory playerInv = player.getInventory();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
@@ -256,16 +268,16 @@ public class Kit {
 
     public String getActionsOnClaimString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String command : actionsOnClaim) {
-            stringBuilder.append(command).append("\n");
+        for (Execution execution : actionsOnClaim) {
+            stringBuilder.append(execution.getAction()).append("\n");
         }
         return stringBuilder.toString();
     }
 
     public String getActionsOnDenyString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String command : actionsOnDeny) {
-            stringBuilder.append(command).append("\n");
+        for (Execution execution : actionsOnDeny) {
+            stringBuilder.append(execution.getAction()).append("\n");
         }
         return stringBuilder.toString();
     }
