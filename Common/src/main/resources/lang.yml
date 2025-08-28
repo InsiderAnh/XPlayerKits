@@ -125,6 +125,151 @@ menus:
         &fPage: &e<page>
         &7
         &eClick to interact!
+  selectActions:
+    title: "Select actions type"
+    player_command:
+      nameItem: "&aPlayer command"
+      loreItem: |-
+        &7This will be the command that will be executed
+        &7when the player click on the kit.
+        &7
+        &fCommand: &e<action>
+        &7
+        &eClick to interact!
+    console_command:
+      nameItem: "&aConsole command"
+      loreItem: |-
+        &7This will be the command that will be executed
+        &7when the player click on the kit.
+        &7
+        &fCommand: &e<action>
+        &7
+        &eClick to interact!
+    message:
+      nameItem: "&aMessage"
+      loreItem: |-
+        &7This will be the message that will be displayed
+        &7when the player click on the kit.
+        &7
+        &fMessage: &e<action>
+        &7
+        &eClick to interact!
+    center_message:
+      nameItem: "&aCenter message"
+      loreItem: |-
+        &7This will be the message that will be displayed
+        &7when the player click on the kit.
+        &7
+        &fMessage: &e<action>
+        &7
+        &eClick to interact!
+    mini_message:
+      nameItem: "&aMini message"
+      loreItem: |-
+        &7This will be the message that will be displayed
+        &7when the player click on the kit.
+        &7
+        &fMessage: &e<action>
+        &7
+        &eClick to interact!
+    action_bar:
+      nameItem: "&aAction bar"
+      loreItem: |-
+        &7This will be the message that will be displayed
+        &7when the player click on the kit.
+        &7
+        &fMessage: &e<action>
+        &7
+        &eClick to interact!
+    broadcast:
+      nameItem: "&aBroadcast"
+      loreItem: |-
+        &7This will be the message that will be displayed
+        &7when the player click on the kit.
+        &7
+        &fMessage: &e<action>
+        &7
+        &eClick to interact!
+    sound:
+      nameItem: "&aSound"
+      loreItem: |-
+        &7This will be the sound that will be played
+        &7when the player click on the kit.
+        &7
+        &fSound: &e<action>
+        &7
+        &eClick to interact!
+    playsound_resource_pack:
+      nameItem: "&aPlay sound resource pack"
+      loreItem: |-
+        &7This will be the sound that will be played
+        &7when the player click on the kit.
+        &7
+        &fSound: &e<action>
+        &7
+        &eClick to interact!
+    titles:
+      nameItem: "&aTitle"
+      loreItem: |-
+        &7This will be the title that will be displayed
+        &7when the player click on the kit.
+        &7
+        &fTitle: &e<action>
+        &7
+        &eClick to interact!
+    wait_ticks:
+      nameItem: "&aWait ticks"
+      loreItem: |-
+        &7This will be the ticks that will be waited
+        &7when the player click on the kit.
+        &7
+        &fTicks: &e<action>
+        &7
+        &eClick to interact!
+  actions:
+    title: "Editor actions"
+    action:
+      nameItem: "&a<action> &7(#<#>)"
+      loreItem: |-
+        &7<details>
+        &7
+        &eClick to edit!
+    newAction:
+      nameItem: "&aNew action"
+      loreItem: |-
+        &7Create a new action
+        &7
+        &eClick to interact!
+  mainActions:
+    title: "Actions & requirements"
+    requirements:
+      nameItem: "&aPlaceholder requirements"
+      loreItem: |-
+        &7Here you can set placeholder requirements
+        &7that the player must meet before being
+        &7able to claim this kit.
+        &7
+        &eRequirements:
+        <requirements>
+        &eClick to interact!
+    claimCommands:
+      nameItem: "&aExtra actions on claim"
+      loreItem: |-
+        &7Here you can set additional actions 
+        &7to be executed when claiming the kit.
+        &7
+        &eClaim commands:
+        <claimCommands>
+        &eClick to interact!
+    denyCommands:
+      nameItem: "&aExtra actions on deny"
+      loreItem: |-
+        &7Here you can set additional actions
+        &7to be executed when unable to claim the kit.
+        &7
+        &eDeny commands:
+        <denyCommands>
+        &eClick to interact!
   newKit:
     title: "New kit"
     name:
@@ -177,16 +322,6 @@ menus:
         &fPrice: &e<price>
         &7
         &eClick to interact!
-    requirements:
-      nameItem: "&aPlaceholder requirements"
-      loreItem: |-
-        &7Here you can set placeholder requirements
-        &7that the player must meet before being
-        &7able to claim this kit.
-        &7
-        &eRequirements:
-        <requirements>
-        &c&lEdit in config!
     permission:
       nameItem: "&aKit permission"
       loreItem: |-
@@ -200,24 +335,15 @@ menus:
         &fPermission: &e<permission>
         &7
         &eClick to interact!
-    claimCommands:
-      nameItem: "&aExtra actions on claim"
+    actionsRequirements:
+      nameItem: "&aActions & requirements"
       loreItem: |-
-        &7Here you can set additional actions 
-        &7to be executed when claiming the kit.
+        &7With this property, you determine
+        &7whether the kit requires a specific
+        &7placeholder and executes actions
+        &7when the placeholder is claimed.
         &7
-        &eClaim commands:
-        <claimCommands>
-        &c&lEdit in config!
-    denyCommands:
-      nameItem: "&aExtra actions on deny"
-      loreItem: |-
-        &7Here you can set additional actions
-        &7to be executed when unable to claim the kit.
-        &7
-        &eDeny commands:
-        <denyCommands>
-        &c&lEdit in config!
+        &eClick to interact!
     icons:
       nameItem: "&aIcons"
       loreItem: |-

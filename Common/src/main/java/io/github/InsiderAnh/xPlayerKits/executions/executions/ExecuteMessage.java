@@ -44,4 +44,8 @@ public class ExecuteMessage extends Execution {
         }
     }
 
+    public String getActionType() {
+        return messageType.name().toLowerCase();
+    }
+
 }

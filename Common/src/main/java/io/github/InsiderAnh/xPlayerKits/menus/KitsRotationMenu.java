@@ -6,11 +6,13 @@ import io.github.InsiderAnh.xPlayerKits.customize.Menu;
 import io.github.InsiderAnh.xPlayerKits.customize.MenuItem;
 import io.github.InsiderAnh.xPlayerKits.customize.MenuSlots;
 import io.github.InsiderAnh.xPlayerKits.customize.MenuVarItem;
+import io.github.InsiderAnh.xPlayerKits.customize.actions.MenuAction;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
+import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.entity.Player;
@@ -30,8 +32,8 @@ public class KitsRotationMenu extends AInventory {
     private int page;
 
     public KitsRotationMenu(Player player, PlayerKitData playerKitData, int page) {
-        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getMenuManager().getTitle("rotative_kits", "Kits rotation"));
-        this.menu = playerKits.getMenuManager().getMenu("rotative_kits");
+        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getMenuManager().getTitle("rotation_kits", "Kits rotation"));
+        this.menu = playerKits.getMenuManager().getMenu("rotation_kits");
         this.playerKitData = playerKitData;
         this.page = page;
         onUpdate(getInventory());
@@ -43,18 +45,25 @@ public class KitsRotationMenu extends AInventory {
         Player player = getPlayer();
         NBTItem nbtItem = new NBTItem(currentItem);
         if (nbtItem.hasTag("xpk-menu:item")) {
-            String action = nbtItem.getString("xpk-menu:item");
-            if (action.equals("close")) {
-                close();
+            String menuItemId = nbtItem.getString("xpk-menu:item");
+            MenuItem menuItem = menu.getItems().get(menuItemId);
+            if (menuItem == null) return;
+
+            for (MenuAction action : menuItem.getActions()) {
+                if (action.getAction().equals("close_menu")) {
+                    close();
+                }
+                if (action.getAction().equals("last_page")) {
+                    page = page + 1;
+                    onUpdate(getInventory());
+                }
+                if (action.getAction().equals("next_page")) {
+                    page = page - 1;
+                    onUpdate(getInventory());
+                }
             }
-            if (action.equals("last_page")) {
-                page = page + 1;
-                onUpdate(getInventory());
-            }
-            if (action.equals("next_page")) {
-                page = page - 1;
-                onUpdate(getInventory());
-            }
+
+            playerKits.getExecutionManager().execute(player, menuItem.getExecutions(), new Placeholder("<player>", player.getName()));
         }
         if (nbtItem.hasTag("kit")) {
             Kit kit = playerKits.getKitManager().getKit(nbtItem.getString("kit"));
@@ -90,6 +99,10 @@ public class KitsRotationMenu extends AInventory {
         inventory.clear();
         Player player = getPlayer();
         for (MenuItem menuItem : menu.getItems().values()) {
+            if (menu.getLastPageItems().contains(menuItem.getItemId()) && page <= 1) continue;
+            if (menu.getNextPageItems().contains(menuItem.getItemId()) && page >= playerKits.getKitManager().getLastPage())
+                continue;
+
             MenuSlots menuSlots = menuItem.getSlots();
 
             ItemStack itemStack = menuItem.buildItem(player);
@@ -115,8 +128,9 @@ public class KitsRotationMenu extends AInventory {
 
     public void buildAndSet(Player player, int slot, Kit kit) {
         String state = getState(player, kit, playerKitData);
-        ItemStack icon = kit.getIcons().get(state);
-        getInventory().setItem(slot, XPKUtils.applySimpleTag(new ItemUtils(icon).displayName(playerKits.getLang().getString("menus.kitsMenu." + state + ".nameItem").replace("<name>", kit.getName())).build(), "kit", kit.getName()));
+        ItemStack icon = new ItemUtils(kit.getIcons().get(state))
+            .build();
+        getInventory().setItem(slot, XPKUtils.applySimpleTag(icon, "kit", kit.getName()));
     }
 
     private String getState(Player player, Kit kit, PlayerKitData playerKitData) {

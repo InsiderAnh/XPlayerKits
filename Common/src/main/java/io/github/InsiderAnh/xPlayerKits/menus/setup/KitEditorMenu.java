@@ -7,6 +7,7 @@ import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
 import io.github.InsiderAnh.xPlayerKits.libs.xseries.XSound;
+import io.github.InsiderAnh.xPlayerKits.menus.setup.actions.KitMainActionsMenu;
 import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -44,7 +45,7 @@ public class KitEditorMenu extends AInventory {
                 player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
                 return;
             }
-            kit.getIcons().put(icon, itemStack);
+            kit.setIcon(icon, itemStack);
             player.sendMessage(playerKits.getLang().getString("messages.setIcon"));
             player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
             onUpdate(getInventory());
@@ -59,6 +60,9 @@ public class KitEditorMenu extends AInventory {
                 case "inventorySettings":
                     new KitInventorySettingsMenu(player, kit).open();
                     return;
+                case "actionsRequirements":
+                    new KitMainActionsMenu(player, kit).open();
+                    return;
                 case "save":
                     kit.save();
                     playerKits.getKitManager().load();
@@ -67,7 +71,7 @@ public class KitEditorMenu extends AInventory {
                     close();
                     return;
                 case "back":
-                    new MainKitEditorMenu(player, 1).open();
+                    new KitMainEditorMenu(player, 1).open();
                     return;
                 case "armor":
                 case "inv":
@@ -144,9 +148,7 @@ public class KitEditorMenu extends AInventory {
         ItemStack inv = new ItemUtils(XMaterial.CHEST.get()).displayName(playerKits.getLang().getString("menus.newKit.inv.nameItem")).lore(playerKits.getLang().getString("menus.newKit.inv.loreItem")).build();
         ItemStack inventorySettings = new ItemUtils(XMaterial.ENDER_CHEST.get()).displayName(playerKits.getLang().getString("menus.newKit.inventorySettings.nameItem")).lore(playerKits.getLang().getString("menus.newKit.inventorySettings.loreItem")).build();
         ItemStack price = new ItemUtils(XMaterial.GOLD_NUGGET.get()).displayName(playerKits.getLang().getString("menus.newKit.price.nameItem")).lore(playerKits.getLang().getString("menus.newKit.price.loreItem").replace("<price>", String.valueOf(kit.getPrice()))).build();
-        ItemStack requirements = new ItemUtils(XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.newKit.requirements.nameItem")).lore(playerKits.getLang().getString("menus.newKit.requirements.loreItem").replace("<requirements>", kit.getRequirementsString())).build();
-        ItemStack claimCommands = new ItemUtils(XMaterial.GOLD_INGOT.get()).displayName(playerKits.getLang().getString("menus.newKit.claimCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.claimCommands.loreItem").replace("<claimCommands>", kit.getActionsOnClaimString())).build();
-        ItemStack denyCommands = new ItemUtils(XMaterial.REDSTONE.get()).displayName(playerKits.getLang().getString("menus.newKit.denyCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.denyCommands.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
+        ItemStack actionsRequirements = new ItemUtils(XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.newKit.actionsRequirements.nameItem")).lore(playerKits.getLang().getString("menus.newKit.actionsRequirements.loreItem")).build();
         ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
         ItemStack save = new ItemUtils(XMaterial.NETHER_STAR.get()).displayName(playerKits.getLang().getString("menus.newKit.save.nameItem")).lore(playerKits.getLang().getString("menus.newKit.save.loreItem")).build();
         inventory.setItem(10, XPKUtils.applySimpleTag(name, "action", "name"));
@@ -155,10 +157,8 @@ public class KitEditorMenu extends AInventory {
         inventory.setItem(15, XPKUtils.applySimpleTag(armor, "action", "armor"));
         inventory.setItem(16, XPKUtils.applySimpleTag(inv, "action", "inv"));
         inventory.setItem(19, XPKUtils.applySimpleTag(inventorySettings, "action", "inventorySettings"));
-        inventory.setItem(21, XPKUtils.applySimpleTag(price, "action", "price"));
-        inventory.setItem(22, XPKUtils.applySimpleTag(requirements, "action", "requirements"));
-        inventory.setItem(23, XPKUtils.applySimpleTag(claimCommands, "action", "claimCommands"));
-        inventory.setItem(24, XPKUtils.applySimpleTag(denyCommands, "action", "denyCommands"));
+        inventory.setItem(22, XPKUtils.applySimpleTag(price, "action", "price"));
+        inventory.setItem(25, XPKUtils.applySimpleTag(actionsRequirements, "action", "actionsRequirements"));
         ItemStack icons = new ItemUtils(XMaterial.GREEN_STAINED_GLASS_PANE.parseItem()).displayName(playerKits.getLang().getString("menus.newKit.icons.nameItem")).lore(playerKits.getLang().getString("menus.newKit.icons.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
         for (int i = 28; i <= 34; i++) {
             inventory.setItem(i, icons);

@@ -41,4 +41,8 @@ public class ExecuteWaitTicks extends Execution {
         }.runTaskLater(PlayerKits.getInstance(), ticks);
     }
 
+    public String getActionType() {
+        return "wait_ticks";
+    }
+
 }

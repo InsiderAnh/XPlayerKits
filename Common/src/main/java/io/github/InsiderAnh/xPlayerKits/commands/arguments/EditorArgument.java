@@ -1,7 +1,7 @@
 package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
-import io.github.InsiderAnh.xPlayerKits.menus.setup.MainKitEditorMenu;
+import io.github.InsiderAnh.xPlayerKits.menus.setup.KitMainEditorMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ public class EditorArgument extends StellarArgument {
             player.sendMessage(playerKits.getLang().getString("messages.noPermission"));
             return;
         }
-        new MainKitEditorMenu(player, 1).open();
+        new KitMainEditorMenu(player, 1).open();
     }
 
 }

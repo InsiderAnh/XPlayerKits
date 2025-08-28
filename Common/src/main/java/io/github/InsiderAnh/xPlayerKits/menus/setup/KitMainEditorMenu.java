@@ -21,13 +21,13 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-public class MainKitEditorMenu extends AInventory {
+public class KitMainEditorMenu extends AInventory {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
     private final int page;
     private final int passedSlots;
 
-    public MainKitEditorMenu(Player player, int page) {
+    public KitMainEditorMenu(Player player, int page) {
         super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getLang().getString("menus.mainKitEditor.title"));
         this.page = page;
         this.passedSlots = (page - 1) * 21;
@@ -60,10 +60,10 @@ public class MainKitEditorMenu extends AInventory {
                     .open(player);
             }
             if (action.equals("last")) {
-                new MainKitEditorMenu(player, page - 1).open();
+                new KitMainEditorMenu(player, page - 1).open();
             }
             if (action.equals("next")) {
-                new MainKitEditorMenu(player, page + 1).open();
+                new KitMainEditorMenu(player, page + 1).open();
             }
             if (action.equals("close")) {
                 close();

@@ -21,4 +21,6 @@ public abstract class Execution {
 
     }
 
+    public abstract String getActionType();
+
 }

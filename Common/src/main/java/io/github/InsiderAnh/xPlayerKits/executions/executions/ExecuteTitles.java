@@ -52,4 +52,9 @@ public class ExecuteTitles extends Execution {
 
         nms.sendTitle(player, replacedTitle, replacedSubTitle, fadeIn, stay, fadeOut);
     }
+
+    public String getActionType() {
+        return "titles";
+    }
+
 }

@@ -58,4 +58,8 @@ public class ExecuteSound extends Execution {
         }
     }
 
+    public String getActionType() {
+        return soundType.name().toLowerCase();
+    }
+
 }

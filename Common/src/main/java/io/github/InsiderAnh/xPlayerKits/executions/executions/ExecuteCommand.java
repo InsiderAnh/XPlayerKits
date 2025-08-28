@@ -29,4 +29,8 @@ public class ExecuteCommand extends Execution {
         }
     }
 
+    public String getActionType() {
+        return commandType.name().toLowerCase();
+    }
+
 }

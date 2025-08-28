@@ -2,6 +2,7 @@ package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
 import io.github.InsiderAnh.xPlayerKits.menus.KitsMenu;
+import io.github.InsiderAnh.xPlayerKits.menus.KitsRotationMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ public class KitsOpenArgument extends StellarArgument {
         playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData -> {
             switch (arguments[0].toLowerCase()) {
                 case "rotation":
-                    playerKits.getStellarTaskHook(() -> new KitsMenu(player, playerKitData, 1).open()).runTask(player.getLocation());
+                    playerKits.getStellarTaskHook(() -> new KitsRotationMenu(player, playerKitData, 1).open()).runTask(player.getLocation());
                     break;
             }
         }).exceptionally(throwable -> {
