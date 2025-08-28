@@ -187,24 +187,23 @@ public class XPKUtils {
         String conditional = sep[1];
 
         try {
-            double valueFinal = Double.parseDouble(sep[2]);
-            double valueFinalVariable = Double.parseDouble(variable);
-
             switch (conditional) {
+                case "==": return variable.equals(sep[2]);
+                case "!=": return !variable.equals(sep[2]);
                 case ">=":
-                    return valueFinalVariable >= valueFinal;
                 case "<=":
-                    return valueFinalVariable <= valueFinal;
-                case "==":
-                    return variable.equals(sep[2]);
-                case "!=":
-                    return !variable.equals(sep[2]);
                 case ">":
-                    return valueFinalVariable > valueFinal;
                 case "<":
-                    return valueFinalVariable < valueFinal;
-                default:
-                    return false;
+                    double valueFinal = Double.parseDouble(sep[2]);
+                    double valueFinalVariable = Double.parseDouble(variable);
+                    switch (conditional) {
+                        case ">=": return valueFinalVariable >= valueFinal;
+                        case "<=": return valueFinalVariable <= valueFinal;
+                        case ">": return valueFinalVariable > valueFinal;
+                        case "<": return valueFinalVariable < valueFinal;
+                        default: return false;
+                    }
+                default: return false;
             }
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             return false;

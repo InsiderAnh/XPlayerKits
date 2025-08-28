@@ -1,5 +1,8 @@
 package io.github.InsiderAnh.xPlayerKits.items;
 
+import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.iface.ReadableNBT;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionBannerPattern;
@@ -28,6 +31,8 @@ public class ItemSerializer {
     public static ItemStack deserialize(Map<String, Object> data) {
         ItemStack item = createBasicItemStack(data);
         if (item == null) return null;
+
+        applyNBT(item, data);
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
@@ -85,6 +90,18 @@ public class ItemSerializer {
             lore.add(codeToColor(line.toString()));
         }
         return lore;
+    }
+
+    private static void applyNBT(ItemStack item, Map<String, Object> data) {
+        if (!data.containsKey("internal")) return;
+
+        String nbtString = (String) data.get("internal");
+        if (nbtString == null) return;
+
+        ReadableNBT nbt = NBT.parseNBT(nbtString);
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.mergeCompound(nbt);
+        item.setItemMeta(nbtItem.getItem().getItemMeta());
     }
 
     private static void applyEnchantments(ItemMeta meta, Map<String, Object> data) {
@@ -260,6 +277,7 @@ public class ItemSerializer {
 
         config.set(path, null);
         serializeBasicProperties(item, config, path);
+        serializeNBT(item, config, path);
 
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
@@ -312,6 +330,13 @@ public class ItemSerializer {
         config.set(path + ".enchants", enchants);
     }
 
+    private static void serializeNBT(ItemStack itemStack, YamlConfiguration config, String path) {
+        NBTItem nbtItem = new NBTItem(itemStack);
+        if (!nbtItem.hasNBTData()) return;
+
+        config.set(path + ".internal", nbtItem.toString());
+    }
+
     private static void serializeItemFlags(ItemMeta meta, YamlConfiguration config, String path) {
         if (meta.getItemFlags().isEmpty()) return;
 
@@ -328,13 +353,8 @@ public class ItemSerializer {
     }
 
     private static void serializeUnbreakable(ItemMeta meta, YamlConfiguration config, String path) {
-        if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_11)) return;
-
         try {
-            Method isUnbreakable = meta.getClass().getMethod("isUnbreakable");
-            if ((Boolean) isUnbreakable.invoke(meta)) {
-                config.set(path + ".unbreakable", true);
-            }
+            config.set(path + ".unbreakable", PlayerKits.getInstance().getPlayerKitsNMS().isUnbreakable(meta));
         } catch (Exception ignored) {
         }
     }

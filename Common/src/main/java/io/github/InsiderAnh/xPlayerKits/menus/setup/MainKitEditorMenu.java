@@ -96,10 +96,10 @@ public class MainKitEditorMenu extends AInventory {
         ItemStack newKit = new ItemUtils(XMaterial.EMERALD.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.newKit.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.newKit.loreItem")).build();
         ItemStack lastPage = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.last.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.last.loreItem")).build();
         ItemStack nextPage = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.next.nameItem")).lore(playerKits.getLang().getString("menus.mainKitEditor.next.loreItem")).build();
-        inventory.setItem(45, XPKUtils.applySimpleTag(close, "action", "close"));
-        inventory.setItem(50, XPKUtils.applySimpleTag(newKit, "action", "newKit"));
+        inventory.setItem(49, XPKUtils.applySimpleTag(close, "action", "close"));
+        inventory.setItem(53, XPKUtils.applySimpleTag(newKit, "action", "newKit"));
         if (page > 1) {
-            inventory.setItem(44, XPKUtils.applySimpleTag(lastPage, "action", "last"));
+            inventory.setItem(46, XPKUtils.applySimpleTag(lastPage, "action", "last"));
         }
         if (page < playerKits.getKitManager().getLastPage()) {
             inventory.setItem(52, XPKUtils.applySimpleTag(nextPage, "action", "next"));
