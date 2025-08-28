@@ -3,7 +3,14 @@ package io.github.InsiderAnh.xPlayerKits.nms.v1_16_R5;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.InsiderAnh.xPlayerKits.api.PlayerKitsNMS;
+import net.minecraft.server.v1_16_R3.ChatComponentText;
+import net.minecraft.server.v1_16_R3.ChatMessageType;
+import net.minecraft.server.v1_16_R3.PacketPlayOutChat;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -45,6 +52,35 @@ public class PlayerKitsNMS_v1_16_R5 extends PlayerKitsNMS {
 
         itemMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+    }
+
+    @Override
+    public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        try {
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        } catch (NoSuchMethodError error) {
+            player.sendTitle(title, subtitle);
+        }
+    }
+
+    @Override
+    public void sendActionBar(Player player, String message) {
+        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), ChatMessageType.GAME_INFO, UUID.randomUUID());
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void playSound(Location location, String sound, float volume, float pitch) {
+        if (location == null || location.getWorld() == null) return;
+        try {
+            location.getWorld().playSound(location, Sound.valueOf(sound.toUpperCase()), volume, pitch);
+        } catch (NoSuchMethodError ignored) {
+        }
+    }
+
+    @Override
+    public void sendMiniMessage(Player player, String message) {
+        player.sendMessage(message);
     }
 
     @Override

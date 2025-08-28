@@ -2,7 +2,6 @@ package io.github.InsiderAnh.xPlayerKits.database;
 
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
-import io.github.InsiderAnh.xPlayerKits.superclass.Database;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;

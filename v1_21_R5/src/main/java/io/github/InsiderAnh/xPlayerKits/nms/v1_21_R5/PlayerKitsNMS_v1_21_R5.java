@@ -4,7 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.InsiderAnh.xPlayerKits.api.PlayerKitsNMS;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -14,11 +19,61 @@ import org.bukkit.profile.PlayerTextures;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlayerKitsNMS_v1_21_R5 extends PlayerKitsNMS {
 
     private final Gson GSON = new Gson();
+    private final Map<String, String> replacements = new HashMap<>();
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+
+    public PlayerKitsNMS_v1_21_R5() {
+        replacements.put("0", "<black>");
+        replacements.put("1", "<dark_blue>");
+        replacements.put("2", "<dark_green>");
+        replacements.put("3", "<dark_aqua>");
+        replacements.put("4", "<dark_red>");
+        replacements.put("5", "<dark_purple>");
+        replacements.put("6", "<gold>");
+        replacements.put("7", "<gray>");
+        replacements.put("8", "<dark_gray>");
+        replacements.put("9", "<blue>");
+        replacements.put("a", "<green>");
+        replacements.put("b", "<aqua>");
+        replacements.put("c", "<red>");
+        replacements.put("d", "<light_purple>");
+        replacements.put("e", "<yellow>");
+        replacements.put("f", "<white>");
+        replacements.put("k", "<obfuscated>");
+        replacements.put("l", "<bold>");
+        replacements.put("m", "<strikethrough>");
+        replacements.put("n", "<underlined>");
+        replacements.put("o", "<italic>");
+        replacements.put("r", "<reset>");
+    }
+
+    @Override
+    public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    @Override
+    public void playSound(Location location, String sound, float volume, float pitch) {
+        if (location == null || location.getWorld() == null) return;
+        location.getWorld().playSound(location, sound, volume, pitch);
+    }
+
+    @Override
+    public void sendActionBar(Player player, String message) {
+        player.sendActionBar(Component.text(message));
+    }
+
+    @Override
+    public void sendMiniMessage(Player player, String message) {
+        player.sendMessage(miniMessage.deserialize(replaceColors(PlaceholderAPI.setPlaceholders(player, message))));
+    }
 
     @Override
     public void setUnbreakable(ItemMeta itemMeta, boolean unbreakable) {
@@ -155,6 +210,30 @@ public class PlayerKitsNMS_v1_21_R5 extends PlayerKitsNMS {
             sb.append(str);
         }
         return sb.toString();
+    }
+
+    private String replaceColors(String message) {
+        StringBuilder result = new StringBuilder(message.length());
+        for (int i = 0; i < message.length(); i++) {
+            char ch = message.charAt(i);
+            if (ch == '&' || ch == '§') {
+                if (i + 1 < message.length()) {
+                    char code = Character.toLowerCase(message.charAt(i + 1));
+                    String replacement = replacements.get(String.valueOf(code));
+                    if (replacement != null) {
+                        result.append(replacement);
+                        i++;
+                    } else {
+                        result.append(ch);
+                    }
+                } else {
+                    result.append(ch);
+                }
+            } else {
+                result.append(ch);
+            }
+        }
+        return result.toString();
     }
 
 }

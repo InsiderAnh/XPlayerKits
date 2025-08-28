@@ -86,6 +86,7 @@ public class MainKitEditorMenu extends AInventory {
         AtomicInteger counter = new AtomicInteger();
         AtomicInteger index = new AtomicInteger();
         for (Kit kit : playerKits.getKitManager().getKits().values()) {
+            if (kit == null) continue;
             if (counter.getAndIncrement() < passedSlots || index.get() >= 21) {
                 continue;
             }

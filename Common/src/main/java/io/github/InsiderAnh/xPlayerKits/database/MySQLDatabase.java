@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
-import io.github.InsiderAnh.xPlayerKits.superclass.Database;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;

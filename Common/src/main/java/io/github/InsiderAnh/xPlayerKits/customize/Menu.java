@@ -1,9 +1,11 @@
 package io.github.InsiderAnh.xPlayerKits.customize;
 
+import io.github.InsiderAnh.xPlayerKits.customize.actions.MenuAction;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 @Getter
 public class Menu {
@@ -14,6 +16,9 @@ public class Menu {
     private final HashMap<String, MenuItem> items = new HashMap<>();
     private final HashMap<String, MenuVarItem> varItems = new HashMap<>();
 
+    private final HashSet<String> lastPageItems = new HashSet<>();
+    private final HashSet<String> nextPageItems = new HashSet<>();
+
     public Menu(YamlConfiguration configuration, String menuId) {
         this.menuId = menuId;
         this.rows = configuration.getInt("rows");
@@ -23,6 +28,15 @@ public class Menu {
             for (String itemId : configuration.getConfigurationSection("items").getKeys(false)) {
                 MenuItem menuItem = new MenuItem(configuration, itemId, "items." + itemId);
                 items.put(itemId, menuItem);
+
+                for (MenuAction action : menuItem.getActions()) {
+                    if (action.getAction().equals("last_page")) {
+                        lastPageItems.add(itemId);
+                    }
+                    if (action.getAction().equals("next_page")) {
+                        nextPageItems.add(itemId);
+                    }
+                }
             }
         }
         if (configuration.isSet("varItems")) {

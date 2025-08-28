@@ -93,9 +93,9 @@ public class ItemSerializer {
     }
 
     private static void applyNBT(ItemStack item, Map<String, Object> data) {
-        if (!data.containsKey("internal")) return;
+        if (!data.containsKey("nbt_data")) return;
 
-        String nbtString = (String) data.get("internal");
+        String nbtString = (String) data.get("nbt_data");
         if (nbtString == null) return;
 
         ReadableNBT nbt = NBT.parseNBT(nbtString);
@@ -334,7 +334,7 @@ public class ItemSerializer {
         NBTItem nbtItem = new NBTItem(itemStack);
         if (!nbtItem.hasNBTData()) return;
 
-        config.set(path + ".internal", nbtItem.toString());
+        config.set(path + ".nbt_data", nbtItem.toString());
     }
 
     private static void serializeItemFlags(ItemMeta meta, YamlConfiguration config, String path) {

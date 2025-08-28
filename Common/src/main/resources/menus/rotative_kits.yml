@@ -1,9 +1,30 @@
 rows: 6
 title: "Kits"
 varItems:
-  kitSlots:
-    slots: "10-16;19-25;28-34"
+  rotationSlots:
+    slots: "20;22;24"
 items:
+  noInRotation:
+    material: BEDROCK
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&cNo kits in rotation"
+    lore:
+      - "&7We don´t have any kits in rotation."
+    slots: 22
+    actions:
+      - "none"
+  countdown:
+    material: CLOCK
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&cSlot in countdown"
+    lore:
+      - "&7Here will appear a kit."
+      - "&7"
+      - "&7Next kit in: &6<countdown>"
   close:
     material: BOOK
     amount: 1

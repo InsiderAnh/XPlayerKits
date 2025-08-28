@@ -1,4 +1,4 @@
-package io.github.InsiderAnh.xPlayerKits.superclass;
+package io.github.InsiderAnh.xPlayerKits.database;
 
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
 

@@ -3,7 +3,12 @@ package io.github.InsiderAnh.xPlayerKits.nms.v1_12_R2;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.InsiderAnh.xPlayerKits.api.PlayerKitsNMS;
+import net.minecraft.server.v1_12_R1.*;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -78,6 +83,42 @@ public class PlayerKitsNMS_v1_12_R2 extends PlayerKitsNMS {
         }
         itemStack.setItemMeta(headMeta);
         return itemStack;
+    }
+
+    @Override
+    public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        IChatBaseComponent titleText = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + title + "\"}");
+        IChatBaseComponent subtitleText = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + subtitle + "\"}");
+
+        PacketPlayOutTitle packetTitleInfo = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TIMES, null, fadeIn, stay, fadeOut);
+
+        PacketPlayOutTitle packetTitleText = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, titleText);
+        PacketPlayOutTitle packetSubtitleText = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, subtitleText);
+
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+        playerConnection.sendPacket(packetTitleInfo);
+        playerConnection.sendPacket(packetSubtitleText);
+        playerConnection.sendPacket(packetTitleText);
+    }
+
+    @Override
+    public void sendActionBar(Player player, String message) {
+        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(message), ChatMessageType.GAME_INFO);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void playSound(Location location, String sound, float volume, float pitch) {
+        if (location == null || location.getWorld() == null) return;
+        try {
+            location.getWorld().playSound(location, Sound.valueOf(sound.toUpperCase()), volume, pitch);
+        } catch (NoSuchMethodError ignored) {
+        }
+    }
+
+    @Override
+    public void sendMiniMessage(Player player, String message) {
+        player.sendMessage(message);
     }
 
 }

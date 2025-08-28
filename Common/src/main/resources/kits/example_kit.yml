@@ -1,10 +1,11 @@
-name: miner
+name: example_kit
 timing:
   countdown: 300
   oneTime: false
   rotationEnabled: false
   rotationTime: 0
   rotationCooldown: 0
+  rotationProbability: -1
 inventory:
   checkInventorySpace: false
   autoArmor: false
