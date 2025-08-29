@@ -4,24 +4,28 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.InsiderAnh.xPlayerKits.api.PlayerKitsNMS;
+import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionPotionEffect;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerKitsNMS_v1_21_R1 extends PlayerKitsNMS {
 
@@ -52,6 +56,67 @@ public class PlayerKitsNMS_v1_21_R1 extends PlayerKitsNMS {
         replacements.put("n", "<underlined>");
         replacements.put("o", "<italic>");
         replacements.put("r", "<reset>");
+    }
+
+    @Override
+    public void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data) {
+        if (data.containsKey("potion_data")) {
+            String potionDataStr = (String) data.get("potion_data");
+            String[] parts = potionDataStr.split(":");
+            if (parts.length >= 3) {
+                PotionType type = PotionType.valueOf(parts[0]);
+                boolean extended = Boolean.parseBoolean(parts[1]);
+                boolean upgraded = Boolean.parseBoolean(parts[2]);
+                potionMeta.setBasePotionData(new PotionData(type, extended, upgraded));
+            }
+        }
+        
+        if (!data.containsKey("potion_effects")) return;
+
+        List<?> effectList = (List<?>) data.get("potion_effects");
+        for (Object effectObj : effectList) {
+            PotionEffect effect = parsePotionEffect(effectObj.toString());
+            if (effect != null) {
+                potionMeta.addCustomEffect(effect, true);
+            }
+        }
+    }
+
+    private PotionEffect parsePotionEffect(String effectStr) {
+        String[] parts = effectStr.split(":");
+        if (parts.length < 3) return null;
+
+        PotionEffectType type = CrossVersionPotionEffect.getEffect(parts[0]);
+        if (type == null) return null;
+
+        try {
+            int amplifier = Integer.parseInt(parts[1]) - 1;
+            int duration = Integer.parseInt(parts[2]);
+            return new PotionEffect(type, duration, amplifier);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void serializePotionMeta(ItemStack itemStack, YamlConfiguration config, String path) {
+        PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
+        if (potionMeta == null) return;
+
+        PotionData potionData = potionMeta.getBasePotionData();
+        if (potionData != null) {
+            PotionType type = potionData.getType();
+            config.set(path + ".potion_data", type.name() + ":" + potionData.isExtended() + ":" + potionData.isUpgraded());
+        }
+        
+        if (!potionMeta.hasCustomEffects()) return;
+
+        List<String> effects = new ArrayList<>();
+        for (PotionEffect effect : potionMeta.getCustomEffects()) {
+            String effectId = CrossVersionPotionEffect.getEffectId(effect.getType());
+            effects.add(effectId + ":" + (effect.getAmplifier() + 1) + ":" + effect.getDuration());
+        }
+        config.set(path + ".potion_effects", effects);
     }
 
     @Override

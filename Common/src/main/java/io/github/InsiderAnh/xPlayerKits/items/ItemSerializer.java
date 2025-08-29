@@ -55,7 +55,8 @@ public class ItemSerializer {
         if (material == null) return null;
 
         int amount = data.containsKey("amount") ? (Integer) data.get("amount") : 1;
-        ItemStack item = new ItemStack(material, amount);
+        short dat = data.containsKey("data") ? (short) (int) data.get("data") : 0;
+        ItemStack item = new ItemStack(material, amount, dat);
 
         if (data.containsKey("durability")) {
             item.setDurability(((Number) data.get("durability")).shortValue());
@@ -241,34 +242,6 @@ public class ItemSerializer {
         return pages;
     }
 
-    private static void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data) {
-        if (!data.containsKey("potion_effects")) return;
-
-        List<?> effectList = (List<?>) data.get("potion_effects");
-        for (Object effectObj : effectList) {
-            PotionEffect effect = parsePotionEffect(effectObj.toString());
-            if (effect != null) {
-                potionMeta.addCustomEffect(effect, true);
-            }
-        }
-    }
-
-    private static PotionEffect parsePotionEffect(String effectStr) {
-        String[] parts = effectStr.split(":");
-        if (parts.length < 3) return null;
-
-        PotionEffectType type = CrossVersionPotionEffect.getEffect(parts[0]);
-        if (type == null) return null;
-
-        try {
-            int amplifier = Integer.parseInt(parts[1]) - 1;
-            int duration = Integer.parseInt(parts[2]);
-            return new PotionEffect(type, duration, amplifier);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
     public static void serialize(ItemStack item, YamlConfiguration config, String path) {
         if (item == null || item.getType() == Material.AIR) {
             config.set(path + ".material", "AIR");
@@ -281,12 +254,16 @@ public class ItemSerializer {
 
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            serializeItemMeta(meta, config, path);
+            serializeItemMeta(item, meta, config, path);
         }
     }
 
     private static void serializeBasicProperties(ItemStack item, YamlConfiguration config, String path) {
         config.set(path + ".material", item.getType().name());
+
+        if (item.getData().getData() != 0) {
+            config.set(path + ".data", item.getData().getData());
+        }
 
         if (item.getAmount() != 1) {
             config.set(path + ".amount", item.getAmount());
@@ -297,12 +274,12 @@ public class ItemSerializer {
         }
     }
 
-    private static void serializeItemMeta(ItemMeta meta, YamlConfiguration config, String path) {
+    private static void serializeItemMeta(ItemStack itemStack, ItemMeta meta, YamlConfiguration config, String path) {
         serializeDisplayProperties(meta, config, path);
         serializeEnchantments(meta, config, path);
         serializeItemFlags(meta, config, path);
         serializeVersionSpecificProperties(meta, config, path);
-        serializeSpecificMeta(meta, config, path);
+        serializeSpecificMeta(itemStack, meta, config, path);
     }
 
     private static void serializeDisplayProperties(ItemMeta meta, YamlConfiguration config, String path) {
@@ -373,7 +350,7 @@ public class ItemSerializer {
         }
     }
 
-    private static void serializeSpecificMeta(ItemMeta meta, YamlConfiguration config, String path) {
+    private static void serializeSpecificMeta(ItemStack itemStack, ItemMeta meta, YamlConfiguration config, String path) {
         if (meta instanceof BannerMeta) {
             serializeBannerMeta((BannerMeta) meta, config, path);
         } else if (meta instanceof LeatherArmorMeta) {
@@ -383,7 +360,7 @@ public class ItemSerializer {
         } else if (meta instanceof BookMeta) {
             serializeBookMeta((BookMeta) meta, config, path);
         } else if (meta instanceof PotionMeta) {
-            serializePotionMeta((PotionMeta) meta, config, path);
+            serializePotionMeta(itemStack, config, path);
         } else if (meta instanceof FireworkMeta) {
             serializeFireworkMeta((FireworkMeta) meta, config, path);
         } else if (meta instanceof MapMeta) {
@@ -432,15 +409,12 @@ public class ItemSerializer {
         }
     }
 
-    private static void serializePotionMeta(PotionMeta potionMeta, YamlConfiguration config, String path) {
-        if (!potionMeta.hasCustomEffects()) return;
+    private static void serializePotionMeta(ItemStack itemStack, YamlConfiguration config, String path) {
+        PlayerKits.getInstance().getPlayerKitsNMS().serializePotionMeta(itemStack, config, path);
+    }
 
-        List<String> effects = new ArrayList<>();
-        for (PotionEffect effect : potionMeta.getCustomEffects()) {
-            String effectId = CrossVersionPotionEffect.getEffectId(effect.getType());
-            effects.add(effectId + ":" + (effect.getAmplifier() + 1) + ":" + effect.getDuration());
-        }
-        config.set(path + ".potion_effects", effects);
+    private static void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data) {
+        PlayerKits.getInstance().getPlayerKitsNMS().deserializePotionMeta(potionMeta, data);
     }
 
     private static void serializeFireworkMeta(FireworkMeta fireworkMeta, YamlConfiguration config, String path) {

@@ -1,9 +1,13 @@
 package io.github.InsiderAnh.xPlayerKits.api;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+
+import java.util.Map;
 
 public abstract class PlayerKitsNMS {
 
@@ -28,5 +32,9 @@ public abstract class PlayerKitsNMS {
     public abstract boolean isUnbreakable(ItemMeta itemMeta);
 
     public abstract int getCustomModelData(ItemMeta itemMeta);
+
+    public abstract void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data);
+
+    public abstract void serializePotionMeta(ItemStack itemStack, YamlConfiguration config, String path);
 
 }

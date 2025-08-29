@@ -3,22 +3,72 @@ package io.github.InsiderAnh.xPlayerKits.nms.v1_9_R4;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.InsiderAnh.xPlayerKits.api.PlayerKitsNMS;
+import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionPotionEffect;
 import net.minecraft.server.v1_9_R2.*;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class PlayerKitsNMS_v1_9_R4 extends PlayerKitsNMS {
+public class PlayerKitsNMS_v1_9_R4 extends PlayerKitsNMS  {
+
+    @Override
+    public void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data) {
+        if (data.containsKey("potion_data")) {
+            String potionDataStr = (String) data.get("potion_data");
+            String[] parts = potionDataStr.split(":");
+            if (parts.length >= 3) {
+                PotionType type = PotionType.valueOf(parts[0]);
+                boolean extended = Boolean.parseBoolean(parts[1]);
+                boolean upgraded = Boolean.parseBoolean(parts[2]);
+                potionMeta.setBasePotionData(new PotionData(type, extended, upgraded));
+            }
+        }
+
+        if (!data.containsKey("potion_effects")) return;
+
+        List<?> effectList = (List<?>) data.get("potion_effects");
+        for (Object effectObj : effectList) {
+            PotionEffect effect = parsePotionEffect(effectObj.toString());
+            if (effect != null) {
+                potionMeta.addCustomEffect(effect, true);
+            }
+        }
+    }
+
+    private PotionEffect parsePotionEffect(String effectStr) {
+        String[] parts = effectStr.split(":");
+        if (parts.length < 3) return null;
+
+        PotionEffectType type = CrossVersionPotionEffect.getEffect(parts[0]);
+        if (type == null) return null;
+
+        try {
+            int amplifier = Integer.parseInt(parts[1]) - 1;
+            int duration = Integer.parseInt(parts[2]);
+            return new PotionEffect(type, duration, amplifier);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
     @Override
     public void setUnbreakable(ItemMeta itemMeta, boolean unbreakable) {
@@ -35,6 +85,21 @@ public class PlayerKitsNMS_v1_9_R4 extends PlayerKitsNMS {
     @Override
     public int getCustomModelData(ItemMeta itemMeta) {
         return 0;
+    }
+
+    @Override
+    public void serializePotionMeta(ItemStack itemStack, YamlConfiguration config, String path) {
+        PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
+        if (potionMeta == null) return;
+
+        if (!potionMeta.hasCustomEffects()) return;
+
+        List<String> effects = new ArrayList<>();
+        for (PotionEffect effect : potionMeta.getCustomEffects()) {
+            String effectId = CrossVersionPotionEffect.getEffectId(effect.getType());
+            effects.add(effectId + ":" + (effect.getAmplifier() + 1) + ":" + effect.getDuration());
+        }
+        config.set(path + ".potion_effects", effects);
     }
 
     @Override

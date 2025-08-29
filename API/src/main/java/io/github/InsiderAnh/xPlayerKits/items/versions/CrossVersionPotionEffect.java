@@ -1,6 +1,5 @@
 package io.github.InsiderAnh.xPlayerKits.items.versions;
 
-import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
@@ -72,7 +71,6 @@ public class CrossVersionPotionEffect {
                         }
                     }
                 } catch (Exception ex) {
-                    PlayerKits.getInstance().getLogger().info("Error on initialize potion effect: " + ex.getMessage());
                 }
             }
         }
