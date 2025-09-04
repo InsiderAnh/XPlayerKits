@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -181,8 +182,8 @@ public class Kit {
         config.set("price", price);
         config.set("permission", permission);
         config.set("requirements", requirements);
-        config.set("actionsOnClaim", actionsOnClaim);
-        config.set("actionsOnDeny", actionsOnDeny);
+        config.set("actionsOnClaim", actionsOnClaim.stream().map(Execution::getAction).collect(Collectors.toList()));
+        config.set("actionsOnDeny", actionsOnDeny.stream().map(Execution::getAction).collect(Collectors.toList()));
         if (offhand != null) {
             ItemSerializer.serialize(offhand, config.getConfig(), "playerOffhand");
         }
@@ -205,6 +206,7 @@ public class Kit {
         config.set("inventory", null);
         config.set("icons", null);
         config.set("offhand", null);
+        config.set("iconSet", null);
         config.set("iconsSet", null);
         config.set("armorSet", null);
         config.set("inventorySet", null);

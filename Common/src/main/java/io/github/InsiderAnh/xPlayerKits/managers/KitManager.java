@@ -47,8 +47,18 @@ public class KitManager {
         for (File file : kitsFolder.listFiles()) {
             if (!file.getName().endsWith(".yml")) continue;
 
-            InsiderConfig config = new InsiderConfig(playerKits, "kits/" + file.getName().replace(".yml", ""), false, false);
-            Kit kit = new Kit(config);
+            Kit kit;
+            try {
+                InsiderConfig config = new InsiderConfig(playerKits, "kits/" + file.getName().replace(".yml", ""), false, false);
+                kit = new Kit(config);
+            } catch (Exception e) {
+                playerKits.getLogger().info("Error loading kit " + file.getName() + ": " + e.getMessage());
+                continue;
+            }
+            if (kit.getPropertyInventory() == null || kit.getPropertyTiming() == null) {
+                playerKits.getLogger().info("Error loading kit " + file.getName() + ": null");
+                continue;
+            }
 
             loadedKits.add(kit);
             playerKits.getLogger().info("Correctly loaded kit " + kit.getName() + ".");
@@ -101,6 +111,8 @@ public class KitManager {
         }
 
         for (Kit kit : new ArrayList<>(kits.values())) {
+            if (kit == null || kit.getPropertyInventory() == null || kit.getPropertyTiming() == null) continue;
+
             PropertyInventory property = kit.getPropertyInventory();
             if (property.getPage() != -1 && property.getSlot() != -1) {
                 String key = property.getPage() + "-" + property.getSlot();
@@ -119,6 +131,7 @@ public class KitManager {
         int maxPagesNeeded = (int) Math.ceil((double) totalKits / perPage);
 
         for (Kit kit : forcedPositionKits.values()) {
+            if (kit == null || kit.getPropertyInventory() == null || kit.getPropertyTiming() == null) continue;
             if (kit.getPropertyInventory().getPage() > maxPagesNeeded) {
                 maxPagesNeeded = kit.getPropertyInventory().getPage();
             }
