@@ -13,6 +13,7 @@ import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import lombok.Getter;
 import lombok.Setter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -20,10 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -40,6 +38,7 @@ public class Kit {
     private PropertyInventory propertyInventory;
     private boolean preview;
     private double price;
+    private boolean parsePlaceholdersOnClaim = true;
     private String permission;
     private ItemStack[] armor = new ItemStack[10];
     private ItemStack[] inventory = new ItemStack[50];
@@ -79,6 +78,7 @@ public class Kit {
         this.propertyTiming = new PropertyTiming(config);
         this.propertyInventory = new PropertyInventory(config);
         this.preview = config.getBooleanOrDefault("preview", true);
+        this.parsePlaceholdersOnClaim = config.getBooleanOrDefault("parsePlaceholdersOnClaim", true);
         this.price = config.getDouble("price");
         this.permission = config.getString("permission");
         this.requirements.addAll(config.getList("requirements"));
@@ -248,7 +248,7 @@ public class Kit {
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
             ItemStack toItem = playerInv.getItem(i);
             if (toItem == null || toItem.getType().equals(Material.AIR)) {
-                playerInv.setItem(i, itemStack);
+                playerInv.setItem(i, parsePlaceholders(player, itemStack));
             }
         }
         for (int i = 0; i < armor.length; i++) {
@@ -257,19 +257,38 @@ public class Kit {
             ItemStack toItem = player.getInventory().getArmorContents()[i];
             if (toItem == null || toItem.getType().equals(Material.AIR)) {
                 if (XPKUtils.isHelmet(itemStack.getType().name())) {
-                    player.getInventory().setHelmet(itemStack);
+                    player.getInventory().setHelmet(parsePlaceholders(player, itemStack));
                 }
                 if (XPKUtils.isChestplate(itemStack.getType().name())) {
-                    player.getInventory().setChestplate(itemStack);
+                    player.getInventory().setChestplate(parsePlaceholders(player, itemStack));
                 }
                 if (XPKUtils.isLeggings(itemStack.getType().name())) {
-                    player.getInventory().setLeggings(itemStack);
+                    player.getInventory().setLeggings(parsePlaceholders(player, itemStack));
                 }
                 if (XPKUtils.isBoots(itemStack.getType().name())) {
-                    player.getInventory().setBoots(itemStack);
+                    player.getInventory().setBoots(parsePlaceholders(player, itemStack));
                 }
             }
         }
+    }
+
+    public ItemStack parsePlaceholders(Player player, ItemStack itemStack) {
+        if (parsePlaceholdersOnClaim) {
+            ItemStack clonedItemStack = itemStack.clone();
+            ItemMeta itemMeta = clonedItemStack.getItemMeta();
+            if (itemMeta != null) {
+                if (itemMeta.hasDisplayName()) {
+                    itemMeta.setDisplayName(PlaceholderAPI.setPlaceholders(player, itemMeta.getDisplayName()));
+                }
+                if (itemMeta.hasLore()) {
+                    itemMeta.setLore(PlaceholderAPI.setPlaceholders(player, Objects.requireNonNull(itemMeta.getLore())));
+                }
+                clonedItemStack.setItemMeta(itemMeta);
+            }
+            return clonedItemStack;
+        }
+
+        return itemStack;
     }
 
     public boolean isNoHasRequirements(Player player) {
