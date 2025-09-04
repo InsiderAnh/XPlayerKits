@@ -4,7 +4,9 @@ import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.commands.arguments.*;
 import io.github.InsiderAnh.xPlayerKits.commands.completers.*;
 import io.github.InsiderAnh.xPlayerKits.data.CountdownPlayer;
+import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.menus.KitsMenu;
+import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,7 +26,7 @@ public class XKitsCommands implements TabExecutor {
 
     private final PlayerKits playerKits = PlayerKits.getInstance();
     private final HashMap<String, StellarArgument> arguments = new HashMap<>();
-    private final HashMap<String, StellarCompleter> completers = new HashMap<>();
+    private final HashMap<String, StellarCompleter> completes = new HashMap<>();
 
     public XKitsCommands() {
         arguments.put("editor", new EditorArgument());
@@ -43,13 +45,13 @@ public class XKitsCommands implements TabExecutor {
         arguments.put("claim", new ClaimArgument());
         arguments.put("open", new KitsOpenArgument());
 
-        completers.put("preview", new PreviewCompleter());
-        completers.put("give", new GiveCompleter());
-        completers.put("delete", new DeleteCompleter());
-        completers.put("resetall", new ResetAllCompleter());
-        completers.put("migrate", new MigrateCompleter());
-        completers.put("migratekits", new MigrateKitsCompleter());
-        completers.put("open", new KitsOpenCompleter());
+        completes.put("preview", new PreviewCompleter());
+        completes.put("give", new GiveCompleter());
+        completes.put("delete", new DeleteCompleter());
+        completes.put("resetall", new ResetAllCompleter());
+        completes.put("migrate", new MigrateCompleter());
+        completes.put("migratekits", new MigrateKitsCompleter());
+        completes.put("open", new KitsOpenCompleter());
     }
 
     @Override
@@ -110,7 +112,24 @@ public class XKitsCommands implements TabExecutor {
                 arguments.get(argument).onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
                 break;
             }
+            case "help":
+                sendHelp(sender);
+                break;
             default:
+                if (playerKits.getConfigManager().isClaimAlias()) {
+                    Kit kit = playerKits.getKitManager().getKit(args[0]);
+                    if (kit != null && sender instanceof Player) {
+                        Player player = (Player) sender;
+                        playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData ->
+                                playerKits.getStellarTaskHook(() ->
+                                    XPKUtils.claimKit(player, kit, playerKitData)).runTask(player.getLocation()))
+                            .exceptionally(throwable -> {
+                                throwable.printStackTrace();
+                                return null;
+                            });
+                        return false;
+                    }
+                }
                 sendHelp(sender);
                 break;
         }
@@ -145,14 +164,14 @@ public class XKitsCommands implements TabExecutor {
             case "give":
             case "claim":
             case "reset":
-                return completers.get("give").onTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
+                return completes.get("give").onTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
             case "delete":
             case "preview":
             case "resetall":
             case "migrate":
             case "migratekits":
             case "open":
-                return completers.get(args[0].toLowerCase()).onTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
+                return completes.get(args[0].toLowerCase()).onTabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
             default:
                 return null;
         }

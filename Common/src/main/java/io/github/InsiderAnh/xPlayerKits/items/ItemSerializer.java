@@ -7,7 +7,6 @@ import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionBannerPattern;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionEnchantment;
-import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionPotionEffect;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
@@ -17,8 +16,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

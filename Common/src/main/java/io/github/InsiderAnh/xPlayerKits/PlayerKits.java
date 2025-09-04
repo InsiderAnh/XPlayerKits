@@ -80,9 +80,13 @@ public class PlayerKits extends JavaPlugin {
         this.menuManager.load();
         this.kitManager.load();
 
-        getCommand("xkits").setExecutor(new XKitsCommands());
-        if (getConfig().getBoolean("kitsCMD.enabled")) {
-            XPKUtils.registerCommandDynamic(new XKitsCommands());
+        XKitsCommands xkitsCommands = new XKitsCommands();
+        getCommand("xkits").setExecutor(xkitsCommands);
+        if (configManager.isKitsCMDEnabled()) {
+            XPKUtils.registerCommandDynamic("kits", xkitsCommands);
+        }
+        if (configManager.isShortKit()) {
+            XPKUtils.registerCommandDynamic("kit", xkitsCommands);
         }
 
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -102,7 +106,8 @@ public class PlayerKits extends JavaPlugin {
     }
 
     public void reload() {
-        boolean lasEnabled = getConfig().getBoolean("kitsCMD.enabled");
+        boolean lastEnabled = getConfigManager().isKitsCMDEnabled();
+        boolean lastShortKit = getConfigManager().isShortKit();
 
         this.reloadConfig();
         this.lang.reload();
@@ -110,8 +115,11 @@ public class PlayerKits extends JavaPlugin {
         this.menuManager.load();
         this.kitManager.load();
 
-        if (!lasEnabled && getConfig().getBoolean("kitsCMD.enabled")) {
-            XPKUtils.registerCommandDynamic(new XKitsCommands());
+        if (!lastEnabled && configManager.isKitsCMDEnabled()) {
+            XPKUtils.registerCommandDynamic("kits", new XKitsCommands());
+        }
+        if (!lastShortKit && configManager.isShortKit()) {
+            XPKUtils.registerCommandDynamic("kit", new XKitsCommands());
         }
     }
 

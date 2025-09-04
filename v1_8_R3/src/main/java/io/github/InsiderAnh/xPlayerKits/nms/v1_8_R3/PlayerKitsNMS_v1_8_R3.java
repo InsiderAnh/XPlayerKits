@@ -19,7 +19,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import java.lang.reflect.Field;
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerKitsNMS_v1_8_R3 extends PlayerKitsNMS  {
+public class PlayerKitsNMS_v1_8_R3 extends PlayerKitsNMS {
 
     @Override
     public void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data) {

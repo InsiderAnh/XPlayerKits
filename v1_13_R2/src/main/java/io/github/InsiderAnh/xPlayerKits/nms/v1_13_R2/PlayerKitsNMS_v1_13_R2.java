@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerKitsNMS_v1_13_R2 extends PlayerKitsNMS  {
+public class PlayerKitsNMS_v1_13_R2 extends PlayerKitsNMS {
 
     @Override
     public void deserializePotionMeta(PotionMeta potionMeta, Map<String, Object> data) {

@@ -5,6 +5,10 @@ kitOnJoin:
 kitsCMD:
   # Enable /kits command it is disabled by default to avoid conflicts with other plugins
   enabled: false
+  # Enable /kit command it is disabled by default to avoid conflicts with other plugins
+  shortKit: false
+  # Claim alias for /xkits claim <kitName> command to /kit <kitName>
+  claimAlias: false
 databases:
   databaseType: "h2"
   h2:

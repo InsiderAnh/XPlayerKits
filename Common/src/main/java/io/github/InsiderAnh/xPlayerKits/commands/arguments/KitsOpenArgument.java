@@ -1,7 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
-import io.github.InsiderAnh.xPlayerKits.menus.KitsMenu;
 import io.github.InsiderAnh.xPlayerKits.menus.KitsRotationMenu;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

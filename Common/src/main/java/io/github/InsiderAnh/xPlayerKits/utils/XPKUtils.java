@@ -287,20 +287,20 @@ public class XPKUtils {
     }
 
 
-    public void registerCommandDynamic(XKitsCommands command) {
+    public void registerCommandDynamic(String command, XKitsCommands cmd) {
         try {
             Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, org.bukkit.plugin.Plugin.class);
             constructor.setAccessible(true);
-            PluginCommand pluginCommand = constructor.newInstance("kits", playerKits);
+            PluginCommand pluginCommand = constructor.newInstance(command, playerKits);
 
-            pluginCommand.setExecutor(command);
-            pluginCommand.setTabCompleter(command);
+            pluginCommand.setExecutor(cmd);
+            pluginCommand.setTabCompleter(cmd);
 
             Field commandMapField = playerKits.getServer().getClass().getDeclaredField("commandMap");
             commandMapField.setAccessible(true);
             org.bukkit.command.CommandMap commandMap = (org.bukkit.command.CommandMap) commandMapField.get(playerKits.getServer());
 
-            commandMap.register("kits", pluginCommand);
+            commandMap.register(command, pluginCommand);
         } catch (Exception e) {
         }
     }

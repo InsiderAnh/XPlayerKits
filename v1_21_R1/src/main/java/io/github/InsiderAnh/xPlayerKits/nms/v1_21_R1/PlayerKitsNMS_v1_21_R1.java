@@ -70,7 +70,7 @@ public class PlayerKitsNMS_v1_21_R1 extends PlayerKitsNMS {
                 potionMeta.setBasePotionData(new PotionData(type, extended, upgraded));
             }
         }
-        
+
         if (!data.containsKey("potion_effects")) return;
 
         List<?> effectList = (List<?>) data.get("potion_effects");
@@ -108,7 +108,7 @@ public class PlayerKitsNMS_v1_21_R1 extends PlayerKitsNMS {
             PotionType type = potionData.getType();
             config.set(path + ".potion_data", type.name() + ":" + potionData.isExtended() + ":" + potionData.isUpgraded());
         }
-        
+
         if (!potionMeta.hasCustomEffects()) return;
 
         List<String> effects = new ArrayList<>();

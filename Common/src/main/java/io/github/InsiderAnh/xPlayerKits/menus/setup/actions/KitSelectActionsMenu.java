@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 
 public class KitSelectActionsMenu extends AInventory {
 
-    private final PlayerKits playerKits = PlayerKits.getInstance();
     private static final String[] availableActions = {"player_command", "console_command", "message", "center_message", "mini_message", "action_bar", "broadcast", "sound", "playsound_resource_pack", "titles", "wait_ticks"};
+    private final PlayerKits playerKits = PlayerKits.getInstance();
 
     public KitSelectActionsMenu(Player player) {
         super(player, InventorySizes.GENERIC_9X5, PlayerKits.getInstance().getLang().getString("menus.selectActions.title"));

@@ -109,7 +109,7 @@ public class PlayerKitsNMS_v1_18_R2 extends PlayerKitsNMS {
         if (potionData != null) {
             config.set(path + ".potion_data", potionData.getType().name().toLowerCase() + ":" + potionData.isExtended() + ":" + potionData.isUpgraded());
         }
-        
+
         if (!potionMeta.hasCustomEffects()) return;
 
         List<String> effects = new ArrayList<>();

@@ -1,6 +1,6 @@
 name: XPlayerKits
 main: io.github.InsiderAnh.xPlayerKits.PlayerKits
-version: 2.0.2
+version: 2.0.5
 author: InsiderAnh
 api-version: 1.13
 folia-supported: true
@@ -8,6 +8,8 @@ depend:
   - PlaceholderAPI
 commands:
   xkits:
+    aliases:
+      - xkit
 permissions:
   xkits.admin:
     description: "Allow use /xkits editor."
