@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,13 +29,11 @@ public class MigratorManager {
     public void migrateKitsFromPlayerKits2(Player player) {
         File playerKitsDirectory = new File(playerKits.getServer().getWorldContainer(), "plugins/PlayerKits2/kits");
         if (!playerKitsDirectory.exists() || !playerKitsDirectory.isDirectory()) {
-            playerKits.getLogger().info("You don´t have kits yml in this plugin.");
+            playerKits.getLogger().info("You don´t have kits yml in PlayerKits2 folder, (plugins/PlayerKits2/kits), please put kits files in this folder.");
             return;
         }
         ArrayList<File> kitFiles = new ArrayList<>();
-        for (File file : playerKitsDirectory.listFiles()) {
-            kitFiles.add(file);
-        }
+        Collections.addAll(kitFiles, playerKitsDirectory.listFiles());
         if (!kitFiles.isEmpty()) {
             migrateKitFromPlayerKits2(player, kitFiles);
         }

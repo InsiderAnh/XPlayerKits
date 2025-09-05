@@ -81,7 +81,7 @@ public class KitPreviewMenu extends AInventory {
                 ItemStack itemStack = kit.getInventory()[i];
                 if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
 
-                inventory.setItem(menuSlots.getSlot(index.getAndIncrement()), itemStack);
+                inventory.setItem(menuSlots.getSlot(index.getAndIncrement()), kit.parsePlaceholders(player, itemStack));
             }
         }
 
@@ -94,7 +94,7 @@ public class KitPreviewMenu extends AInventory {
                 ItemStack itemStack = kit.getArmor()[i];
                 if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
 
-                inventory.setItem(menuSlots.getSlot(index.getAndIncrement()), itemStack);
+                inventory.setItem(menuSlots.getSlot(index.getAndIncrement()), kit.parsePlaceholders(player, itemStack));
             }
         }
 
@@ -103,7 +103,7 @@ public class KitPreviewMenu extends AInventory {
             ItemStack itemStack = kit.getOffhand();
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) return;
 
-            inventory.setItem(menuVarOffhandItem.getSlots().getSlot(0), itemStack);
+            inventory.setItem(menuVarOffhandItem.getSlots().getSlot(0), kit.parsePlaceholders(player, itemStack));
         }
     }
 
