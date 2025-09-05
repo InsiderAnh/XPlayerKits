@@ -2,7 +2,6 @@ name: XPlayerKits
 main: io.github.InsiderAnh.xPlayerKits.PlayerKits
 version: 2.0.7
 author: InsiderAnh
-api-version: 1.13
 folia-supported: true
 depend:
   - PlaceholderAPI
