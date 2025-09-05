@@ -3,6 +3,7 @@ package io.github.InsiderAnh.xPlayerKits.utils;
 import com.google.gson.Gson;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
+import io.github.InsiderAnh.xPlayerKits.api.events.ClaimXKitEvent;
 import io.github.InsiderAnh.xPlayerKits.commands.XKitsCommands;
 import io.github.InsiderAnh.xPlayerKits.data.KitData;
 import io.github.InsiderAnh.xPlayerKits.data.PlayerKitData;
@@ -92,6 +93,10 @@ public class XPKUtils {
             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
             return;
         }
+
+        ClaimXKitEvent event = new ClaimXKitEvent(player, kit);
+        playerKits.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
 
         playerKitData.getKitsData().put(kit.getName(), new KitData(kit.getName(), System.currentTimeMillis() + (timing.getCountdown() * 1000L), timing.isOneTime(), false));
         playerKits.getExecutor().execute(() -> {

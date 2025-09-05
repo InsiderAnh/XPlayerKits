@@ -27,9 +27,13 @@ public class MigratorManager {
     private final PlayerKits playerKits = PlayerKits.getInstance();
 
     public void migrateKitsFromPlayerKits2(Player player) {
-        File playerKitsDirectory = new File(playerKits.getServer().getWorldContainer(), "plugins/PlayerKits2/kits");
-        if (!playerKitsDirectory.exists() || !playerKitsDirectory.isDirectory()) {
-            playerKits.getLogger().info("You don´t have kits yml in PlayerKits2 folder, (plugins/PlayerKits2/kits), please put kits files in this folder.");
+        File playerKitsDirectory = new File(Bukkit.getWorldContainer(), "plugins/PlayerKits2/kits");
+        if (!playerKitsDirectory.exists()) {
+            playerKits.getLogger().info("The PlayerKits2 folder does´t exist, (plugins/PlayerKits2/kits), please put kits files in this folder. " + playerKitsDirectory.getAbsolutePath());
+            return;
+        }
+        if (!playerKitsDirectory.isDirectory()) {
+            playerKits.getLogger().info("You don´t have kits yml in PlayerKits2 folder, (plugins/PlayerKits2/kits), please put kits files in this folder. " + playerKitsDirectory.getAbsolutePath());
             return;
         }
         ArrayList<File> kitFiles = new ArrayList<>();

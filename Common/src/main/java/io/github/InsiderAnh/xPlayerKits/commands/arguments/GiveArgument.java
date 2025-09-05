@@ -1,5 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
+import io.github.InsiderAnh.xPlayerKits.api.events.GiveXKitEvent;
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import org.bukkit.Bukkit;
@@ -29,6 +30,10 @@ public class GiveArgument extends StellarArgument {
             sender.sendMessage("§cThis player is not online.");
             return;
         }
+        GiveXKitEvent event = new GiveXKitEvent(sender, online, kit);
+        playerKits.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
+
         kit.giveKit(online);
     }
 
