@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Getter
@@ -215,61 +216,79 @@ public class Kit {
 
     public boolean isNoInventorySpace(Player player) {
         AtomicBoolean occupied = new AtomicBoolean(false);
+        AtomicInteger needAmount = new AtomicInteger(0);
+        AtomicInteger haveAmount = new AtomicInteger(0);
+
         Inventory playerInv = player.getInventory();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack itemStack = inventory[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
+            needAmount.addAndGet(1);
             ItemStack toItem = playerInv.getItem(i);
             if (toItem != null) {
-                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR"))
+                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR")) {
+                    haveAmount.addAndGet(1);
                     continue;
+                }
                 occupied.set(true);
+            } else {
+                haveAmount.addAndGet(1);
             }
         }
         for (int i = 0; i < armor.length; i++) {
             ItemStack itemStack = armor[i];
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
+            needAmount.addAndGet(1);
+
             ItemStack toItem = player.getInventory().getArmorContents()[i];
             if (toItem != null) {
-                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR"))
+                if (toItem.getType().name().equals("AIR") || toItem.getType().name().equals("VOID_AIR") || toItem.getType().name().equals("CAVE_AIR")) {
+                    haveAmount.addAndGet(1);
                     continue;
+                }
                 occupied.set(true);
+            } else {
+                haveAmount.addAndGet(1);
             }
         }
         return occupied.get();
     }
 
     public void giveKit(Player player) {
-        PlayerKits.getInstance().getExecutionManager().execute(player, actionsOnClaim, new Placeholder("<player>", player.getName()));
+        for (ItemStack itemStack : inventory) {
+            if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
 
-        Inventory playerInv = player.getInventory();
-        for (int i = 0; i < inventory.length; i++) {
-            ItemStack itemStack = inventory[i];
+            ItemStack toGive = parsePlaceholders(player, itemStack);
+
+            player.getInventory().addItem(toGive);
+        }
+
+        for (ItemStack itemStack : armor) {
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            ItemStack toItem = playerInv.getItem(i);
-            if (toItem == null || toItem.getType().equals(Material.AIR)) {
-                playerInv.setItem(i, parsePlaceholders(player, itemStack));
+
+            ItemStack toGive = parsePlaceholders(player, itemStack);
+            ItemStack currentArmor = null;
+
+            if (XPKUtils.isHelmet(itemStack.getType().name())) {
+                currentArmor = player.getInventory().getHelmet();
+                player.getInventory().setHelmet(toGive);
+            } else if (XPKUtils.isChestplate(itemStack.getType().name())) {
+                currentArmor = player.getInventory().getChestplate();
+                player.getInventory().setChestplate(toGive);
+            } else if (XPKUtils.isLeggings(itemStack.getType().name())) {
+                currentArmor = player.getInventory().getLeggings();
+                player.getInventory().setLeggings(toGive);
+            } else if (XPKUtils.isBoots(itemStack.getType().name())) {
+                currentArmor = player.getInventory().getBoots();
+                player.getInventory().setBoots(toGive);
+            }
+
+            if (currentArmor != null && !currentArmor.getType().equals(Material.AIR)) {
+                player.getInventory().addItem(currentArmor);
             }
         }
-        for (int i = 0; i < armor.length; i++) {
-            ItemStack itemStack = armor[i];
-            if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
-            ItemStack toItem = player.getInventory().getArmorContents()[i];
-            if (toItem == null || toItem.getType().equals(Material.AIR)) {
-                if (XPKUtils.isHelmet(itemStack.getType().name())) {
-                    player.getInventory().setHelmet(parsePlaceholders(player, itemStack));
-                }
-                if (XPKUtils.isChestplate(itemStack.getType().name())) {
-                    player.getInventory().setChestplate(parsePlaceholders(player, itemStack));
-                }
-                if (XPKUtils.isLeggings(itemStack.getType().name())) {
-                    player.getInventory().setLeggings(parsePlaceholders(player, itemStack));
-                }
-                if (XPKUtils.isBoots(itemStack.getType().name())) {
-                    player.getInventory().setBoots(parsePlaceholders(player, itemStack));
-                }
-            }
-        }
+
+        PlayerKits.getInstance().getExecutionManager().execute(player, actionsOnClaim, new Placeholder("<player>", player.getName()));
     }
 
     public ItemStack parsePlaceholders(Player player, ItemStack itemStack) {
