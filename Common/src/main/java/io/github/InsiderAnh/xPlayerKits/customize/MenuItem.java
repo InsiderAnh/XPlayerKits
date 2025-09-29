@@ -22,6 +22,7 @@ public class MenuItem {
 
     private final PlayerKits plugin = PlayerKits.getInstance();
     private final String material;
+    private final short data;
     private final int amount;
     private final int customModelData;
     private final boolean glowing;
@@ -36,6 +37,7 @@ public class MenuItem {
         this.itemId = itemId;
         this.material = configuration.getString(path + ".material");
         this.amount = configuration.getInt(path + ".amount");
+        this.data = (short) configuration.getInt(path + ".data", 0);
         this.customModelData = configuration.getInt(path + ".custom-model-data");
         this.glowing = configuration.getBoolean(path + ".glowing");
         this.displayName = configuration.getString(path + ".display-name", "");
@@ -80,7 +82,7 @@ public class MenuItem {
 
     public ItemStack buildItem(Player player, Placeholder... placeholders) {
         ColorUtils colorUtils = PlayerKits.getInstance().getColorUtils();
-        ItemStack itemStack = XPKUtils.parseItemStack(player, material);
+        ItemStack itemStack = XPKUtils.parseItemStack(player, material, amount, data);
         if (amount > 0) {
             itemStack.setAmount(amount);
         }

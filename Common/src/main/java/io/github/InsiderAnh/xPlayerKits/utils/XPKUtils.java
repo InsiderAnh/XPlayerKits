@@ -267,7 +267,7 @@ public class XPKUtils {
         }
     }
 
-    public ItemStack parseItemStack(Player player, String material) {
+    public ItemStack parseItemStack(Player player, String material, int amount, short data) {
         if (material.startsWith("head:") || material.startsWith("player_head:")) {
             if (player == null) return new ItemStack(Material.STONE);
             ItemStack head = new ItemStack(Material.PLAYER_HEAD);
@@ -287,7 +287,7 @@ public class XPKUtils {
             head.setItemMeta(skullMeta);
             return head;
         } else {
-            return new ItemStack(Material.valueOf(material));
+            return new ItemStack(Material.valueOf(material), amount, data);
         }
     }
 

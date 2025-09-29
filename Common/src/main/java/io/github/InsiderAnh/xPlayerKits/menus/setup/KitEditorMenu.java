@@ -114,8 +114,8 @@ public class KitEditorMenu extends AInventory {
                             player.sendMessage(playerKits.getLang().getString("messages.permissionNoSpace"));
                             player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.get(), 1.0f, 1.0f);
                         } else {
-                            kit.setName(string);
-                            player.sendMessage(playerKits.getLang().getString("messages.setName").replace("<name>", kit.getName()));
+                            kit.setPermission(string);
+                            player.sendMessage(playerKits.getLang().getString("messages.setPermission").replace("<name>", kit.getName()));
                             player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                             new KitEditorMenu(player, kit).open();
                         }

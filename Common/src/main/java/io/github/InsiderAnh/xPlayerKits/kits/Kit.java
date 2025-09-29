@@ -267,24 +267,29 @@ public class Kit {
             if (itemStack == null || itemStack.getType().equals(Material.AIR)) continue;
 
             ItemStack toGive = parsePlaceholders(player, itemStack);
+            String itemType = toGive.getType().name();
             ItemStack currentArmor = null;
 
-            if (XPKUtils.isHelmet(itemStack.getType().name())) {
-                currentArmor = player.getInventory().getHelmet();
-                player.getInventory().setHelmet(toGive);
-            } else if (XPKUtils.isChestplate(itemStack.getType().name())) {
-                currentArmor = player.getInventory().getChestplate();
-                player.getInventory().setChestplate(toGive);
-            } else if (XPKUtils.isLeggings(itemStack.getType().name())) {
-                currentArmor = player.getInventory().getLeggings();
-                player.getInventory().setLeggings(toGive);
-            } else if (XPKUtils.isBoots(itemStack.getType().name())) {
-                currentArmor = player.getInventory().getBoots();
-                player.getInventory().setBoots(toGive);
-            }
+            if (getPropertyInventory().isAutoArmor()) {
+                if (XPKUtils.isHelmet(itemType)) {
+                    currentArmor = player.getInventory().getHelmet();
+                    player.getInventory().setHelmet(toGive);
+                } else if (XPKUtils.isChestplate(itemType)) {
+                    currentArmor = player.getInventory().getChestplate();
+                    player.getInventory().setChestplate(toGive);
+                } else if (XPKUtils.isLeggings(itemType)) {
+                    currentArmor = player.getInventory().getLeggings();
+                    player.getInventory().setLeggings(toGive);
+                } else if (XPKUtils.isBoots(itemType)) {
+                    currentArmor = player.getInventory().getBoots();
+                    player.getInventory().setBoots(toGive);
+                }
 
-            if (currentArmor != null && !currentArmor.getType().equals(Material.AIR)) {
-                player.getInventory().addItem(currentArmor);
+                if (currentArmor != null && !currentArmor.getType().equals(Material.AIR)) {
+                    player.getInventory().addItem(currentArmor);
+                }
+            } else {
+                player.getInventory().addItem(toGive);
             }
         }
 
