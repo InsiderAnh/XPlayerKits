@@ -281,13 +281,13 @@ public class ItemSerializer {
 
     private static void serializeDisplayProperties(ItemMeta meta, YamlConfiguration config, String path) {
         if (meta.hasDisplayName()) {
-            config.set(path + ".displayname", colorToCode(meta.getDisplayName()));
+            config.set(path + ".displayname", meta.getDisplayName());
         }
 
         if (meta.hasLore()) {
             List<String> lore = new ArrayList<>();
             for (String line : meta.getLore()) {
-                lore.add(colorToCode(line));
+                lore.add(line);
             }
             config.set(path + ".lore", lore);
         }
@@ -392,7 +392,7 @@ public class ItemSerializer {
 
     private static void serializeBookMeta(BookMeta bookMeta, YamlConfiguration config, String path) {
         if (bookMeta.hasTitle()) {
-            config.set(path + ".book_title", colorToCode(bookMeta.getTitle()));
+            config.set(path + ".book_title", bookMeta.getTitle());
         }
         if (bookMeta.hasAuthor()) {
             config.set(path + ".book_author", bookMeta.getAuthor());
@@ -400,7 +400,7 @@ public class ItemSerializer {
         if (bookMeta.hasPages()) {
             List<String> pages = new ArrayList<>();
             for (String page : bookMeta.getPages()) {
-                pages.add(colorToCode(page));
+                pages.add(page);
             }
             config.set(path + ".book_pages", pages);
         }
@@ -447,12 +447,8 @@ public class ItemSerializer {
         }
     }
 
-    private static String colorToCode(String text) {
-        return text.replace("§", "&");
-    }
-
     private static String codeToColor(String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
+        return PlayerKits.getInstance().getColorUtils().color(text);
     }
 
 }

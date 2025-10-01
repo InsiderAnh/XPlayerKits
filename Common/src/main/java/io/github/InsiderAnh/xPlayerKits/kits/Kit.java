@@ -146,12 +146,13 @@ public class Kit {
             HashMap<String, Object> data = new HashMap<>(config.getConfig().getConfigurationSection("playerOffhand").getValues(false));
             this.offhand = ItemSerializer.deserialize(data);
         }
-        this.icons.put("CAN_CLAIM", new ItemUtils(Material.STONE).displayName("§aKit test").lore("§7You can claim this kit.\n\n§eClick to claim!").build());
-        this.icons.put("CANT_CLAIM", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cYou can´t claim this kit!").build());
-        this.icons.put("NO_PERMISSION", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cYou don´t have permission!").build());
-        this.icons.put("COUNTDOWN", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cIn countdown!").build());
-        this.icons.put("ONE_TIME_CLAIMED", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cAlready claimed!").build());
-        this.icons.put("ONE_TIME_REQUIREMENT", new ItemUtils(Material.STONE).displayName("§aKit test").lore("§7You can claim this kit.\n\n§eClick to claim one time!").build());
+
+        this.icons.putIfAbsent("CAN_CLAIM", new ItemUtils(Material.STONE).displayName("§aKit test").lore("§7You can claim this kit.\n\n§eClick to claim!").build());
+        this.icons.putIfAbsent("CANT_CLAIM", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cYou can´t claim this kit!").build());
+        this.icons.putIfAbsent("NO_PERMISSION", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cYou don´t have permission!").build());
+        this.icons.putIfAbsent("COUNTDOWN", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cIn countdown!").build());
+        this.icons.putIfAbsent("ONE_TIME_CLAIMED", new ItemUtils(Material.STONE).displayName("§cKit test").lore("§7You can´t claim this kit.\n\n§cAlready claimed!").build());
+        this.icons.putIfAbsent("ONE_TIME_REQUIREMENT", new ItemUtils(Material.STONE).displayName("§aKit test").lore("§7You can claim this kit.\n\n§eClick to claim one time!").build());
     }
 
     public void setIcon(String icon, ItemStack itemStack) {
