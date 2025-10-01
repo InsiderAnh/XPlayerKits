@@ -2,6 +2,7 @@ package io.github.InsiderAnh.xPlayerKits.managers;
 
 import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.customize.Menu;
+import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +49,13 @@ public class MenuManager {
         if (menu == null) return defaultTitle;
 
         return menu.getTitle();
+    }
+
+    public InventorySizes getInventorySizes(String menuId, InventorySizes defaultSizes) {
+        Menu menu = this.menus.get(menuId);
+        if (menu == null) return defaultSizes;
+
+        return menu.getRows();
     }
 
     @Nullable

@@ -32,7 +32,7 @@ public class KitsRotationMenu extends AInventory {
     private int page;
 
     public KitsRotationMenu(Player player, PlayerKitData playerKitData, int page) {
-        super(player, InventorySizes.GENERIC_9X6, PlayerKits.getInstance().getMenuManager().getTitle("rotation_kits", "Kits rotation"));
+        super(player, PlayerKits.getInstance().getMenuManager().getInventorySizes("rotation_kits", InventorySizes.GENERIC_9X6), PlayerKits.getInstance().getMenuManager().getTitle("rotation_kits", "Kits rotation"));
         this.menu = playerKits.getMenuManager().getMenu("rotation_kits");
         this.playerKitData = playerKitData;
         this.page = page;

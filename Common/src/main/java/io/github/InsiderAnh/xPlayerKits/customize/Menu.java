@@ -1,6 +1,7 @@
 package io.github.InsiderAnh.xPlayerKits.customize;
 
 import io.github.InsiderAnh.xPlayerKits.customize.actions.MenuAction;
+import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,7 +12,7 @@ import java.util.HashSet;
 public class Menu {
 
     private final String menuId;
-    private final int rows;
+    private final InventorySizes rows;
     private final String title;
     private final HashMap<String, MenuItem> items = new HashMap<>();
     private final HashMap<String, MenuVarItem> varItems = new HashMap<>();
@@ -21,7 +22,7 @@ public class Menu {
 
     public Menu(YamlConfiguration configuration, String menuId) {
         this.menuId = menuId;
-        this.rows = configuration.getInt("rows");
+        this.rows = InventorySizes.fromInv(configuration.getInt("rows"));
         this.title = configuration.getString("title");
 
         if (configuration.isSet("items")) {
