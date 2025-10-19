@@ -205,7 +205,6 @@ public class Kit {
             ItemSerializer.serialize(itemStack, config.getConfig(), "kitIcons." + key);
         }
         config.set("armor", null);
-        config.set("inventory", null);
         config.set("icons", null);
         config.set("offhand", null);
         config.set("iconSet", null);

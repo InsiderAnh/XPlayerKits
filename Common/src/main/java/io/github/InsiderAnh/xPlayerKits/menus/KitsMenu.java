@@ -119,7 +119,7 @@ public class KitsMenu extends AInventory {
 
             for (Map.Entry<String, Kit> entry : kits.entrySet()) {
                 Kit kitSlot = entry.getValue();
-                if (kitSlot == null) continue;
+                if (kitSlot == null || !kitSlot.getPropertyInventory().isShowInInventory()) continue;
 
                 buildAndSet(player, kitSlot.getPropertyInventory().getSlot(), kitSlot);
             }

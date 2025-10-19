@@ -6,12 +6,14 @@ import lombok.Data;
 @Data
 public class PropertyInventory {
 
+    private boolean showInInventory;
     private boolean autoArmor;
     private int slot;
     private int page;
     private boolean checkInventorySpace;
 
     public PropertyInventory(InsiderConfig config) {
+        this.showInInventory = config.getBooleanOrDefault("inventory.showInInventory", true);
         if (config.isSet("inventory")) {
             this.autoArmor = config.getConfig().getBoolean("inventory.autoArmor");
             this.slot = config.getConfig().get("inventory.slot") instanceof Integer ? config.getInt("inventory.slot") : -1;
