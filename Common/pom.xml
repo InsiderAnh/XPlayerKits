@@ -232,6 +232,12 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>io.github.InsiderAnh.xPlayerKits</groupId>
+            <artifactId>v1_21_R10</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

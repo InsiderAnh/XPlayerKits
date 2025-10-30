@@ -16,10 +16,6 @@ public enum InventorySizes {
 
     private int size;
 
-    public int toInv() {
-        return size * 9;
-    }
-
     public static InventorySizes fromInv(int size) {
         for (InventorySizes sizes : values()) {
             if (sizes.getSize() == size) {
@@ -27,6 +23,10 @@ public enum InventorySizes {
             }
         }
         return GENERIC_9X1;
+    }
+
+    public int toInv() {
+        return size * 9;
     }
 
 }

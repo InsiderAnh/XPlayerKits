@@ -8,20 +8,23 @@ import io.github.InsiderAnh.xPlayerKits.enums.MinecraftVersion;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionBannerPattern;
 import io.github.InsiderAnh.xPlayerKits.items.versions.CrossVersionEnchantment;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemSerializer {
 
@@ -142,6 +145,8 @@ public class ItemSerializer {
     private static void applyVersionSpecificMeta(ItemMeta meta, Map<String, Object> data) {
         applyUnbreakable(meta, data);
         applyCustomModelData(meta, data);
+        applyAttributeModifiers(meta, data);
+        applyArmorTrim(meta, data);
     }
 
     private static void applyUnbreakable(ItemMeta meta, Map<String, Object> data) {
@@ -161,6 +166,73 @@ public class ItemSerializer {
         PlayerKits.getInstance().getPlayerKitsNMS().setCustomModelData(meta, customModelData);
     }
 
+    private static void applyAttributeModifiers(ItemMeta meta, Map<String, Object> data) {
+        if (!data.containsKey("attribute_modifiers")) return;
+        if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_13)) return;
+
+        try {
+            List<?> attributeList = (List<?>) data.get("attribute_modifiers");
+            for (Object attrObj : attributeList) {
+                if (!(attrObj instanceof Map)) continue;
+                Map<String, Object> attrMap = (Map<String, Object>) attrObj;
+
+                String attributeName = (String) attrMap.get("attribute");
+                Attribute attribute = Attribute.valueOf(attributeName);
+
+                String name = (String) attrMap.get("name");
+                double amount = ((Number) attrMap.get("amount")).doubleValue();
+                AttributeModifier.Operation operation = AttributeModifier.Operation.valueOf((String) attrMap.get("operation"));
+
+                EquipmentSlot slot = null;
+                if (attrMap.containsKey("slot")) {
+                    slot = EquipmentSlot.valueOf((String) attrMap.get("slot"));
+                }
+
+                UUID uuid = attrMap.containsKey("uuid") ? UUID.fromString((String) attrMap.get("uuid")) : UUID.randomUUID();
+
+                AttributeModifier modifier;
+                if (slot != null) {
+                    modifier = new AttributeModifier(uuid, name, amount, operation, slot);
+                } else {
+                    modifier = new AttributeModifier(uuid, name, amount, operation);
+                }
+
+                meta.addAttributeModifier(attribute, modifier);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static void applyArmorTrim(ItemMeta meta, Map<String, Object> data) {
+        if (!data.containsKey("armor_trim")) return;
+        if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_20)) return;
+        if (!(meta instanceof ArmorMeta)) return;
+
+        try {
+            Map<String, String> trimData = (Map<String, String>) data.get("armor_trim");
+            String materialKey = trimData.get("material");
+            String patternKey = trimData.get("pattern");
+
+            Class<?> trimMaterialClass = Class.forName("org.bukkit.inventory.meta.trim.TrimMaterial");
+            Class<?> trimPatternClass = Class.forName("org.bukkit.inventory.meta.trim.TrimPattern");
+            Class<?> armorTrimClass = Class.forName("org.bukkit.inventory.meta.trim.ArmorTrim");
+
+            Object registry = Class.forName("org.bukkit.Registry").getField("TRIM_MATERIAL").get(null);
+            Method getMethod = registry.getClass().getMethod("get", Class.forName("org.bukkit.NamespacedKey"));
+            Object trimMaterial = getMethod.invoke(registry, Class.forName("org.bukkit.NamespacedKey").getConstructor(String.class, String.class).newInstance("minecraft", materialKey));
+
+            registry = Class.forName("org.bukkit.Registry").getField("TRIM_PATTERN").get(null);
+            Object trimPattern = getMethod.invoke(registry, Class.forName("org.bukkit.NamespacedKey").getConstructor(String.class, String.class).newInstance("minecraft", patternKey));
+
+            if (trimMaterial != null && trimPattern != null) {
+                Object armorTrim = armorTrimClass.getConstructor(trimMaterialClass, trimPatternClass).newInstance(trimMaterial, trimPattern);
+                ArmorMeta armorMeta = (ArmorMeta) meta;
+                armorMeta.getClass().getMethod("setTrim", armorTrimClass).invoke(armorMeta, armorTrim);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     private static void deserializeSpecificMeta(ItemMeta meta, Map<String, Object> data) {
         if (meta instanceof BannerMeta) {
             deserializeBannerMeta((BannerMeta) meta, data);
@@ -172,6 +244,10 @@ public class ItemSerializer {
             deserializeBookMeta((BookMeta) meta, data);
         } else if (meta instanceof PotionMeta) {
             deserializePotionMeta((PotionMeta) meta, data);
+        } else if (meta instanceof FireworkMeta) {
+            deserializeFireworkMeta((FireworkMeta) meta, data);
+        } else if (meta instanceof MapMeta) {
+            deserializeMapMeta((MapMeta) meta, data);
         }
     }
 
@@ -237,6 +313,72 @@ public class ItemSerializer {
             pages.add(codeToColor(page.toString()));
         }
         return pages;
+    }
+
+    private static void deserializeFireworkMeta(FireworkMeta fireworkMeta, Map<String, Object> data) {
+        if (data.containsKey("firework_power")) {
+            fireworkMeta.setPower((Integer) data.get("firework_power"));
+        }
+
+        if (data.containsKey("firework_effects")) {
+            List<?> effectsList = (List<?>) data.get("firework_effects");
+            for (Object effectObj : effectsList) {
+                if (!(effectObj instanceof Map)) continue;
+                Map<String, Object> effectMap = (Map<String, Object>) effectObj;
+
+                FireworkEffect effect = parseFireworkEffect(effectMap);
+                if (effect != null) {
+                    fireworkMeta.addEffect(effect);
+                }
+            }
+        }
+    }
+
+    private static FireworkEffect parseFireworkEffect(Map<String, Object> effectMap) {
+        try {
+            String typeStr = (String) effectMap.get("type");
+            FireworkEffect.Type type = FireworkEffect.Type.valueOf(typeStr.toUpperCase());
+
+            FireworkEffect.Builder builder = FireworkEffect.builder().with(type);
+
+            if (effectMap.containsKey("colors")) {
+                List<?> colorsList = (List<?>) effectMap.get("colors");
+                for (Object colorObj : colorsList) {
+                    int colorInt = (Integer) colorObj;
+                    builder.withColor(Color.fromRGB(colorInt));
+                }
+            }
+
+            if (effectMap.containsKey("fade_colors")) {
+                List<?> fadeColorsList = (List<?>) effectMap.get("fade_colors");
+                for (Object colorObj : fadeColorsList) {
+                    int colorInt = (Integer) colorObj;
+                    builder.withFade(Color.fromRGB(colorInt));
+                }
+            }
+
+            if (effectMap.containsKey("flicker")) {
+                builder.flicker((Boolean) effectMap.get("flicker"));
+            }
+
+            if (effectMap.containsKey("trail")) {
+                builder.trail((Boolean) effectMap.get("trail"));
+            }
+
+            return builder.build();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static void deserializeMapMeta(MapMeta mapMeta, Map<String, Object> data) {
+        if (data.containsKey("map_id")) {
+            try {
+                Method setMapId = mapMeta.getClass().getMethod("setMapId", int.class);
+                setMapId.invoke(mapMeta, (Integer) data.get("map_id"));
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     public static void serialize(ItemStack item, YamlConfiguration config, String path) {
@@ -324,6 +466,8 @@ public class ItemSerializer {
     private static void serializeVersionSpecificProperties(ItemMeta meta, YamlConfiguration config, String path) {
         serializeUnbreakable(meta, config, path);
         serializeCustomModelData(meta, config, path);
+        serializeAttributeModifiers(meta, config, path);
+        serializeArmorTrim(meta, config, path);
     }
 
     private static void serializeUnbreakable(ItemMeta meta, YamlConfiguration config, String path) {
@@ -342,6 +486,79 @@ public class ItemSerializer {
                 Method getCustomModelData = meta.getClass().getMethod("getCustomModelData");
                 int modelData = (Integer) getCustomModelData.invoke(meta);
                 config.set(path + ".custom_model_data", modelData);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static void serializeAttributeModifiers(ItemMeta meta, YamlConfiguration config, String path) {
+        if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_13)) return;
+
+        try {
+            if (!meta.hasAttributeModifiers()) return;
+
+            List<Map<String, Object>> attributeList = new ArrayList<>();
+            for (Attribute attribute : meta.getAttributeModifiers().keySet()) {
+                for (AttributeModifier modifier : meta.getAttributeModifiers(attribute)) {
+                    Map<String, Object> attrMap = new HashMap<>();
+                    attrMap.put("attribute", attribute.name());
+                    attrMap.put("name", modifier.getName());
+                    attrMap.put("amount", modifier.getAmount());
+                    attrMap.put("operation", modifier.getOperation().name());
+                    attrMap.put("uuid", modifier.getUniqueId().toString());
+
+                    if (modifier.getSlot() != null) {
+                        attrMap.put("slot", modifier.getSlot().name());
+                    }
+
+                    attributeList.add(attrMap);
+                }
+            }
+
+            if (!attributeList.isEmpty()) {
+                config.set(path + ".attribute_modifiers", attributeList);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static void serializeArmorTrim(ItemMeta meta, YamlConfiguration config, String path) {
+        if (!XPKUtils.SERVER_VERSION.greaterThanOrEqualTo(MinecraftVersion.v1_20)) return;
+        if (!(meta instanceof ArmorMeta)) return;
+
+        try {
+            ArmorMeta armorMeta = (ArmorMeta) meta;
+            Method hasTrim = armorMeta.getClass().getMethod("hasTrim");
+            if ((Boolean) hasTrim.invoke(armorMeta)) {
+                Method getTrim = armorMeta.getClass().getMethod("getTrim");
+                Object armorTrim = getTrim.invoke(armorMeta);
+
+                if (armorTrim != null) {
+                    Class<?> armorTrimClass = Class.forName("org.bukkit.inventory.meta.trim.ArmorTrim");
+                    Method getMaterial = armorTrimClass.getMethod("getMaterial");
+                    Method getPattern = armorTrimClass.getMethod("getPattern");
+
+                    Object trimMaterial = getMaterial.invoke(armorTrim);
+                    Object trimPattern = getPattern.invoke(armorTrim);
+
+                    Class<?> keyedClass = Class.forName("org.bukkit.Keyed");
+                    Method getKey = keyedClass.getMethod("getKey");
+
+                    Object materialKey = getKey.invoke(trimMaterial);
+                    Object patternKey = getKey.invoke(trimPattern);
+
+                    Class<?> namespacedKeyClass = Class.forName("org.bukkit.NamespacedKey");
+                    Method getKeyMethod = namespacedKeyClass.getMethod("getKey");
+
+                    String materialKeyStr = (String) getKeyMethod.invoke(materialKey);
+                    String patternKeyStr = (String) getKeyMethod.invoke(patternKey);
+
+                    Map<String, String> trimData = new HashMap<>();
+                    trimData.put("material", materialKeyStr);
+                    trimData.put("pattern", patternKeyStr);
+
+                    config.set(path + ".armor_trim", trimData);
+                }
             }
         } catch (Exception ignored) {
         }
@@ -438,6 +655,18 @@ public class ItemSerializer {
             }
             effectMap.put("colors", colors);
         }
+
+        if (!effect.getFadeColors().isEmpty()) {
+            List<Integer> fadeColors = new ArrayList<>();
+            for (Color color : effect.getFadeColors()) {
+                fadeColors.add(color.asRGB());
+            }
+            effectMap.put("fade_colors", fadeColors);
+        }
+
+        effectMap.put("flicker", effect.hasFlicker());
+        effectMap.put("trail", effect.hasTrail());
+
         return effectMap;
     }
 

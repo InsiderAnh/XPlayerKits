@@ -1,6 +1,5 @@
 package io.github.InsiderAnh.xPlayerKits.commands.arguments;
 
-import io.github.InsiderAnh.xPlayerKits.api.events.ClaimXKitEvent;
 import io.github.InsiderAnh.xPlayerKits.commands.StellarArgument;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
