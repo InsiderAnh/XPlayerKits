@@ -21,6 +21,9 @@ import io.github.InsiderAnh.xPlayerKits.managers.ConfigManager;
 import io.github.InsiderAnh.xPlayerKits.managers.ExecutionManager;
 import io.github.InsiderAnh.xPlayerKits.managers.KitManager;
 import io.github.InsiderAnh.xPlayerKits.managers.MenuManager;
+import io.github.InsiderAnh.xPlayerKits.managers.VotingManager;
+import io.github.InsiderAnh.xPlayerKits.managers.RotationManager;
+import io.github.InsiderAnh.xPlayerKits.managers.FavoriteManager;
 import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
 import io.github.InsiderAnh.xPlayerKits.utils.UpdateChecker;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
@@ -43,6 +46,9 @@ public class PlayerKits extends JavaPlugin {
     private final ConfigManager configManager;
     private final MenuManager menuManager;
     private final ExecutionManager executionManager;
+    private final VotingManager votingManager;
+    private final RotationManager rotationManager;
+    private final FavoriteManager favoriteManager;
     private InsiderConfig lang;
     private Database database;
     private PlayerKitsNMS playerKitsNMS;
@@ -60,6 +66,9 @@ public class PlayerKits extends JavaPlugin {
         this.kitManager = new KitManager();
         this.configManager = new ConfigManager();
         this.menuManager = new MenuManager();
+        this.votingManager = new VotingManager();
+        this.rotationManager = new RotationManager();
+        this.favoriteManager = new FavoriteManager();
     }
 
     @Override
@@ -97,10 +106,22 @@ public class PlayerKits extends JavaPlugin {
 
         bstats = new MetricsLite(this, 26821);
         updateChecker = new UpdateChecker();
+
+        // Iniciar tarea de verificación de rotaciones
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            rotationManager.checkRotations();
+        }, 20L * 60L, 20L * 60L); // Cada minuto
+
+        // Iniciar tarea de verificación de votaciones automáticas
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            votingManager.checkAutoActivation();
+        }, 20L * 300L, 20L * 300L); // Cada 5 minutos
     }
 
     @Override
     public void onDisable() {
+        votingManager.save();
+        rotationManager.save();
         database.close();
         bstats.shutdown();
     }

@@ -1,5 +1,14 @@
+enabled: true
+maxActiveRotations: 3
+rotationCheckInterval: 60000  # Check every minute
+lastRotationCheck: 0
+
+# Active rotations will be saved here automatically
 rotations:
   example_data:
     rotated_at: 1617472000000
     next_finish_cooldown: -1
     kitId: example
+    active: true
+    probability: 100
+

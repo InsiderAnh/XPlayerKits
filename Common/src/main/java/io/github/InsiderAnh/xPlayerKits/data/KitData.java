@@ -11,5 +11,16 @@ public class KitData {
     private long countdown;
     private boolean oneTime;
     private boolean bought;
+    private boolean favorite;
+    private int votes;
+
+    public KitData(String kitName, long countdown, boolean oneTime, boolean bought) {
+        this.kitName = kitName;
+        this.countdown = countdown;
+        this.oneTime = oneTime;
+        this.bought = bought;
+        this.favorite = false;
+        this.votes = 0;
+    }
 
 }

@@ -41,6 +41,12 @@ messages:
   requirementInfo: "&8» &eRequirement: &f<requirement>"
   requirementsCleared: "&8» &aAll requirements have been cleared from the kit."
   invalidRequirementFormat: "&8» &cInvalid requirement format. Use: %placeholder% operator value (e.g., %player_level% >= 10)"
+  addedToFavorites: "&8» &aKit &e<kit> &aadded to your favorites!"
+  removedFromFavorites: "&8» &7Kit &e<kit> &7removed from your favorites."
+  votedSuccessfully: "&8» &aYou voted for kit &e<kit>&a!"
+  alreadyVoted: "&8» &cYou already voted for this kit."
+  votingNotActive: "&8» &cVoting is not active for this kit."
+  votingDisabled: "&8» &cVoting system is currently disabled."
 menus:
   kitContent:
     title: "Kit content"

@@ -20,7 +20,10 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -68,6 +71,15 @@ public class KitsMenu extends AInventory {
         if (nbtItem.hasTag("kit")) {
             Kit kit = playerKits.getKitManager().getKit(nbtItem.getString("kit"));
             if (kit == null) return;
+
+            if (click == ClickType.MIDDLE || click == ClickType.DROP) {
+                // Agregar/remover de favoritos
+                boolean isFavorite = playerKits.getFavoriteManager().toggleFavorite(playerKitData, kit.getName());
+                player.sendMessage(playerKits.getLang().getString(isFavorite ? "messages.addedToFavorites" : "messages.removedFromFavorites")
+                    .replace("<kit>", kit.getName()));
+                onUpdate(getInventory());
+                return;
+            }
 
             if (click.isRightClick() && kit.isPreview()) {
                 new KitPreviewMenu(player, kit).open();
@@ -128,9 +140,30 @@ public class KitsMenu extends AInventory {
 
     public void buildAndSet(Player player, int slot, Kit kit) {
         String state = getState(player, kit, playerKitData);
-        ItemStack icon = new ItemUtils(kit.getIcons().get(state))
-            .build();
-        getInventory().setItem(slot, XPKUtils.applySimpleTag(icon, "kit", kit.getName()));
+        ItemStack icon = kit.getIcons().get(state);
+        if (icon == null) {
+            icon = new ItemStack(org.bukkit.Material.CHEST);
+        }
+
+        ItemStack clonedIcon = icon.clone();
+        ItemMeta meta = clonedIcon.getItemMeta();
+        if (meta != null) {
+            List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+
+            // Agregar indicador de favorito
+            lore.add("");
+            if (playerKits.getFavoriteManager().isFavorite(playerKitData, kit.getName())) {
+                lore.add("§e⭐ Favorite");
+                lore.add("§7Middle-Click to remove from favorites");
+            } else {
+                lore.add("§7Middle-Click to add to favorites");
+            }
+
+            meta.setLore(lore);
+            clonedIcon.setItemMeta(meta);
+        }
+
+        getInventory().setItem(slot, XPKUtils.applySimpleTag(clonedIcon, "kit", kit.getName()));
     }
 
     private String getState(Player player, Kit kit, PlayerKitData playerKitData) {

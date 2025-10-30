@@ -1,0 +1,15 @@
+rows: 6
+title: "Kit Voting"
+items:
+  close:
+    material: BOOK
+    amount: 1
+    custom-model-data: 0
+    glowing: false
+    display-name: "&cClose"
+    lore:
+      - "&7Close this menu."
+    slots: 49
+    actions:
+      - "close_menu"
+

@@ -92,6 +92,24 @@ public class ItemUtils {
         return item.getAmount();
     }
 
+    public ItemUtils addLore(String... lores) {
+        if (itemMeta == null) {
+            itemMeta = item.getItemMeta();
+        }
+        if (itemMeta == null) {
+            return this;
+        }
+        List<String> currentLore = itemMeta.getLore();
+        if (currentLore == null) {
+            currentLore = new ArrayList<>();
+        }
+        for (String lore : lores) {
+            currentLore.add(XPKUtils.color(lore));
+        }
+        itemMeta.setLore(currentLore);
+        return this;
+    }
+
     public ItemUtils lore(String lore) {
         return lore(null, XPKUtils.color(lore), false);
     }

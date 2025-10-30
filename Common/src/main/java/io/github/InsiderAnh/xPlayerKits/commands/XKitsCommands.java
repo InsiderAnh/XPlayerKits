@@ -45,6 +45,11 @@ public class XKitsCommands implements TabExecutor {
         arguments.put("claim", new ClaimArgument());
         arguments.put("open", new KitsOpenArgument());
 
+        arguments.put("voting", new VotingArgument());
+        arguments.put("favorites", new FavoritesArgument());
+        arguments.put("previewroom", new PreviewRoomArgument());
+        arguments.put("rotation", new RotationArgument());
+
         completes.put("preview", new PreviewCompleter());
         completes.put("give", new GiveCompleter());
         completes.put("delete", new DeleteCompleter());
@@ -91,7 +96,10 @@ public class XKitsCommands implements TabExecutor {
             case "editor":
             case "migratekits":
             case "open":
-            case "kits": {
+            case "kits":
+            case "voting":
+            case "favorites":
+            case "previewroom": {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage("§cThis command is only for players.");
                     return true;
@@ -107,6 +115,7 @@ public class XKitsCommands implements TabExecutor {
             case "resetall":
             case "migrate":
             case "preview":
+            case "rotation":
             case "reload": {
                 String argument = args[0].toLowerCase();
                 arguments.get(argument).onCommand(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -149,8 +158,13 @@ public class XKitsCommands implements TabExecutor {
         sender.sendMessage("§e/xkits preview <kitName> §7- §fPreview a kit.");
         sender.sendMessage("§e/xkits reset <kitName> <player> §7- §fReset a certain kit data.");
         sender.sendMessage("§e/xkits resetall <player> §7- §fReset all kit data.");
+        sender.sendMessage("§e/xkits voting §7- §fOpen the kit voting menu.");
+        sender.sendMessage("§e/xkits favorites §7- §fOpen your favorite kits menu.");
+        sender.sendMessage("§e/xkits previewroom §7- §fOpen the kit preview room.");
+        sender.sendMessage("§e/xkits rotation <start|stop|check|force|list> §7- §fManage kit rotations.");
         sender.sendMessage("§e/xkits migrate playerkits2_yml/playerkits2_mysql §7- §fMigrate data from playerkits2 plugin.");
         sender.sendMessage("§e/xkits migratekits playerkits2 §7- §fMigrate kit from playerkits2 plugin.");
+        sender.sendMessage("§e/xkits reload §7- §fReload the plugin.");
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + "+---------------------------------------+");
     }
 
