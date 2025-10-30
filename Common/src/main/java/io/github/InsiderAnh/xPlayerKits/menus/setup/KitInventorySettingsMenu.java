@@ -101,11 +101,11 @@ public class KitInventorySettingsMenu extends AInventory {
     protected void onUpdate(Inventory inventory) {
         PropertyInventory propertyInventory = kit.getPropertyInventory();
 
-        ItemStack slot = new ItemUtils(XMaterial.GHAST_TEAR.get()).displayName(playerKits.getLang().getString("menus.newKit.slot.nameItem")).lore(playerKits.getLang().getString("menus.newKit.slot.loreItem").replace("<slot>", String.valueOf(propertyInventory.getSlot()))).build();
-        ItemStack page = new ItemUtils(XMaterial.MAP.get()).displayName(playerKits.getLang().getString("menus.newKit.page.nameItem")).lore(playerKits.getLang().getString("menus.newKit.page.loreItem").replace("<page>", String.valueOf(propertyInventory.getPage()))).build();
+        ItemStack slot = new ItemUtils(XMaterial.GHAST_TEAR.get()).displayName(playerKits.getLang().getString("menus.inventorySettings.slot.nameItem")).lore(playerKits.getLang().getString("menus.inventorySettings.slot.loreItem").replace("<slot>", String.valueOf(propertyInventory.getSlot()))).build();
+        ItemStack page = new ItemUtils(XMaterial.MAP.get()).displayName(playerKits.getLang().getString("menus.inventorySettings.page.nameItem")).lore(playerKits.getLang().getString("menus.inventorySettings.page.loreItem").replace("<page>", String.valueOf(propertyInventory.getPage()))).build();
 
-        ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
-        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
+        ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem")).build();
+        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem")).build();
 
         inventory.setItem(11, XPKUtils.applySimpleTag(slot, "action", "slot"));
         inventory.setItem(15, XPKUtils.applySimpleTag(page, "action", "page"));

@@ -333,6 +333,10 @@ public class Kit {
         return stringBuilder.toString();
     }
 
+    public ArrayList<String> getRequirements() {
+        return requirements;
+    }
+
     public String getActionsOnClaimString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Execution execution : actionsOnClaim) {

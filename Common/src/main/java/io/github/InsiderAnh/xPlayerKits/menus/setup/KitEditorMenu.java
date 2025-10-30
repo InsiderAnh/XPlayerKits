@@ -63,6 +63,24 @@ public class KitEditorMenu extends AInventory {
                 case "actionsRequirements":
                     new KitMainActionsMenu(player, kit).open();
                     return;
+                case "preview":
+                    kit.setPreview(!kit.isPreview());
+                    player.sendMessage(playerKits.getLang().getString("messages.setPreview")
+                        .replace("<state>", kit.isPreview() ?
+                            playerKits.getLang().getString("messages.enabled") :
+                            playerKits.getLang().getString("messages.disabled")));
+                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
+                    onUpdate(getInventory());
+                    return;
+                case "parsePlaceholders":
+                    kit.setParsePlaceholdersOnClaim(!kit.isParsePlaceholdersOnClaim());
+                    player.sendMessage(playerKits.getLang().getString("messages.setParsePlaceholders")
+                        .replace("<state>", kit.isParsePlaceholdersOnClaim() ?
+                            playerKits.getLang().getString("messages.enabled") :
+                            playerKits.getLang().getString("messages.disabled")));
+                    player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
+                    onUpdate(getInventory());
+                    return;
                 case "save":
                     kit.save();
                     playerKits.getKitManager().load();
@@ -149,6 +167,8 @@ public class KitEditorMenu extends AInventory {
         ItemStack inventorySettings = new ItemUtils(XMaterial.ENDER_CHEST.get()).displayName(playerKits.getLang().getString("menus.newKit.inventorySettings.nameItem")).lore(playerKits.getLang().getString("menus.newKit.inventorySettings.loreItem")).build();
         ItemStack price = new ItemUtils(XMaterial.GOLD_NUGGET.get()).displayName(playerKits.getLang().getString("menus.newKit.price.nameItem")).lore(playerKits.getLang().getString("menus.newKit.price.loreItem").replace("<price>", String.valueOf(kit.getPrice()))).build();
         ItemStack actionsRequirements = new ItemUtils(XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.newKit.actionsRequirements.nameItem")).lore(playerKits.getLang().getString("menus.newKit.actionsRequirements.loreItem")).build();
+        ItemStack preview = new ItemUtils(kit.isPreview() ? XMaterial.ENDER_EYE.get() : XMaterial.ENDER_PEARL.get()).displayName(playerKits.getLang().getString("menus.newKit.preview.nameItem")).lore(playerKits.getLang().getString("menus.newKit.preview.loreItem").replace("<state>", kit.isPreview() ? playerKits.getLang().getString("messages.enabled") : playerKits.getLang().getString("messages.disabled"))).build();
+        ItemStack parsePlaceholders = new ItemUtils(kit.isParsePlaceholdersOnClaim() ? XMaterial.WRITABLE_BOOK.get() : XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.newKit.parsePlaceholders.nameItem")).lore(playerKits.getLang().getString("menus.newKit.parsePlaceholders.loreItem").replace("<state>", kit.isParsePlaceholdersOnClaim() ? playerKits.getLang().getString("messages.enabled") : playerKits.getLang().getString("messages.disabled"))).build();
         ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
         ItemStack save = new ItemUtils(XMaterial.NETHER_STAR.get()).displayName(playerKits.getLang().getString("menus.newKit.save.nameItem")).lore(playerKits.getLang().getString("menus.newKit.save.loreItem")).build();
         inventory.setItem(10, XPKUtils.applySimpleTag(name, "action", "name"));
@@ -157,7 +177,9 @@ public class KitEditorMenu extends AInventory {
         inventory.setItem(15, XPKUtils.applySimpleTag(armor, "action", "armor"));
         inventory.setItem(16, XPKUtils.applySimpleTag(inv, "action", "inv"));
         inventory.setItem(19, XPKUtils.applySimpleTag(inventorySettings, "action", "inventorySettings"));
+        inventory.setItem(20, XPKUtils.applySimpleTag(preview, "action", "preview"));
         inventory.setItem(22, XPKUtils.applySimpleTag(price, "action", "price"));
+        inventory.setItem(24, XPKUtils.applySimpleTag(parsePlaceholders, "action", "parsePlaceholders"));
         inventory.setItem(25, XPKUtils.applySimpleTag(actionsRequirements, "action", "actionsRequirements"));
         ItemStack icons = new ItemUtils(XMaterial.GREEN_STAINED_GLASS_PANE.parseItem()).displayName(playerKits.getLang().getString("menus.newKit.icons.nameItem")).lore(playerKits.getLang().getString("menus.newKit.icons.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
         for (int i = 28; i <= 34; i++) {

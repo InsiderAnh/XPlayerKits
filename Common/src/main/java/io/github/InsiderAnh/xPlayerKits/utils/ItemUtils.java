@@ -1,5 +1,6 @@
 package io.github.InsiderAnh.xPlayerKits.utils;
 
+import io.github.InsiderAnh.xPlayerKits.libs.xseries.XMaterial;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +22,11 @@ public class ItemUtils {
 
     public ItemUtils(@Nullable Material material) {
         this(material, 1);
+    }
+
+    public ItemUtils(@Nullable XMaterial material) {
+        this.item = material.parseItem();
+        this.itemMeta = item.getItemMeta();
     }
 
     public ItemUtils(@Nullable Material material, int amount) {

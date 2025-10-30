@@ -30,6 +30,17 @@ messages:
   noRequirements: "&8» &cYou have not met the requirements to claim this kit."
   pleaseWait: "&8» &cPlease wait a moment before running this command again."
   deletedKit: "&8» &aThe kit has been successfully deleted."
+  actionAdded: "&8» &aThe action has been successfully added to the kit."
+  actionRemoved: "&8» &aThe action has been successfully removed from the kit."
+  actionInfo: "&8» &eAction: &f<action>"
+  actionsCleared: "&8» &aAll actions have been cleared from the kit."
+  setPreview: "&8» &aThe preview state is now: &e<state>"
+  setParsePlaceholders: "&8» &aThe parse placeholders state is now: &e<state>"
+  requirementAdded: "&8» &aThe requirement has been successfully added to the kit."
+  requirementRemoved: "&8» &aThe requirement has been successfully removed from the kit."
+  requirementInfo: "&8» &eRequirement: &f<requirement>"
+  requirementsCleared: "&8» &aAll requirements have been cleared from the kit."
+  invalidRequirementFormat: "&8» &cInvalid requirement format. Use: %placeholder% operator value (e.g., %player_level% >= 10)"
 menus:
   kitContent:
     title: "Kit content"
@@ -72,6 +83,9 @@ menus:
       loreItem: ""
     close:
       nameItem: "&cClose"
+      loreItem: ""
+    back:
+      nameItem: "&aBack"
       loreItem: ""
   kitClaims:
     title: "Kit claims"
@@ -234,6 +248,12 @@ menus:
         &7<details>
         &7
         &eClick to edit!
+    clearAll:
+      nameItem: "&aClear all actions"
+      loreItem: |-
+        &7Clear all actions from this kit.
+        &7
+        &eClick to interact!
     newAction:
       nameItem: "&aNew action"
       loreItem: |-
@@ -270,6 +290,40 @@ menus:
         &eDeny commands:
         <denyCommands>
         &eClick to interact!
+  requirements:
+    title: "Kit Requirements"
+    requirement:
+      nameItem: "&aRequirement #<index> <status>"
+      loreItem: |-
+        &7Requirement: &f<requirement>
+        &7Status: <status>
+        &7
+        &eLeft-click &7to view info
+        &eRight-click &7to remove
+        &eShift-Left &7to move up
+        &eShift-Right &7to move down
+    newRequirement:
+      nameItem: "&aAdd new requirement"
+      loreItem: |-
+        &7Add a new placeholder requirement
+        &7to this kit.
+        &7
+        &7Format: &f%placeholder% operator value
+        &7Example: &f%player_level% >= 10
+        &7
+        &7Available operators:
+        &f== != >= <= > <
+        &7
+        &eClick to add!
+    clearAll:
+      nameItem: "&cClear all requirements"
+      loreItem: |-
+        &7Remove all requirements from
+        &7this kit.
+        &7
+        &eClick to clear!
+    input:
+      title: "Enter requirement"
   newKit:
     title: "New kit"
     name:
@@ -344,6 +398,26 @@ menus:
         &7when the placeholder is claimed.
         &7
         &eClick to interact!
+    preview:
+      nameItem: "&aKit preview"
+      loreItem: |-
+        &7With this property, you enable or
+        &7disable the preview of the kit
+        &7when right-clicking.
+        &7
+        &fPreview: &e<state>
+        &7
+        &eClick to toggle!
+    parsePlaceholders:
+      nameItem: "&aParse placeholders on claim"
+      loreItem: |-
+        &7With this property, you enable or
+        &7disable parsing placeholders in
+        &7item names and lore when claiming.
+        &7
+        &fParse Placeholders: &e<state>
+        &7
+        &eClick to toggle!
     icons:
       nameItem: "&aIcons"
       loreItem: |-
@@ -422,6 +496,9 @@ menus:
         &7configuration.
         &7
         &eClick to interact!
+    back:
+      nameItem: "&aBack"
+      loreItem: ""
     next:
       nameItem: '&fNext page &8»'
       loreItem: ""

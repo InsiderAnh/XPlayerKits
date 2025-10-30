@@ -105,8 +105,8 @@ public class KitClaimsSettingsMenu extends AInventory {
         ItemStack oneTime = new ItemUtils(XMaterial.EMERALD.get()).displayName(playerKits.getLang().getString("menus.kitClaims.oneTime.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.oneTime.loreItem").replace("<state>", XPKUtils.getStatus(propertyTiming.isOneTime()))).build();
         ItemStack autoArmor = new ItemUtils(XMaterial.DIAMOND_HELMET.get()).displayName(playerKits.getLang().getString("menus.kitClaims.autoArmor.nameItem")).lore(playerKits.getLang().getString("menus.kitClaims.autoArmor.loreItem").replace("<state>", XPKUtils.getStatus(propertyInventory.isAutoArmor()))).build();
 
-        ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
-        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
+        ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem")).build();
+        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem")).build();
 
         inventory.setItem(11, XPKUtils.applySimpleTag(countdown, "action", "countdown"));
         inventory.setItem(13, XPKUtils.applySimpleTag(oneTime, "action", "oneTime"));

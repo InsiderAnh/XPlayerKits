@@ -140,6 +140,13 @@ public class XPKUtils {
         return item;
     }
 
+    public ItemStack applySimpleTag(ItemStack item, String key, int value) {
+        NBTItem nbtItem = new NBTItem(item);
+        nbtItem.setInteger(key, value);
+        nbtItem.mergeNBT(item);
+        return item;
+    }
+
     public boolean isHelmet(String material) {
         return material.endsWith("_HELMET") || material.equals("PLAYER_HEAD") || material.equals("SKULL_ITEM");
     }

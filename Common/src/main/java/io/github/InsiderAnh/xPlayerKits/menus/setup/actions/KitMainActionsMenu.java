@@ -42,7 +42,7 @@ public class KitMainActionsMenu extends AInventory {
                     new KitActionsMenu(player, kit, "deny").open();
                     return;
                 case "requirements":
-                    new KitRequirementsMenu(player).open();
+                    new KitRequirementsMenu(player, kit).open();
                     return;
                 case "back":
                     new KitEditorMenu(player, kit).open();
@@ -58,12 +58,12 @@ public class KitMainActionsMenu extends AInventory {
 
     @Override
     protected void onUpdate(Inventory inventory) {
-        ItemStack requirements = new ItemUtils(XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.newKit.requirements.nameItem")).lore(playerKits.getLang().getString("menus.newKit.requirements.loreItem").replace("<requirements>", kit.getRequirementsString())).build();
-        ItemStack claimCommands = new ItemUtils(XMaterial.GOLD_INGOT.get()).displayName(playerKits.getLang().getString("menus.newKit.claimCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.claimCommands.loreItem").replace("<claimCommands>", kit.getActionsOnClaimString())).build();
-        ItemStack denyCommands = new ItemUtils(XMaterial.REDSTONE.get()).displayName(playerKits.getLang().getString("menus.newKit.denyCommands.nameItem")).lore(playerKits.getLang().getString("menus.newKit.denyCommands.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
+        ItemStack requirements = new ItemUtils(XMaterial.BOOK.get()).displayName(playerKits.getLang().getString("menus.mainActions.requirements.nameItem")).lore(playerKits.getLang().getString("menus.mainActions.requirements.loreItem").replace("<requirements>", kit.getRequirementsString())).build();
+        ItemStack claimCommands = new ItemUtils(XMaterial.GOLD_INGOT.get()).displayName(playerKits.getLang().getString("menus.mainActions.claimCommands.nameItem")).lore(playerKits.getLang().getString("menus.mainActions.claimCommands.loreItem").replace("<claimCommands>", kit.getActionsOnClaimString())).build();
+        ItemStack denyCommands = new ItemUtils(XMaterial.REDSTONE.get()).displayName(playerKits.getLang().getString("menus.mainActions.denyCommands.nameItem")).lore(playerKits.getLang().getString("menus.mainActions.denyCommands.loreItem").replace("<denyCommands>", kit.getActionsOnDenyString())).build();
 
-        ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem")).build();
-        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem")).build();
+        ItemStack back = new ItemUtils(XMaterial.ARROW.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem")).build();
+        ItemStack close = new ItemUtils(XMaterial.BARRIER.get()).displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem")).build();
 
         inventory.setItem(11, XPKUtils.applySimpleTag(requirements, "action", "requirements"));
         inventory.setItem(13, XPKUtils.applySimpleTag(claimCommands, "action", "claimCommands"));
