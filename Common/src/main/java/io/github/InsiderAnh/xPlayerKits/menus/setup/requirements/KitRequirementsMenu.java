@@ -115,7 +115,6 @@ public class KitRequirementsMenu extends AInventory {
             .onClick((index, completion) -> {
                 String input = completion.getText();
 
-                // Validar el formato del requirement
                 String[] parts = input.split(" ");
                 if (parts.length < 3) {
                     player.sendMessage(playerKits.getLang().getString("messages.invalidRequirementFormat"));
@@ -149,21 +148,18 @@ public class KitRequirementsMenu extends AInventory {
         for (int i = 0; i < requirements.size(); i++) {
             String requirement = requirements.get(i);
 
-            // Determinar el icono y estado
             Material material;
             String status;
-            boolean passes = false;
+            boolean passes;
 
             if (requirement.equalsIgnoreCase("none")) {
                 material = Material.GRAY_DYE;
                 status = "&7No requirement";
             } else {
-                // Intentar evaluar el requirement
                 passes = XPKUtils.passCondition(player, requirement);
                 material = passes ? Material.LIME_DYE : Material.RED_DYE;
                 status = passes ? "&aPass ✓" : "&cFail ✗";
 
-                // Preview del placeholder
                 String[] parts = requirement.split(" ");
                 if (parts.length >= 1) {
                     String placeholder = parts[0];
@@ -187,7 +183,6 @@ public class KitRequirementsMenu extends AInventory {
             }
         }
 
-        // Botones de control
         ItemStack back = new ItemUtils(XMaterial.ARROW.get())
             .displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem"))
             .build();
