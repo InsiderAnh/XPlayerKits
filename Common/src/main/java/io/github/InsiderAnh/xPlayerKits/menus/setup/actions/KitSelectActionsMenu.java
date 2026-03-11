@@ -61,26 +61,26 @@ public class KitSelectActionsMenu extends AInventory {
         String defaultText = getDefaultText(actionType);
 
         new AnvilGUI.Builder()
-            .plugin(playerKits)
-            .title(XPKUtils.color(title))
-            .text(defaultText)
-            .onClick((index, completion) -> {
-                String input = completion.getText();
-                String fullAction = buildAction(actionType, input);
+                .plugin(playerKits)
+                .title(XPKUtils.color(title))
+                .text(defaultText)
+                .onClick((index, completion) -> {
+                    String input = completion.getText();
+                    String fullAction = buildAction(actionType, input);
 
-                if (this.actionType.equals("claim")) {
-                    kit.getActionsOnClaim().add(playerKits.getExecutionManager().getExecution(fullAction));
-                } else {
-                    kit.getActionsOnDeny().add(playerKits.getExecutionManager().getExecution(fullAction));
-                }
+                    if (this.actionType.equals("claim")) {
+                        kit.getActionsOnClaim().add(playerKits.getExecutionManager().getExecution(fullAction));
+                    } else {
+                        kit.getActionsOnDeny().add(playerKits.getExecutionManager().getExecution(fullAction));
+                    }
 
-                player.sendMessage(playerKits.getLang().getString("messages.actionAdded"));
-                player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.get(), 1.0f, 1.0f);
+                    player.sendMessage(playerKits.getLang().getString("messages.actionAdded"));
+                    player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.get(), 1.0f, 1.0f);
 
-                new KitActionsMenu(player, kit, this.actionType).open();
-                return Collections.singletonList(AnvilGUI.ResponseAction.close());
-            })
-            .open(player);
+                    new KitActionsMenu(player, kit, this.actionType).open();
+                    return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                })
+                .open(player);
     }
 
     private String getDefaultText(String actionType) {
@@ -143,19 +143,19 @@ public class KitSelectActionsMenu extends AInventory {
         AtomicInteger index = new AtomicInteger();
         for (String action : availableActions) {
             ItemStack itemStack = new ItemUtils(Material.PAPER)
-                .displayName(playerKits.getLang().getString("menus.selectActions." + action + ".nameItem"))
-                .lore(playerKits.getLang().getString("menus.selectActions." + action + ".loreItem").replace("<action>", action))
-                .build();
+                    .displayName(playerKits.getLang().getString("menus.selectActions." + action + ".nameItem"))
+                    .lore(playerKits.getLang().getString("menus.selectActions." + action + ".loreItem").replace("<action>", action))
+                    .build();
 
             inventory.setItem(XPKUtils.SLOTS[index.getAndIncrement()], XPKUtils.applySimpleTag(itemStack, "actionType", action));
         }
 
         ItemStack back = new ItemUtils(XMaterial.ARROW.get())
-            .displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem"))
+                .build();
         ItemStack close = new ItemUtils(XMaterial.BARRIER.get())
-            .displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem"))
+                .build();
 
         inventory.setItem(45, XPKUtils.applySimpleTag(back, "action", "back"));
         inventory.setItem(49, XPKUtils.applySimpleTag(close, "action", "close"));

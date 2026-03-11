@@ -85,15 +85,15 @@ public class KitClaimsSettingsMenu extends AInventory {
 
     private void handleAnvilGUI(Player player, String title, String text, Consumer<String> execute) {
         new AnvilGUI.Builder()
-            .plugin(playerKits)
-            .itemLeft(new ItemStack(Material.PAPER))
-            .title(title)
-            .text(text)
-            .onClick((slot, type) -> {
-                execute.accept(type.getText());
-                return Collections.singletonList(AnvilGUI.ResponseAction.close());
-            })
-            .open(player);
+                .plugin(playerKits)
+                .itemLeft(new ItemStack(Material.PAPER))
+                .title(title)
+                .text(text)
+                .onClick((slot, type) -> {
+                    execute.accept(type.getText());
+                    return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                })
+                .open(player);
     }
 
     @Override

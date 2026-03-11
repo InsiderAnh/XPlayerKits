@@ -42,22 +42,22 @@ public class KitMainEditorMenu extends AInventory {
             String action = nbtItem.getString("action");
             if (action.equals("newKit")) {
                 new AnvilGUI.Builder()
-                    .plugin(playerKits)
-                    .onClick((slot, type) -> {
-                        if (type.getText().length() > 36) {
-                            player.sendMessage(playerKits.getLang().getString("messages.longName"));
-                            player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                            return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cLong name"));
-                        }
-                        String line = type.getText();
-                        Kit kit = new Kit(line, 10 + playerKits.getKitManager().getKits().size());
-                        playerKits.getKitManager().addKit(kit);
-                        new KitEditorMenu(player, kit).open();
-                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                    })
-                    .text("Write a name")
-                    .title("Write a kit name")
-                    .open(player);
+                        .plugin(playerKits)
+                        .onClick((slot, type) -> {
+                            if (type.getText().length() > 36) {
+                                player.sendMessage(playerKits.getLang().getString("messages.longName"));
+                                player.playSound(player.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
+                                return Collections.singletonList(AnvilGUI.ResponseAction.replaceInputText("§cLong name"));
+                            }
+                            String line = type.getText();
+                            Kit kit = new Kit(line, 10 + playerKits.getKitManager().getKits().size());
+                            playerKits.getKitManager().addKit(kit);
+                            new KitEditorMenu(player, kit).open();
+                            return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                        })
+                        .text("Write a name")
+                        .title("Write a kit name")
+                        .open(player);
             }
             if (action.equals("last")) {
                 new KitMainEditorMenu(player, page - 1).open();

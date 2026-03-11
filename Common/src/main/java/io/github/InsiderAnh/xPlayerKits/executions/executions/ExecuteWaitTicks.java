@@ -4,7 +4,6 @@ import io.github.InsiderAnh.xPlayerKits.PlayerKits;
 import io.github.InsiderAnh.xPlayerKits.executions.Execution;
 import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,21 +23,18 @@ public class ExecuteWaitTicks extends Execution {
 
     @Override
     public void executeActions(List<Execution> executions, Player player, Placeholder... placeholders) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                LinkedList<Execution> list = new LinkedList<>(executions);
-                for (Execution execution : new LinkedList<>(list)) {
-                    list.remove(execution);
-                    if (execution instanceof ExecuteWaitTicks) {
-                        ExecuteWaitTicks waitTicks = (ExecuteWaitTicks) execution;
-                        waitTicks.executeActions(list, player, placeholders);
-                    } else {
-                        execution.execute(player, placeholders);
-                    }
+        PlayerKits.getInstance().getStellarTaskHook(() -> {
+            LinkedList<Execution> list = new LinkedList<>(executions);
+            for (Execution execution : new LinkedList<>(list)) {
+                list.remove(execution);
+                if (execution instanceof ExecuteWaitTicks) {
+                    ExecuteWaitTicks waitTicks = (ExecuteWaitTicks) execution;
+                    waitTicks.executeActions(list, player, placeholders);
+                } else {
+                    execution.execute(player, placeholders);
                 }
             }
-        }.runTaskLater(PlayerKits.getInstance(), ticks);
+        }).runTask(ticks);
     }
 
     public String getActionType() {

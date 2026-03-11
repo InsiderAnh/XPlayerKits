@@ -130,12 +130,12 @@ public class XKitsCommands implements TabExecutor {
                     if (kit != null && sender instanceof Player) {
                         Player player = (Player) sender;
                         playerKits.getDatabase().getPlayerData(player.getUniqueId(), player.getName()).thenAccept(playerKitData ->
-                                playerKits.getStellarTaskHook(() ->
-                                    XPKUtils.claimKit(player, kit, playerKitData)).runTask(player.getLocation()))
-                            .exceptionally(throwable -> {
-                                throwable.printStackTrace();
-                                return null;
-                            });
+                                        playerKits.getStellarTaskHook(() ->
+                                                XPKUtils.claimKit(player, kit, playerKitData)).runTask(player.getLocation()))
+                                .exceptionally(throwable -> {
+                                    throwable.printStackTrace();
+                                    return null;
+                                });
                         return false;
                     }
                 }

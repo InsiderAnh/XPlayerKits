@@ -22,7 +22,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class KitsRotationMenu extends AInventory {
@@ -163,7 +162,7 @@ public class KitsRotationMenu extends AInventory {
     public void buildAndSet(Player player, int slot, Kit kit) {
         String state = getState(player, kit, playerKitData);
         ItemStack icon = new ItemUtils(kit.getIcons().get(state))
-            .build();
+                .build();
         getInventory().setItem(slot, XPKUtils.applySimpleTag(icon, "kit", kit.getName()));
     }
 

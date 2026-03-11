@@ -66,18 +66,18 @@ public class KitEditorMenu extends AInventory {
                 case "preview":
                     kit.setPreview(!kit.isPreview());
                     player.sendMessage(playerKits.getLang().getString("messages.setPreview")
-                        .replace("<state>", kit.isPreview() ?
-                            playerKits.getLang().getString("messages.enabled") :
-                            playerKits.getLang().getString("messages.disabled")));
+                            .replace("<state>", kit.isPreview() ?
+                                    playerKits.getLang().getString("messages.enabled") :
+                                    playerKits.getLang().getString("messages.disabled")));
                     player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                     onUpdate(getInventory());
                     return;
                 case "parsePlaceholders":
                     kit.setParsePlaceholdersOnClaim(!kit.isParsePlaceholdersOnClaim());
                     player.sendMessage(playerKits.getLang().getString("messages.setParsePlaceholders")
-                        .replace("<state>", kit.isParsePlaceholdersOnClaim() ?
-                            playerKits.getLang().getString("messages.enabled") :
-                            playerKits.getLang().getString("messages.disabled")));
+                            .replace("<state>", kit.isParsePlaceholdersOnClaim() ?
+                                    playerKits.getLang().getString("messages.enabled") :
+                                    playerKits.getLang().getString("messages.disabled")));
                     player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                     onUpdate(getInventory());
                     return;
@@ -146,15 +146,15 @@ public class KitEditorMenu extends AInventory {
 
     private void handleAnvilGUI(Player player, String title, String text, Consumer<String> execute) {
         new AnvilGUI.Builder()
-            .plugin(playerKits)
-            .itemLeft(new ItemStack(Material.PAPER))
-            .title(title)
-            .text(text)
-            .onClick((slot, type) -> {
-                execute.accept(type.getText());
-                return Collections.singletonList(AnvilGUI.ResponseAction.close());
-            })
-            .open(player);
+                .plugin(playerKits)
+                .itemLeft(new ItemStack(Material.PAPER))
+                .title(title)
+                .text(text)
+                .onClick((slot, type) -> {
+                    execute.accept(type.getText());
+                    return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                })
+                .open(player);
     }
 
     @Override

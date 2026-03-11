@@ -37,8 +37,8 @@ public class MenuSlots {
     @Override
     public String toString() {
         return "MenuSlots{" +
-            "slots=" + slots +
-            '}';
+                "slots=" + slots +
+                '}';
     }
 
     public int getSlot(int index) {

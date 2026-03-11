@@ -15,9 +15,9 @@ public class PlayerKitData {
     @Override
     public String toString() {
         return "PlayerKitData{" +
-            "uuid=" + uuid +
-            ", name='" + name + '\'' +
-            ", kitsData=" + kitsData +
-            '}';
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
+                ", kitsData=" + kitsData +
+                '}';
     }
 }

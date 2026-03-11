@@ -32,6 +32,7 @@ public class PropertyInventory {
         this.slot = -1;
         this.page = -1;
         this.checkInventorySpace = true;
+        this.showInInventory = true;
     }
 
     public void save(InsiderConfig config) {
@@ -44,6 +45,7 @@ public class PropertyInventory {
         config.set("inventory.slot", slot);
         config.set("inventory.page", page);
         config.set("inventory.checkInventorySpace", checkInventorySpace);
+        config.set("inventory.showInInventory", showInInventory);
     }
 
 }

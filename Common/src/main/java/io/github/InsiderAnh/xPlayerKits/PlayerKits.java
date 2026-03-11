@@ -17,13 +17,7 @@ import io.github.InsiderAnh.xPlayerKits.hooks.StellarTaskHook;
 import io.github.InsiderAnh.xPlayerKits.hooks.tasks.BukkitTaskHook;
 import io.github.InsiderAnh.xPlayerKits.hooks.tasks.FoliaTaskHook;
 import io.github.InsiderAnh.xPlayerKits.listeners.PlayerListener;
-import io.github.InsiderAnh.xPlayerKits.managers.ConfigManager;
-import io.github.InsiderAnh.xPlayerKits.managers.ExecutionManager;
-import io.github.InsiderAnh.xPlayerKits.managers.KitManager;
-import io.github.InsiderAnh.xPlayerKits.managers.MenuManager;
-import io.github.InsiderAnh.xPlayerKits.managers.VotingManager;
-import io.github.InsiderAnh.xPlayerKits.managers.RotationManager;
-import io.github.InsiderAnh.xPlayerKits.managers.FavoriteManager;
+import io.github.InsiderAnh.xPlayerKits.managers.*;
 import io.github.InsiderAnh.xPlayerKits.placeholders.PlayerKitsPlaceholders;
 import io.github.InsiderAnh.xPlayerKits.utils.UpdateChecker;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
@@ -107,15 +101,8 @@ public class PlayerKits extends JavaPlugin {
         bstats = new MetricsLite(this, 26821);
         updateChecker = new UpdateChecker();
 
-        // Iniciar tarea de verificación de rotaciones
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
-            rotationManager.checkRotations();
-        }, 20L * 60L, 20L * 60L); // Cada minuto
-
-        // Iniciar tarea de verificación de votaciones automáticas
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
-            votingManager.checkAutoActivation();
-        }, 20L * 300L, 20L * 300L); // Cada 5 minutos
+        getStellarTaskHook(rotationManager::checkRotations).runTaskTimerAsynchronously(20L * 60L, 20L * 60L);
+        getStellarTaskHook(votingManager::checkAutoActivation).runTaskTimerAsynchronously(20L * 300L, 20L * 300L);
     }
 
     @Override

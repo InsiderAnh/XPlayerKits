@@ -35,10 +35,10 @@ public class SQLiteDatabase extends Database {
                 Connection connection = getConnection();
                 try (Statement statement = connection.createStatement()) {
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS player_kits (" +
-                        "uuid VARCHAR(36) PRIMARY KEY," +
-                        "name VARCHAR(36)," +
-                        "data TEXT" +
-                        ")");
+                            "uuid VARCHAR(36) PRIMARY KEY," +
+                            "name VARCHAR(36)," +
+                            "data TEXT" +
+                            ")");
                     close(null, statement, null);
                 } catch (Exception exception) {
                     exception.printStackTrace();

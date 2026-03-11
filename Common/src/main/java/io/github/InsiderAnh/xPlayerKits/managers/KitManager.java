@@ -29,7 +29,7 @@ public class KitManager {
             playerKits.saveResource("kits/example_kit.yml", false);
         }
 
-        int perPage = 21;
+        int perPage = 28;
         Menu menu = playerKits.getMenuManager().getMenu("kits");
         if (menu != null) {
             MenuVarItem menuVarItem = menu.getVarItems().get("kitSlots");
@@ -44,7 +44,7 @@ public class KitManager {
         Map<String, Kit> forcedPositionKits = new HashMap<>();
         List<Kit> flexibleKits = new ArrayList<>();
 
-        for (File file : kitsFolder.listFiles()) {
+        for (File file : Objects.requireNonNull(kitsFolder.listFiles())) {
             if (!file.getName().endsWith(".yml")) continue;
 
             Kit kit;
@@ -143,7 +143,7 @@ public class KitManager {
         Iterator<Kit> flexibleIterator = flexibleKits.iterator();
 
         for (int page = 1; page <= lastPage; page++) {
-            for (int slot = 0; slot < perPage; slot++) {
+            for (int slot = 0; slot < 54; slot++) {
                 String positionKey = page + "-" + slot;
                 if (forcedPositionKits.containsKey(positionKey)) {
                     Kit forcedKit = forcedPositionKits.get(positionKey);
@@ -172,9 +172,9 @@ public class KitManager {
 
         Map<String, Kit> result = new LinkedHashMap<>();
         kits.entrySet().stream()
-            .skip(skip)
-            .limit((long) actualLimit - skip)
-            .forEach(entry -> result.put(entry.getKey(), entry.getValue()));
+                .skip(skip)
+                .limit((long) actualLimit - skip)
+                .forEach(entry -> result.put(entry.getKey(), entry.getValue()));
 
         return result;
     }

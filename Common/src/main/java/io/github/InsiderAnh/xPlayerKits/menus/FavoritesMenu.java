@@ -33,7 +33,7 @@ public class FavoritesMenu extends AInventory {
 
     public FavoritesMenu(Player player, PlayerKitData playerKitData, int page) {
         super(player, PlayerKits.getInstance().getMenuManager().getInventorySizes("favorites", InventorySizes.GENERIC_9X6),
-              PlayerKits.getInstance().getMenuManager().getTitle("favorites", "Favorite Kits"));
+                PlayerKits.getInstance().getMenuManager().getTitle("favorites", "Favorite Kits"));
         this.menu = playerKits.getMenuManager().getMenu("favorites");
         this.playerKitData = playerKitData;
         this.page = page;
@@ -68,7 +68,7 @@ public class FavoritesMenu extends AInventory {
             }
 
             playerKits.getExecutionManager().execute(player, menuItem.getExecutions(),
-                new Placeholder("<player>", player.getName()));
+                    new Placeholder("<player>", player.getName()));
         }
 
         if (nbtItem.hasTag("kit")) {
@@ -79,7 +79,7 @@ public class FavoritesMenu extends AInventory {
                 // Remover de favoritos
                 playerKits.getFavoriteManager().removeFavorite(playerKitData, kit.getName());
                 player.sendMessage(playerKits.getLang().getString("messages.removedFromFavorites")
-                    .replace("<kit>", kit.getName()));
+                        .replace("<kit>", kit.getName()));
                 onUpdate(getInventory());
                 return;
             }
@@ -130,9 +130,9 @@ public class FavoritesMenu extends AInventory {
         if (favoriteKits.isEmpty()) {
             // Mostrar mensaje de no hay favoritos
             ItemStack noFavorites = new ItemUtils(Material.BARRIER)
-                .displayName("§cNo Favorite Kits")
-                .lore("§7You haven't marked any kits as favorite yet.")
-                .build();
+                    .displayName("§cNo Favorite Kits")
+                    .lore("§7You haven't marked any kits as favorite yet.")
+                    .build();
             inventory.setItem(22, noFavorites);
             return;
         }
@@ -154,8 +154,8 @@ public class FavoritesMenu extends AInventory {
     public void buildAndSet(Player player, int slot, Kit kit) {
         String state = getState(player, kit, playerKitData);
         ItemStack icon = new ItemUtils(kit.getIcons().get(state))
-            .addLore("", "§e⭐ Favorite", "", "§7Shift+Click to remove from favorites")
-            .build();
+                .addLore("", "§e⭐ Favorite", "", "§7Shift+Click to remove from favorites")
+                .build();
         getInventory().setItem(slot, XPKUtils.applySimpleTag(icon, "kit", kit.getName()));
     }
 

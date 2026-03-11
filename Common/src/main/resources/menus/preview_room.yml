@@ -42,5 +42,5 @@ maxKitsPerVoting: 5
 lastAutoActivation: 0
 
 # Active votings will be saved here automatically
-activeVotings: {}
+activeVotings: { }
 

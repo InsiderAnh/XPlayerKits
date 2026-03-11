@@ -48,7 +48,7 @@ public class KitRequirementsMenu extends AInventory {
                 if (click == ClickType.LEFT) {
                     String requirement = requirements.get(requirementIndex);
                     player.sendMessage(playerKits.getLang().getString("messages.requirementInfo")
-                        .replace("<requirement>", requirement));
+                            .replace("<requirement>", requirement));
                     player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                 } else if (click == ClickType.RIGHT) {
                     requirements.remove(requirementIndex);
@@ -109,32 +109,32 @@ public class KitRequirementsMenu extends AInventory {
         String defaultText = "%player_name% == Steve";
 
         new AnvilGUI.Builder()
-            .plugin(playerKits)
-            .title(XPKUtils.color(title))
-            .text(defaultText)
-            .onClick((index, completion) -> {
-                String input = completion.getText();
+                .plugin(playerKits)
+                .title(XPKUtils.color(title))
+                .text(defaultText)
+                .onClick((index, completion) -> {
+                    String input = completion.getText();
 
-                String[] parts = input.split(" ");
-                if (parts.length < 3) {
-                    player.sendMessage(playerKits.getLang().getString("messages.invalidRequirementFormat"));
-                    player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.get(), 1.0f, 1.0f);
+                    String[] parts = input.split(" ");
+                    if (parts.length < 3) {
+                        player.sendMessage(playerKits.getLang().getString("messages.invalidRequirementFormat"));
+                        player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.get(), 1.0f, 1.0f);
+                        return Collections.singletonList(AnvilGUI.ResponseAction.close());
+                    }
+
+                    ArrayList<String> requirements = kit.getRequirements();
+                    if (requirements.size() == 1 && requirements.get(0).equalsIgnoreCase("none")) {
+                        requirements.clear();
+                    }
+
+                    requirements.add(input);
+                    player.sendMessage(playerKits.getLang().getString("messages.requirementAdded"));
+                    player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.get(), 1.0f, 1.0f);
+
+                    new KitRequirementsMenu(player, kit).open();
                     return Collections.singletonList(AnvilGUI.ResponseAction.close());
-                }
-
-                ArrayList<String> requirements = kit.getRequirements();
-                if (requirements.size() == 1 && requirements.get(0).equalsIgnoreCase("none")) {
-                    requirements.clear();
-                }
-
-                requirements.add(input);
-                player.sendMessage(playerKits.getLang().getString("messages.requirementAdded"));
-                player.playSound(player.getLocation(), XSound.ENTITY_PLAYER_LEVELUP.get(), 1.0f, 1.0f);
-
-                new KitRequirementsMenu(player, kit).open();
-                return Collections.singletonList(AnvilGUI.ResponseAction.close());
-            })
-            .open(player);
+                })
+                .open(player);
     }
 
     @Override
@@ -169,13 +169,13 @@ public class KitRequirementsMenu extends AInventory {
             }
 
             ItemStack itemStack = new ItemUtils(material)
-                .displayName(playerKits.getLang().getString("menus.requirements.requirement.nameItem")
-                    .replace("<index>", String.valueOf(i + 1))
-                    .replace("<status>", status))
-                .lore(playerKits.getLang().getString("menus.requirements.requirement.loreItem")
-                    .replace("<requirement>", requirement)
-                    .replace("<status>", status))
-                .build();
+                    .displayName(playerKits.getLang().getString("menus.requirements.requirement.nameItem")
+                            .replace("<index>", String.valueOf(i + 1))
+                            .replace("<status>", status))
+                    .lore(playerKits.getLang().getString("menus.requirements.requirement.loreItem")
+                            .replace("<requirement>", requirement)
+                            .replace("<status>", status))
+                    .build();
 
             int slot = XPKUtils.SLOTS[index.getAndIncrement()];
             if (slot < 45) {
@@ -184,19 +184,19 @@ public class KitRequirementsMenu extends AInventory {
         }
 
         ItemStack back = new ItemUtils(XMaterial.ARROW.get())
-            .displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.mainKitEditor.back.nameItem"))
+                .build();
         ItemStack close = new ItemUtils(XMaterial.BARRIER.get())
-            .displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.mainKitEditor.close.nameItem"))
+                .build();
         ItemStack newRequirement = new ItemUtils(XMaterial.EMERALD.get())
-            .displayName(playerKits.getLang().getString("menus.requirements.newRequirement.nameItem"))
-            .lore(playerKits.getLang().getString("menus.requirements.newRequirement.loreItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.requirements.newRequirement.nameItem"))
+                .lore(playerKits.getLang().getString("menus.requirements.newRequirement.loreItem"))
+                .build();
         ItemStack clearAll = new ItemUtils(XMaterial.TNT.get())
-            .displayName(playerKits.getLang().getString("menus.requirements.clearAll.nameItem"))
-            .lore(playerKits.getLang().getString("menus.requirements.clearAll.loreItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.requirements.clearAll.nameItem"))
+                .lore(playerKits.getLang().getString("menus.requirements.clearAll.loreItem"))
+                .build();
 
         inventory.setItem(45, XPKUtils.applySimpleTag(back, "action", "back"));
         inventory.setItem(49, XPKUtils.applySimpleTag(close, "action", "close"));

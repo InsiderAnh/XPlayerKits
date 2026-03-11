@@ -254,6 +254,6 @@ public enum XEntityType implements XBase<XEntityType, EntityType> {
 
     private static final class Data {
         public static final XRegistry<XEntityType, EntityType> REGISTRY =
-            new XRegistry<>(EntityType.class, XEntityType.class, XEntityType[]::new);
+                new XRegistry<>(EntityType.class, XEntityType.class, XEntityType[]::new);
     }
 }

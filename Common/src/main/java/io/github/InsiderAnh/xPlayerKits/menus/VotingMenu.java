@@ -32,7 +32,7 @@ public class VotingMenu extends AInventory {
 
     public VotingMenu(Player player, PlayerKitData playerKitData) {
         super(player, PlayerKits.getInstance().getMenuManager().getInventorySizes("voting", InventorySizes.GENERIC_9X6),
-              PlayerKits.getInstance().getMenuManager().getTitle("voting", "Kit Voting"));
+                PlayerKits.getInstance().getMenuManager().getTitle("voting", "Kit Voting"));
         this.menu = playerKits.getMenuManager().getMenu("voting");
         this.playerKitData = playerKitData;
         onUpdate(getInventory());
@@ -56,7 +56,7 @@ public class VotingMenu extends AInventory {
             }
 
             playerKits.getExecutionManager().execute(player, menuItem.getExecutions(),
-                new Placeholder("<player>", player.getName()));
+                    new Placeholder("<player>", player.getName()));
         }
 
         if (nbtItem.hasTag("voting-kit")) {
@@ -65,7 +65,7 @@ public class VotingMenu extends AInventory {
 
             if (voted) {
                 player.sendMessage(playerKits.getLang().getString("messages.votedSuccessfully")
-                    .replace("<kit>", kitName));
+                        .replace("<kit>", kitName));
                 onUpdate(getInventory());
             } else {
                 KitVotingData votingData = playerKits.getVotingManager().getVotingData(kitName);
@@ -114,9 +114,9 @@ public class VotingMenu extends AInventory {
         if (activeVotings.isEmpty()) {
             // Mostrar mensaje de no hay votaciones activas
             ItemStack noVotings = new ItemUtils(Material.BARRIER)
-                .displayName("§cNo Active Votings")
-                .lore("§7There are no active kit votings at the moment.")
-                .build();
+                    .displayName("§cNo Active Votings")
+                    .lore("§7There are no active kit votings at the moment.")
+                    .build();
             inventory.setItem(22, noVotings);
             return;
         }
@@ -143,9 +143,9 @@ public class VotingMenu extends AInventory {
                     (hasVoted ? "§cYou already voted!" : "§eClick to vote!");
 
             ItemStack votingItem = new ItemUtils(icon.clone())
-                .displayName("§e" + kit.getName())
-                .lore(loreText)
-                .build();
+                    .displayName("§e" + kit.getName())
+                    .lore(loreText)
+                    .build();
 
             votingItem = XPKUtils.applySimpleTag(votingItem, "voting-kit", kit.getName());
             inventory.setItem(slots[index], votingItem);

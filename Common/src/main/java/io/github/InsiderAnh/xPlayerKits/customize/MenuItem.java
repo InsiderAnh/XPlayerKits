@@ -70,14 +70,14 @@ public class MenuItem {
     @Override
     public String toString() {
         return "MenuItem{" +
-            "material='" + material + '\'' +
-            ", amount=" + amount +
-            ", customModelData=" + customModelData +
-            ", glowing=" + glowing +
-            ", displayName='" + displayName + '\'' +
-            ", lore=" + lore +
-            ", slots=" + slots +
-            '}';
+                "material='" + material + '\'' +
+                ", amount=" + amount +
+                ", customModelData=" + customModelData +
+                ", glowing=" + glowing +
+                ", displayName='" + displayName + '\'' +
+                ", lore=" + lore +
+                ", slots=" + slots +
+                '}';
     }
 
     public ItemStack buildItem(Player player, Placeholder... placeholders) {

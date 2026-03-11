@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.Connection;
@@ -45,38 +44,35 @@ public class MigratorManager {
 
     public void migrateKitFromPlayerKits2(Player player, ArrayList<File> kitFiles) {
         File file = kitFiles.remove(0);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-                String name = file.getName().replace(".yml", "");
-                Kit kit = new Kit(name, 10);
-                player.getInventory().clear();
-                player.getInventory().setArmorContents(null);
-                Bukkit.getScheduler().runTaskLater(playerKits, () -> {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "playerkits give " + name + " " + player.getName());
-                }, 2);
-                Bukkit.getScheduler().runTaskLater(playerKits, () -> {
-                    kit.setInventory(player.getInventory().getContents());
-                    kit.setArmor(player.getInventory().getArmorContents());
+        playerKits.getStellarTaskHook(() -> {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+            String name = file.getName().replace(".yml", "");
+            Kit kit = new Kit(name, 10);
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+            playerKits.getStellarTaskHook(() -> {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "playerkits give " + name + " " + player.getName());
+            }).runTask(2);
+            playerKits.getStellarTaskHook(() -> {
+                kit.setInventory(player.getInventory().getContents());
+                kit.setArmor(player.getInventory().getArmorContents());
 
-                    kit.getPropertyTiming().setOneTime(config.getBoolean("one_time"));
-                    kit.getPropertyInventory().setAutoArmor(config.getBoolean("auto_armor"));
-                    kit.getPropertyTiming().setCountdown(config.getInt("cooldown"));
+                kit.getPropertyTiming().setOneTime(config.getBoolean("one_time"));
+                kit.getPropertyInventory().setAutoArmor(config.getBoolean("auto_armor"));
+                kit.getPropertyTiming().setCountdown(config.getInt("cooldown"));
 
-                    if (config.getBoolean("permission_required")) {
-                        kit.setPermission("playerkits.kit." + name);
-                    }
-                    kit.setPreview(true);
-                    kit.save();
-                    playerKits.getKitManager().addKit(kit);
-                    player.sendMessage("§aMigrated correctly §e" + kit.getName() + "§a.");
-                    if (!kitFiles.isEmpty()) {
-                        migrateKitFromPlayerKits2(player, kitFiles);
-                    }
-                }, 4);
-            }
-        }.runTaskLater(playerKits, 5);
+                if (config.getBoolean("permission_required")) {
+                    kit.setPermission("playerkits.kit." + name);
+                }
+                kit.setPreview(true);
+                kit.save();
+                playerKits.getKitManager().addKit(kit);
+                player.sendMessage("§aMigrated correctly §e" + kit.getName() + "§a.");
+                if (!kitFiles.isEmpty()) {
+                    migrateKitFromPlayerKits2(player, kitFiles);
+                }
+            }).runTask(4);
+        }).runTask(5);
     }
 
     public void migrateFromPlayerKits2MySQL() {
@@ -102,13 +98,13 @@ public class MigratorManager {
 
             try (Connection connection = dataSource.getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(
-                    "SELECT playerkits_players.UUID, playerkits_players.PLAYER_NAME, " +
-                        "playerkits_players_kits.NAME, " +
-                        "playerkits_players_kits.COOLDOWN, " +
-                        "playerkits_players_kits.ONE_TIME, " +
-                        "playerkits_players_kits.BOUGHT " +
-                        "FROM playerkits_players LEFT JOIN playerkits_players_kits " +
-                        "ON playerkits_players.UUID = playerkits_players_kits.UUID");
+                        "SELECT playerkits_players.UUID, playerkits_players.PLAYER_NAME, " +
+                                "playerkits_players_kits.NAME, " +
+                                "playerkits_players_kits.COOLDOWN, " +
+                                "playerkits_players_kits.ONE_TIME, " +
+                                "playerkits_players_kits.BOUGHT " +
+                                "FROM playerkits_players LEFT JOIN playerkits_players_kits " +
+                                "ON playerkits_players.UUID = playerkits_players_kits.UUID");
 
                 ResultSet result = statement.executeQuery();
 

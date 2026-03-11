@@ -55,7 +55,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.15.3-SNAPSHOT</version>
+            <version>2.15.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>net.wesjd</groupId>
             <artifactId>anvilgui</artifactId>
-            <version>1.10.8-SNAPSHOT</version>
+            <version>1.10.10-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -235,6 +235,12 @@
         <dependency>
             <groupId>io.github.InsiderAnh.xPlayerKits</groupId>
             <artifactId>v1_21_R10</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.InsiderAnh.xPlayerKits</groupId>
+            <artifactId>v1_21_R11</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>

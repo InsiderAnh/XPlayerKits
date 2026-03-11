@@ -13,7 +13,6 @@ import io.github.InsiderAnh.xPlayerKits.inventory.AInventory;
 import io.github.InsiderAnh.xPlayerKits.inventory.InventorySizes;
 import io.github.InsiderAnh.xPlayerKits.kits.Kit;
 import io.github.InsiderAnh.xPlayerKits.placeholders.Placeholder;
-import io.github.InsiderAnh.xPlayerKits.utils.ItemUtils;
 import io.github.InsiderAnh.xPlayerKits.utils.XPKUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -73,10 +72,9 @@ public class KitsMenu extends AInventory {
             if (kit == null) return;
 
             if (click == ClickType.MIDDLE || click == ClickType.DROP) {
-                // Agregar/remover de favoritos
                 boolean isFavorite = playerKits.getFavoriteManager().toggleFavorite(playerKitData, kit.getName());
                 player.sendMessage(playerKits.getLang().getString(isFavorite ? "messages.addedToFavorites" : "messages.removedFromFavorites")
-                    .replace("<kit>", kit.getName()));
+                        .replace("<kit>", kit.getName()));
                 onUpdate(getInventory());
                 return;
             }
@@ -150,7 +148,6 @@ public class KitsMenu extends AInventory {
         if (meta != null) {
             List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
-            // Agregar indicador de favorito
             lore.add("");
             if (playerKits.getFavoriteManager().isFavorite(playerKitData, kit.getName())) {
                 lore.add("§e⭐ Favorite");

@@ -86,8 +86,8 @@ public interface XBase<XForm extends XBase<XForm, BukkitForm>, BukkitForm> {
     @Contract(pure = true)
     default String friendlyName() {
         return Arrays.stream(name().split("_"))
-            .map(t -> t.charAt(0) + t.substring(1).toLowerCase(Locale.ENGLISH))
-            .collect(Collectors.joining(" "));
+                .map(t -> t.charAt(0) + t.substring(1).toLowerCase(Locale.ENGLISH))
+                .collect(Collectors.joining(" "));
     }
 
     @Nullable

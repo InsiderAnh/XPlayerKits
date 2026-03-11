@@ -28,10 +28,10 @@ public class MenuVarItem {
     @Override
     public String toString() {
         return "MenuVarItem{" +
-            "displayName='" + displayName + '\'' +
-            ", lore=" + lore +
-            ", slots=" + slots +
-            '}';
+                "displayName='" + displayName + '\'' +
+                ", lore=" + lore +
+                ", slots=" + slots +
+                '}';
     }
 
     public ItemStack buildItem(Player player, ItemStack itemStack, Placeholder... placeholders) {

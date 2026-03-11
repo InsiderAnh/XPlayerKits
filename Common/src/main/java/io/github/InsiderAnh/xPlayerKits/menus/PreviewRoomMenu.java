@@ -31,7 +31,7 @@ public class PreviewRoomMenu extends AInventory {
 
     public PreviewRoomMenu(Player player, int page) {
         super(player, PlayerKits.getInstance().getMenuManager().getInventorySizes("preview_room", InventorySizes.GENERIC_9X6),
-              PlayerKits.getInstance().getMenuManager().getTitle("preview_room", "Kit Preview Room"));
+                PlayerKits.getInstance().getMenuManager().getTitle("preview_room", "Kit Preview Room"));
         this.menu = playerKits.getMenuManager().getMenu("preview_room");
         this.page = page;
         onUpdate(getInventory());
@@ -65,7 +65,7 @@ public class PreviewRoomMenu extends AInventory {
             }
 
             playerKits.getExecutionManager().execute(player, menuItem.getExecutions(),
-                new Placeholder("<player>", player.getName()));
+                    new Placeholder("<player>", player.getName()));
         }
 
         if (nbtItem.hasTag("preview-kit")) {
@@ -117,9 +117,9 @@ public class PreviewRoomMenu extends AInventory {
         if (previewableKits.isEmpty()) {
             // Mostrar mensaje de no hay kits disponibles
             ItemStack noKits = new ItemUtils(Material.BARRIER)
-                .displayName("§cNo Previewable Kits")
-                .lore("§7There are no kits available for preview.")
-                .build();
+                    .displayName("§cNo Previewable Kits")
+                    .lore("§7There are no kits available for preview.")
+                    .build();
             inventory.setItem(22, noKits);
             return;
         }
@@ -139,8 +139,8 @@ public class PreviewRoomMenu extends AInventory {
             }
 
             ItemUtils itemBuilder = new ItemUtils(icon.clone())
-                .displayName("§e" + kit.getName())
-                .addLore("", "§7Click to preview this kit!");
+                    .displayName("§e" + kit.getName())
+                    .addLore("", "§7Click to preview this kit!");
 
             ItemStack previewItem = XPKUtils.applySimpleTag(itemBuilder.build(), "preview-kit", kit.getName());
             inventory.setItem(slots[index], previewItem);

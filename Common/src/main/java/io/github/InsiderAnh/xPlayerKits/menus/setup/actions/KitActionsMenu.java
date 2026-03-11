@@ -47,7 +47,7 @@ public class KitActionsMenu extends AInventory {
                     // Click izquierdo: Mostrar información
                     String actionInfo = executions.get(actionIndex).getAction();
                     player.sendMessage(playerKits.getLang().getString("messages.actionInfo")
-                        .replace("<action>", actionInfo));
+                            .replace("<action>", actionInfo));
                     player.playSound(player.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.get(), 1.0f, 1.0f);
                 } else if (click == ClickType.RIGHT) {
                     // Click derecho: Eliminar acción
@@ -115,13 +115,13 @@ public class KitActionsMenu extends AInventory {
             String actionTypeName = execution.getActionType();
 
             ItemStack itemStack = new ItemUtils(getMaterialForActionType(actionTypeName))
-                .displayName(playerKits.getLang().getString("menus.actions.actionItem.nameItem")
-                    .replace("<type>", actionTypeName)
-                    .replace("<index>", String.valueOf(i + 1)))
-                .lore(playerKits.getLang().getString("menus.actions.actionItem.loreItem")
-                    .replace("<action>", execution.getAction())
-                    .replace("<type>", actionTypeName))
-                .build();
+                    .displayName(playerKits.getLang().getString("menus.actions.actionItem.nameItem")
+                            .replace("<type>", actionTypeName)
+                            .replace("<index>", String.valueOf(i + 1)))
+                    .lore(playerKits.getLang().getString("menus.actions.actionItem.loreItem")
+                            .replace("<action>", execution.getAction())
+                            .replace("<type>", actionTypeName))
+                    .build();
 
             int slot = XPKUtils.SLOTS[index.getAndIncrement()];
             if (slot < 45) {
@@ -130,20 +130,20 @@ public class KitActionsMenu extends AInventory {
         }
 
         ItemStack back = new ItemUtils(XMaterial.ARROW.get())
-            .displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.kitsMenu.back.nameItem"))
+                .build();
         ItemStack close = new ItemUtils(XMaterial.BARRIER.get())
-            .displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.kitsMenu.close.nameItem"))
+                .build();
         ItemStack newAction = new ItemUtils(XMaterial.EMERALD.get())
-            .displayName(playerKits.getLang().getString("menus.actions.newAction.nameItem"))
-            .lore(playerKits.getLang().getString("menus.actions.newAction.loreItem")
-                .replace("<action>", actionType))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.actions.newAction.nameItem"))
+                .lore(playerKits.getLang().getString("menus.actions.newAction.loreItem")
+                        .replace("<action>", actionType))
+                .build();
         ItemStack clearAll = new ItemUtils(XMaterial.TNT.get())
-            .displayName(playerKits.getLang().getString("menus.actions.clearAll.nameItem"))
-            .lore(playerKits.getLang().getString("menus.actions.clearAll.loreItem"))
-            .build();
+                .displayName(playerKits.getLang().getString("menus.actions.clearAll.nameItem"))
+                .lore(playerKits.getLang().getString("menus.actions.clearAll.loreItem"))
+                .build();
 
         inventory.setItem(45, XPKUtils.applySimpleTag(back, "action", "back"));
         inventory.setItem(49, XPKUtils.applySimpleTag(close, "action", "close"));

@@ -127,7 +127,7 @@ public class RotationManager {
 
             // Verificar si ya está en rotación activa
             if (activeRotations.containsKey(kit.getName()) &&
-                activeRotations.get(kit.getName()).isActive()) {
+                    activeRotations.get(kit.getName()).isActive()) {
                 continue;
             }
 

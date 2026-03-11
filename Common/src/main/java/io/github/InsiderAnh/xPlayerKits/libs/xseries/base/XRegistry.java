@@ -203,7 +203,7 @@ public final class XRegistry<XForm extends XBase<XForm, BukkitForm>, BukkitForm>
         for (Field field : clazz.getDeclaredFields()) {
             int modifiers = field.getModifiers();
             if (field.getType() == clazz &&
-                Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
+                    Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {
                 try {
                     consumer.accept(field, (T) field.get(null));
                 } catch (IllegalAccessException e) {
@@ -511,7 +511,7 @@ public final class XRegistry<XForm extends XBase<XForm, BukkitForm>, BukkitForm>
             // in that case enum names are not supported with namespace type (even if we uppercase
             // it, we don't know the placement of dots instead of underscores)
             throw new IllegalArgumentException("Unknown standard bukkit form for " + registryName + ": " + bukkit
-                + (bukkit.toString().equals(name) ? "" : (" (" + name + ')')));
+                    + (bukkit.toString().equals(name) ? "" : (" (" + name + ')')));
         }
 
         xForm = creator.apply(bukkit, extraFieldName == null ? new String[]{name} : new String[]{extraFieldName, name});
@@ -606,7 +606,7 @@ public final class XRegistry<XForm extends XBase<XForm, BukkitForm>, BukkitForm>
 
             try {
                 Object xform = Objects.requireNonNull(field.get(null),
-                    () -> "XForm backing field returned null: " + field + " for registry of " + this.xFormClass);
+                        () -> "XForm backing field returned null: " + field + " for registry of " + this.xFormClass);
 
                 @SuppressWarnings("unchecked") XForm castForm = (XForm) xform;
                 backingFields.put(castForm, field);
@@ -623,10 +623,10 @@ public final class XRegistry<XForm extends XBase<XForm, BukkitForm>, BukkitForm>
         if (meta != null) return meta;
 
         meta = new XModuleMetadata(
-            formField.isAnnotationPresent(Deprecated.class),
-            formField.getAnnotationsByType(XChange.class),
-            formField.getAnnotationsByType(XMerge.class),
-            formField.getAnnotation(XInfo.class)
+                formField.isAnnotationPresent(Deprecated.class),
+                formField.getAnnotationsByType(XChange.class),
+                formField.getAnnotationsByType(XMerge.class),
+                formField.getAnnotation(XInfo.class)
         );
 
         if (!peekOnly) {
@@ -672,14 +672,14 @@ public final class XRegistry<XForm extends XBase<XForm, BukkitForm>, BukkitForm>
     @Override
     public String toString() {
         return "XRegistry<" + registryName + ">(" +
-            "nameMappings=" + nameMappings.size() + ", bukkitToX=" + bukkitToX.size() +
-            ", bukkitFormClass=" + bukkitFormClass.getName() +
-            ", xFormClass=" + xFormClass.getName() +
-            ", supportsRegistry=" + supportsRegistry +
-            ", bukkitFormClassType=" + bukkitClassType +
-            ", pulled=" + pulled +
-            ", values=[" + bukkitToX.values().stream().limit(10).map(XBase::name).collect(Collectors.joining(", ")) + ']' +
-            ')';
+                "nameMappings=" + nameMappings.size() + ", bukkitToX=" + bukkitToX.size() +
+                ", bukkitFormClass=" + bukkitFormClass.getName() +
+                ", xFormClass=" + xFormClass.getName() +
+                ", supportsRegistry=" + supportsRegistry +
+                ", bukkitFormClassType=" + bukkitClassType +
+                ", pulled=" + pulled +
+                ", values=[" + bukkitToX.values().stream().limit(10).map(XBase::name).collect(Collectors.joining(", ")) + ']' +
+                ')';
     }
 
     private enum ClassType {

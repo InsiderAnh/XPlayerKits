@@ -1899,8 +1899,8 @@ public enum XMaterial implements XBase<XMaterial, Material> {
      * @since 1.0.0
      */
     private static final Cache<String, XMaterial> NAME_CACHE = CacheBuilder.newBuilder()
-        .expireAfterAccess(1, TimeUnit.HOURS)
-        .build();
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .build();
     /**
      * The maximum data value in the pre-flattening update which belongs to {@link #VILLAGER_SPAWN_EGG}<br>
      * <a href="https://minecraftitemids.com/types/spawn-egg">Spawn Eggs</a>
@@ -2107,7 +2107,7 @@ public enum XMaterial implements XBase<XMaterial, Material> {
     public static XMaterial matchXMaterial(@NotNull Material material) {
         Objects.requireNonNull(material, "Cannot match null material");
         return matchDefinedXMaterial(material.name(), UNKNOWN_DATA_VALUE)
-            .orElseThrow(() -> new IllegalArgumentException("Unsupported material with no data value: " + material.name()));
+                .orElseThrow(() -> new IllegalArgumentException("Unsupported material with no data value: " + material.name()));
     }
 
     /**
@@ -2367,8 +2367,8 @@ public enum XMaterial implements XBase<XMaterial, Material> {
     @NotNull
     public String toString() {
         return Arrays.stream(name().split("_"))
-            .map(t -> t.charAt(0) + t.substring(1).toLowerCase(Locale.ENGLISH))
-            .collect(Collectors.joining(" "));
+                .map(t -> t.charAt(0) + t.substring(1).toLowerCase(Locale.ENGLISH))
+                .collect(Collectors.joining(" "));
     }
 
     /**
@@ -2431,9 +2431,9 @@ public enum XMaterial implements XBase<XMaterial, Material> {
                 SpawnEggMeta egg = (SpawnEggMeta) meta;
                 String entityName = this.name();
                 egg.setSpawnedType(XEntityType
-                    .of(entityName.substring(0, entityName.length() - "_SPAWN_EGG".length()))
-                    .orElse(XEntityType.ZOMBIE)
-                    .get()
+                        .of(entityName.substring(0, entityName.length() - "_SPAWN_EGG".length()))
+                        .orElse(XEntityType.ZOMBIE)
+                        .get()
                 );
             }
         }
